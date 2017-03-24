@@ -1,0 +1,60 @@
+{
+  "name": "generator-jhipster-db-helper",
+  "version": "0.0.0",
+  "description": "A JHipster module for better interaction with an already existing database. Bastien Michaux & Adrien Horgnies",
+  "keywords": [
+    "yeoman-generator",
+    "jhipster-module"
+  ],
+  "homepage": "https://github.com/bastienmichaux/generator-jhipster-db-helper",
+  "author": [
+		{
+		  "name": "Bastien Michaux",
+		  "email": "bastienmichaux@gmail.com",
+		  "url": "https://github.com/bastienmichaux"
+		},
+		{
+		  "name": "Adrien Horgnies",
+		  "email": "",
+		  "url": "https://github.com/adrienhorgnies"
+		}
+	],
+  "files": [
+    "generators"
+  ],
+  "main": "generators/app/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bastienmichaux/generator-jhipster-db-helper.git"
+  },
+  "dependencies": {
+    "yeoman-generator": "0.22.4",
+    "chalk": "1.1.1",
+    "mkdirp": "0.5.1",
+    "generator-jhipster": ">2.26.0"
+  },
+  "devDependencies": {
+    "fs-extra": "0.26.4",
+    "gulp": "^3.9.0",
+    "gulp-bump": "1.0.0",
+    "gulp-eslint": "1.0.0",
+    "gulp-exclude-gitignore": "1.0.0",
+    "gulp-git": "1.6.1",
+    "gulp-istanbul": "0.10.3",
+    "gulp-mocha": "2.2.0",
+    "gulp-nsp": "2.3.0",
+    "gulp-plumber": "1.0.1",
+    "gulp-rename": "^1.2.0",
+    "gulp-sequence": "0.4.4",
+    "gulp-shell": "^0.5.1",
+    "mocha": "2.3.4",
+    "yeoman-assert": "2.1.1",
+    "yeoman-test": "1.0.0"
+  },
+  "scripts": {
+    "test": "mocha test/*"
+  },
+  "bugs": {
+    "url": "https://github.com/bastienmichaux/generator-jhipster-db-helper/issues"
+  }
+}

@@ -1,0 +1,2 @@
+hello db-helper!
+It's dummy.txt
