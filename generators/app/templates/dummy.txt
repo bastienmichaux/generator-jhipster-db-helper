@@ -1,2 +1,3 @@
-hello db-helper!
-It's dummy.txt
+- hello db-helper!
+- hello dawg, whatcha do ?
+- just checkin in alright
