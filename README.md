@@ -33,7 +33,7 @@ This generator will make mapping on an already existing database easier. We will
 
 # License
 
-
+Apache License 2
 
 [npm-image]: https://img.shields.io/npm/v/generator-jhipster-db-helper.svg
 [npm-url]: https://npmjs.org/package/generator-jhipster-db-helper
