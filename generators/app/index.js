@@ -3,18 +3,23 @@ var yeoman = require('yeoman-generator');
 // makes logs more beautiful
 var chalk = require('chalk');
 // gives access to the package.json data
+//§ TODO : investigate __dirname
+//§ WARN : this is hardcoded
 var packagejs = require(__dirname + '/../../package.json');
 
 // Stores JHipster variables
-var jhipsterVar = {moduleName: 'db-helper'}; //WARN: this is hard-coded
+//§ WARN: this is hard-coded and should have all needed data passed on at some point
+var jhipsterVar = {moduleName: 'db-helper'};
 
 // Stores JHipster functions
 var jhipsterFunc = function () {
   this.log("Just used jhipsterFunc")
 };
 
-module.exports = yeoman.Base.extend({
 
+module.exports = yeoman.Base.extend({
+  //check current project state, get configs, etc
+  //TODO :  with a private function, validate the needed files before replacing
   initializing: {
     compose: function (args) {
       this.composeWith('jhipster:modules',
@@ -35,6 +40,9 @@ module.exports = yeoman.Base.extend({
     }
   },
 
+  //prompt the user for options :
+  //- modify naming strategy (choose from a list ?)
+  //- regenerate all entities ?
   prompting: function () {
     var done = this.async();
 
@@ -53,6 +61,9 @@ module.exports = yeoman.Base.extend({
     }.bind(this));
   },
 
+  //other Yeoman run steps : configuring, default
+
+  //write the generator-specific files
   writing: {
     writeTemplates : function () {
       this.baseName = jhipsterVar.baseName;
@@ -69,9 +80,11 @@ module.exports = yeoman.Base.extend({
       this.log('angularAppName=' + this.angularAppName);
       this.log('message=' + this.message);
 
-      //wtf this does ?
+      //test writing files here
       this.template('dummy.txt', 'dummy.txt', this, {});
       this.template('README.md', 'README.md', this, {});
+      this.template('README.md', 'myFolder/README.md', this, {});
+      this.template('README.md', 'myFolder/README.md', this, {});
     },
 
     registering: function () {
@@ -83,10 +96,16 @@ module.exports = yeoman.Base.extend({
     }
   },
 
+  //conflicts will be handled here
+  conflicts: {
+  }
+
+  //run installation (npm, bower, etc)
   install: function () {
     this.installDependencies();
   },
 
+  //cleanup, say goodbye
   end: function () {
     this.log('End of db-helper generator');
   }
