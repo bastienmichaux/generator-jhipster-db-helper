@@ -69,7 +69,9 @@ module.exports = yeoman.Base.extend({
       this.log('angularAppName=' + this.angularAppName);
       this.log('message=' + this.message);
 
+      //wtf this does ?
       this.template('dummy.txt', 'dummy.txt', this, {});
+      this.template('README.md', 'README.md', this, {});
     },
 
     registering: function () {
