@@ -1,13 +1,17 @@
 'use strict';
 var yeoman = require('yeoman-generator');
+// makes logs more beautiful
 var chalk = require('chalk');
+// gives access to the package.json data
 var packagejs = require(__dirname + '/../../package.json');
 
 // Stores JHipster variables
-var jhipsterVar = {moduleName: 'db-helper'};
+var jhipsterVar = {moduleName: 'db-helper'}; //WARN: this is hard-coded
 
 // Stores JHipster functions
-var jhipsterFunc = {};
+var jhipsterFunc = {
+  this.log("Just used jhipsterFunc");
+};
 
 module.exports = yeoman.Base.extend({
 
@@ -25,7 +29,9 @@ module.exports = yeoman.Base.extend({
     },
     displayLogo: function () {
       // Have Yeoman greet the user.
-      this.log('Welcome to the ' + chalk.red('JHipster db-helper') + ' generator! ' + chalk.yellow('v' + packagejs.version + '\n'));
+      this.log(
+        chalk.bold('Welcome to the ' + chalk.red(packagejs.name) + ' generator! ' + chalk.yellow('v' + packagejs.version + '\n'))
+      );
     }
   },
 

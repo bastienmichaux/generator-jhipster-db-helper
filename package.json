@@ -1,11 +1,8 @@
 {
   "name": "generator-jhipster-db-helper",
-  "version": "0.0.0",
-  "description": "A JHipster module for better interaction with an already existing database. Bastien Michaux & Adrien Horgnies",
-  "keywords": [
-    "yeoman-generator",
-    "jhipster-module"
-  ],
+  "version": "0.0.1",
+  "description": "A JHipster module for better interaction with an already existing database.",
+  "keywords": [],
   "homepage": "https://github.com/bastienmichaux/generator-jhipster-db-helper",
   "author": [
 		{
