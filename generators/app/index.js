@@ -9,8 +9,8 @@ var packagejs = require(__dirname + '/../../package.json');
 var jhipsterVar = {moduleName: 'db-helper'}; //WARN: this is hard-coded
 
 // Stores JHipster functions
-var jhipsterFunc = {
-  this.log("Just used jhipsterFunc");
+var jhipsterFunc = function () {
+  this.log("Just used jhipsterFunc")
 };
 
 module.exports = yeoman.Base.extend({
