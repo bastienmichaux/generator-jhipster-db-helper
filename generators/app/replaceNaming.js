@@ -11,11 +11,11 @@ fileWithNamingStrategyPaths.forEach( function(path) {
 	}
 });
 
-var physicalOld = "org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy";
-var physicalNew = "org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl";
+const physicalOld = "org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy";
+const physicalNew = "org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl";
 
-var implicitOld = "org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy";
-var implicitNew = "org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl";
+const implicitOld = "org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy";
+const implicitNew = "org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl";
 
 replace({
 	regex: physicalOld,
