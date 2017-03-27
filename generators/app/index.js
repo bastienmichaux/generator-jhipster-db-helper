@@ -82,10 +82,7 @@ module.exports = yeoman.Base.extend({
 
       //test writing files here
       this.template('dummy.txt', 'dummy.txt', this, {});
-      this.template('README.md', 'README.md', this, {});
-      this.template('README.md', 'myFolder/README.md', this, {});
-      this.template('README.md', 'myFolder/README.md', this, {});
-    },
+      this.template('README.md', 'README.md', this, {});    },
 
     registering: function () {
       try {
@@ -95,10 +92,6 @@ module.exports = yeoman.Base.extend({
       }
     }
   },
-
-  //conflicts will be handled here
-  conflicts: {
-  }
 
   //run installation (npm, bower, etc)
   install: function () {
