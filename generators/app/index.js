@@ -1,7 +1,12 @@
 const chalk = require('chalk');
+
 const generator = require('yeoman-generator');
+
 // gives access to the package.json data
 const packagejs = require('../../package.json');
+
+// db-helper utility functions
+const dbh = require('./dbh.js');
 
 // Stores JHipster variables
 const jhipsterVar = { moduleName: 'db-helper' };
@@ -9,13 +14,15 @@ const jhipsterVar = { moduleName: 'db-helper' };
 // Stores JHipster functions
 const jhipsterFunc = {};
 
+
+
 module.exports = generator.extend({
 
     // check current project state, get configs, etc
     initializing: {
         compose() {
             // DEBUG : log where we are
-            this.log(chalk.cyan.bold("initializing:compose"));
+            dbh._dbhDebugLog("initializing: compose");
 
             this.composeWith('jhipster:modules',
                 { jhipsterVar, jhipsterFunc },
@@ -41,7 +48,7 @@ module.exports = generator.extend({
         ];
 
         // DEBUG : log where we are
-        this.log(chalk.cyan.bold("prompting"));
+        dbh._dbhDebugLog("prompting");
 
         this.prompt(prompts).then((props) => {
             this.props = props;
@@ -59,7 +66,7 @@ module.exports = generator.extend({
     // TODO : modify naming strategy
     writing() {
         // DEBUG : log where we are
-        this.log(chalk.cyan.bold("writing"));
+        dbh._dbhDebugLog("writing");
 
         // function to use directly template
         this.template = function (source, destination) {
@@ -107,7 +114,7 @@ module.exports = generator.extend({
             `To install your dependencies manually, run: ${chalk.yellow.bold(`${this.clientPackageManager} install`)}`;
 
         // DEBUG : log where we are
-        this.log(chalk.cyan.bold("install"));
+        dbh._dbhDebugLog("install");
 
         if (this.clientFramework === 'angular1') {
             logMsg =
@@ -133,7 +140,9 @@ module.exports = generator.extend({
     // cleanup, say goodbye
     end() {
         // DEBUG : log where we are
-        this.log(chalk.cyan.bold("end"));
+        dbh._dbhDebugLog("end");
+        dbh._dbhDebugLog();
+        dbh._dbhDebugLog(54);
 
         this.log('End of db-helper generator');
     }
