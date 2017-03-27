@@ -56,7 +56,9 @@ module.exports = {
             }
         });
 
-        // replace the files
+        // replace the files :
+
+        // replace Spring physical naming strategy
         replace({
             regex: physicalOld,
             replacement: physicalNew,
@@ -65,6 +67,7 @@ module.exports = {
             silent: true,
         });
 
+        // replace Spring implicit naming strategy
         replace({
             regex: implicitOld,
             replacement: implicitNew,
