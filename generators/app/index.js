@@ -53,9 +53,7 @@ module.exports = generator.extend({
 
         // replace files with Spring's naming strategies
         dbh.replaceNamingStrategies();
-
         
-
         this.prompt(prompts).then((props) => {
             this.props = props;
             // To access props later use this.props.someOption;

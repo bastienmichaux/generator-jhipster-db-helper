@@ -16,14 +16,6 @@ const fs = require('fs');
 // this is true with jhipster v4.1.1
 const filesWithNamingStrategyPaths = ["./pom.xml", "./src/main/resources/config/application.yml", "./src/test/resources/config/application.yml"];
 
-const physicalOld = "org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy";
-const physicalNew = "org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl";
-
-const implicitOld = "org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy";
-const implicitNew = "org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl";
-
-var fileWithNamingStrategyPaths = ["./pom.xml", "./src/main/resources/config/application.yml", "./src/test/resources/config/application.yml"];
-
 module.exports = {
 
     // use this function as a DEBUG logger
@@ -46,9 +38,16 @@ module.exports = {
 
     // replace Spring naming strategies with more neutral ones
     replaceNamingStrategies : function () {
+        // grab our files from the global space
         const files = filesWithNamingStrategyPaths;
-        console.log("files :: " + filesWithNamingStrategyPaths);
-        console.log("files :: " + files);
+
+        const physicalOld = "org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy";
+        const physicalNew = "org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl";
+
+        const implicitOld = "org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy";
+        const implicitNew = "org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl";
+        
+        // check that each file exists
         files.forEach( function(path) {
             if (!fs.existsSync(path)) {
                 throw new Error(path + " doesn't exist!");
@@ -57,7 +56,7 @@ module.exports = {
             }
         });
 
-        /*
+        // replace the files
         replace({
             regex: physicalOld,
             replacement: physicalNew,
@@ -73,7 +72,7 @@ module.exports = {
             recursive: false,
             silent: true,
         });
-        */
+        
 
         return false;
     }
