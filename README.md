@@ -1,20 +1,25 @@
 # generator-jhipster-db-helper
 [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url]
-> JHipster module, A JHipster module for already existing databases
 
-# Introduction
+A JHipster module for already existing databases.
+
+This module should make JHipster work with already existing databases.
+
+We are interested by your contributions ! Check our [notes](notes.md) for details. Read [contributing][README.md#forking] to fork this module.
+
+## Introduction
 
 This is a [JHipster](http://jhipster.github.io/) module, that is meant to be used in a JHipster application.
 
-# Prerequisites
+## Prerequisites
 
 As this is a [JHipster](http://jhipster.github.io/) module, we expect you have JHipster and its related tools already installed:
 
 - [Installing JHipster](https://jhipster.github.io/installation.html)
 
-# Installation
+## Installation
 
-## With Yarn
+### With Yarn
 
 To install this module:
 
@@ -28,7 +33,7 @@ To update this module:
 yarn global upgrade generator-jhipster-db-helper
 ```
 
-## With NPM
+### With NPM
 
 To install this module:
 
@@ -42,11 +47,23 @@ To update this module:
 npm update -g generator-jhipster-db-helper
 ```
 
-# Usage
+## Contributing
 
-# License
+1. Fork this module and create a new branch
+1. In the module folder, type `yarn link`
+1. Create a new JHipster app in an empty folder : `yo jhipster`
+1. In the new app folder : `yarn link generator-jhipster-db-helper`
+	* Yep it's quite a strokeful. Consider using an alias
+1. In the new app folder : `yo jhipster-db-helper`
+1. Answer the questions. The module should work.
 
-Apache-2.0 © [Bastien Michaux]()
+If you have a bug, contact us at bastienmichaux@gmail.com.
+
+## Usage
+
+## License
+
+Apache-2.0 © @bastienmichaux, @adrienHorgnies
 
 
 [npm-image]: https://img.shields.io/npm/v/generator-jhipster-db-helper.svg
