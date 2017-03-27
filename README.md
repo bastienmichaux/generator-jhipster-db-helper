@@ -5,7 +5,7 @@ A JHipster module for already existing databases.
 
 This module should make JHipster work with already existing databases.
 
-We are interested by your contributions ! Check our [notes](notes.md) for details. Read [contributing][README.md#forking] to fork this module.
+We are interested by your contributions ! Check our [notes](notes.md) for details. Read the **contributing** section too in this document.
 
 ## Introduction
 
@@ -50,12 +50,12 @@ npm update -g generator-jhipster-db-helper
 ## Contributing
 
 1. Fork this module and create a new branch
-1. In the module folder, type `yarn link`
-1. Create a new JHipster app in an empty folder : `yo jhipster`
-1. In the new app folder : `yarn link generator-jhipster-db-helper`
-	* Yep it's quite a strokeful. Consider using an alias
-1. In the new app folder : `yo jhipster-db-helper`
-1. Answer the questions. The module should work.
+2. In the module folder, type `yarn link`
+3. Create a new JHipster app in an empty folder : `yo jhipster`
+4. In the new app folder : `yarn link generator-jhipster-db-helper`
+ * Yep it's quite a strokeful. Consider using an alias
+5. In the new app folder : `yo jhipster-db-helper`
+6. Answer the questions. The module should work.
 
 If you have a bug, contact us at bastienmichaux@gmail.com.
 
@@ -63,7 +63,7 @@ If you have a bug, contact us at bastienmichaux@gmail.com.
 
 ## License
 
-Apache-2.0 © @bastienmichaux, @adrienHorgnies
+Apache-2.0 © @bastienmichaux, @adrienHorgnies and the JHipster contributors
 
 
 [npm-image]: https://img.shields.io/npm/v/generator-jhipster-db-helper.svg

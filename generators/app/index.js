@@ -1,18 +1,16 @@
 "use strict";
 
-const chalk = require('chalk');
-
 const generator = require('yeoman-generator');
-
+const chalk = require('chalk');
 // gives access to the package.json data
 const packagejs = require('../../package.json');
-
 // db-helper utility functions
 const dbh = require('./db-helper-utility.js');
 
+
+
 // Stores JHipster variables
 const jhipsterVar = { moduleName: 'db-helper' };
-
 // Stores JHipster functions
 const jhipsterFunc = {};
 
@@ -40,6 +38,10 @@ module.exports = generator.extend({
     // prompt the user for options
     prompting() {
         const done = this.async();
+
+        // DEBUG : log where we are
+        dbh.debugLog("prompting");
+
         const prompts = [
             {
                 type: 'input',
@@ -49,8 +51,10 @@ module.exports = generator.extend({
             }
         ];
 
-        // DEBUG : log where we are
-        dbh.debugLog("prompting");
+        // replace files with Spring's naming strategies
+        dbh.replaceNamingStrategies();
+
+        
 
         this.prompt(prompts).then((props) => {
             this.props = props;
