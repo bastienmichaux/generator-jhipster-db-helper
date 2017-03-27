@@ -14,6 +14,9 @@ module.exports = generator.extend({
     // check current project state, get configs, etc
     initializing: {
         compose() {
+            // DEBUG : log where we are
+            this.log(chalk.cyan.bold("initializing:compose"));
+
             this.composeWith('jhipster:modules',
                 { jhipsterVar, jhipsterFunc },
                 this.options.testmode ? { local: require.resolve('generator-jhipster/generators/modules') } : null
@@ -37,6 +40,9 @@ module.exports = generator.extend({
             }
         ];
 
+        // DEBUG : log where we are
+        this.log(chalk.cyan.bold("prompting"));
+
         this.prompt(prompts).then((props) => {
             this.props = props;
             // To access props later use this.props.someOption;
@@ -52,6 +58,9 @@ module.exports = generator.extend({
     // write the generator-specific files
     // TODO : modify naming strategy
     writing() {
+        // DEBUG : log where we are
+        this.log(chalk.cyan.bold("writing"));
+
         // function to use directly template
         this.template = function (source, destination) {
             this.fs.copyTpl(
@@ -97,6 +106,9 @@ module.exports = generator.extend({
         let logMsg =
             `To install your dependencies manually, run: ${chalk.yellow.bold(`${this.clientPackageManager} install`)}`;
 
+        // DEBUG : log where we are
+        this.log(chalk.cyan.bold("install"));
+
         if (this.clientFramework === 'angular1') {
             logMsg =
                 `To install your dependencies manually, run: ${chalk.yellow.bold(`${this.clientPackageManager} install & bower install`)}`;
@@ -120,6 +132,9 @@ module.exports = generator.extend({
 
     // cleanup, say goodbye
     end() {
+        // DEBUG : log where we are
+        this.log(chalk.cyan.bold("end"));
+
         this.log('End of db-helper generator');
     }
 });
