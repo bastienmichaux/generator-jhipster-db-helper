@@ -46,7 +46,7 @@ module.exports = {
 
         const implicitOld = "org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy";
         const implicitNew = "org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl";
-        
+
         // check that each file exists
         files.forEach( function(path) {
             if (!fs.existsSync(path)) {
@@ -60,7 +60,7 @@ module.exports = {
         replace({
             regex: physicalOld,
             replacement: physicalNew,
-            paths: fileWithNamingStrategyPaths,
+            paths: files,
             recursive: false,
             silent: true,
         });
@@ -68,7 +68,7 @@ module.exports = {
         replace({
             regex: implicitOld,
             replacement: implicitNew,
-            paths: fileWithNamingStrategyPaths,
+            paths: files,
             recursive: false,
             silent: true,
         });
