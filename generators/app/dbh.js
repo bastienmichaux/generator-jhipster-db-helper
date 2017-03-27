@@ -1,3 +1,5 @@
+"use strict";
+
 // utility functions for generator-jhipster-db-helper
 
 const chalk = require('chalk');

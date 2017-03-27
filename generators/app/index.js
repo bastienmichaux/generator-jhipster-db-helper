@@ -1,3 +1,5 @@
+"use strict";
+
 const chalk = require('chalk');
 
 const generator = require('yeoman-generator');
@@ -141,8 +143,6 @@ module.exports = generator.extend({
     end() {
         // DEBUG : log where we are
         dbh._dbhDebugLog("end");
-        dbh._dbhDebugLog();
-        dbh._dbhDebugLog(54);
 
         this.log('End of db-helper generator');
     }
