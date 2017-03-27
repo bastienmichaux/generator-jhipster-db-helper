@@ -1,5 +1,6 @@
 const chalk = require('chalk');
 const generator = require('yeoman-generator');
+// gives access to the package.json data
 const packagejs = require('../../package.json');
 
 // Stores JHipster variables
@@ -10,6 +11,7 @@ const jhipsterFunc = {};
 
 module.exports = generator.extend({
 
+    // check current project state, get configs, etc
     initializing: {
         compose() {
             this.composeWith('jhipster:modules',
@@ -19,10 +21,11 @@ module.exports = generator.extend({
         },
         displayLogo() {
             // Have Yeoman greet the user.
-            this.log(`Welcome to the ${chalk.bold.yellow('JHipster db-helper')} generator! ${chalk.yellow(`v${packagejs.version}\n`)}`);
+            this.log(`${chalk.bold.yellow('JHipster db-helper')} generator ${chalk.yellow(`v${packagejs.version}\n`)}`);
         }
     },
 
+    // prompt the user for options
     prompting() {
         const done = this.async();
         const prompts = [
@@ -42,6 +45,12 @@ module.exports = generator.extend({
         });
     },
 
+    // other Yeoman run steps would go here :
+    // configuring
+    // default
+
+    // write the generator-specific files
+    // TODO : modify naming strategy
     writing() {
         // function to use directly template
         this.template = function (source, destination) {
@@ -83,6 +92,7 @@ module.exports = generator.extend({
         }
     },
 
+    // run installation (npm, bower, etc)
     install() {
         let logMsg =
             `To install your dependencies manually, run: ${chalk.yellow.bold(`${this.clientPackageManager} install`)}`;
@@ -108,6 +118,7 @@ module.exports = generator.extend({
         this.installDependencies(installConfig);
     },
 
+    // cleanup, say goodbye
     end() {
         this.log('End of db-helper generator');
     }
