@@ -1,14 +1,10 @@
 # generator-jhipster-db-helper
 [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url]
-> A JHipster module for better interaction with an already existing database.
+> JHipster module, A JHipster module for already existing databases
 
 # Introduction
 
 This is a [JHipster](http://jhipster.github.io/) module, that is meant to be used in a JHipster application.
-
-This is a work in progress.
-
-This generator will make mapping on an already existing database easier. We will modify the behavior of the`jhipster:entity` subgenerator.
 
 # Prerequisites
 
@@ -18,6 +14,22 @@ As this is a [JHipster](http://jhipster.github.io/) module, we expect you have J
 
 # Installation
 
+## With Yarn
+
+To install this module:
+
+```bash
+yarn global add generator-jhipster-db-helper
+```
+
+To update this module:
+
+```bash
+yarn global upgrade generator-jhipster-db-helper
+```
+
+## With NPM
+
 To install this module:
 
 ```bash
@@ -25,6 +37,7 @@ npm install -g generator-jhipster-db-helper
 ```
 
 To update this module:
+
 ```bash
 npm update -g generator-jhipster-db-helper
 ```
@@ -33,7 +46,8 @@ npm update -g generator-jhipster-db-helper
 
 # License
 
-Apache License 2
+Apache-2.0 © [Bastien Michaux]()
+
 
 [npm-image]: https://img.shields.io/npm/v/generator-jhipster-db-helper.svg
 [npm-url]: https://npmjs.org/package/generator-jhipster-db-helper
