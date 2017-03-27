@@ -8,7 +8,7 @@ const generator = require('yeoman-generator');
 const packagejs = require('../../package.json');
 
 // db-helper utility functions
-const dbh = require('./dbh.js');
+const dbh = require('./db-helper-utility.js');
 
 // Stores JHipster variables
 const jhipsterVar = { moduleName: 'db-helper' };
@@ -24,7 +24,7 @@ module.exports = generator.extend({
     initializing: {
         compose() {
             // DEBUG : log where we are
-            dbh._dbhDebugLog("initializing: compose");
+            dbh.debugLog("initializing: compose");
 
             this.composeWith('jhipster:modules',
                 { jhipsterVar, jhipsterFunc },
@@ -50,7 +50,7 @@ module.exports = generator.extend({
         ];
 
         // DEBUG : log where we are
-        dbh._dbhDebugLog("prompting");
+        dbh.debugLog("prompting");
 
         this.prompt(prompts).then((props) => {
             this.props = props;
@@ -61,14 +61,14 @@ module.exports = generator.extend({
     },
 
     // other Yeoman run steps would go here :
-    // configuring
-    // default
+    // configuring() {}
+    // default() {}
 
     // write the generator-specific files
     // TODO : modify naming strategy
     writing() {
         // DEBUG : log where we are
-        dbh._dbhDebugLog("writing");
+        dbh.debugLog("writing");
 
         // function to use directly template
         this.template = function (source, destination) {
@@ -116,7 +116,7 @@ module.exports = generator.extend({
             `To install your dependencies manually, run: ${chalk.yellow.bold(`${this.clientPackageManager} install`)}`;
 
         // DEBUG : log where we are
-        dbh._dbhDebugLog("install");
+        dbh.debugLog("install");
 
         if (this.clientFramework === 'angular1') {
             logMsg =
@@ -142,7 +142,7 @@ module.exports = generator.extend({
     // cleanup, say goodbye
     end() {
         // DEBUG : log where we are
-        dbh._dbhDebugLog("end");
+        dbh.debugLog("end");
 
         this.log('End of db-helper generator');
     }
