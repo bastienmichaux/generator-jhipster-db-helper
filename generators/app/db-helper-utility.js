@@ -59,7 +59,7 @@ module.exports = {
 
     // test if Spring naming strategies are replaced by our naming strategies
     // return a boolean
-    // TODO : write test
+    // TODO : write unit test
     namingStrategiesReplaced() {
         console.log(chalk.bold.red('getEntityNameVariations NOT IMPLEMENTED YET !'));
         return false;
@@ -67,7 +67,7 @@ module.exports = {
 
     // return an object with the entity name and all variants :
     // name, tableName, entityTableName, etc
-    // TODO : write test
+    // TODO : write unit test
     getEntityNameVariations(pEntityName) {
         console.log(chalk.bold.red('getEntityNameVariations NOT IMPLEMENTED YET !'));
         return false;
@@ -75,7 +75,8 @@ module.exports = {
 
     // replace Spring naming strategies with more neutral ones
     // return true if all occurrences are replaced
-    // TODO : write test
+    // TODO : write local test for the return value
+    // TODO : write unit test
     replaceNamingStrategies() {
         // grab our files from the global space
         const files = filesWithNamingStrategyPaths;
