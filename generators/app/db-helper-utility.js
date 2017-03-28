@@ -2,8 +2,9 @@
 
 /**
  * TODOS :
- * - Write proper JsDoc
- * - Replace 'console.log' with 'this.log'
+ * - write proper JsDoc
+ * - create an ensemble unit test
+ * - replace 'console.log' with 'this.log'
  * Don't forget to run eslint !
  */
 
@@ -37,7 +38,7 @@ module.exports = {
 
     // use this function as a DEBUG logger
     debugLog(pString) {
-        if (isTrueString) {
+        if (isTrueString(pString)) {
             console.log(chalk.bold.green(`DBH-DEBUG: ${pString}`));
         } else {
             // log obvious, shameful mistake
@@ -92,6 +93,7 @@ module.exports = {
             if (fs.existsSync(path)) {
                 console.log(`File ${chalk.cyan(path)} exists`);
             } else {
+                // note : 'throw' ends the function here
                 throw new Error(`${path} doesn't exist!`);
             }
         });
