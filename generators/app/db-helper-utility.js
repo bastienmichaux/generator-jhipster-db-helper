@@ -1,11 +1,11 @@
 // utility functions for generator-jhipster-db-helper
 
 /**
- * TODOS : keep our TODOS here
+ * TODOS :
  * - Write proper JsDoc
  * - Replace 'console.log' with 'this.log'
+ * Don't forget to run eslint !
  */
-
 
 
 // imports
@@ -13,7 +13,6 @@
 const chalk = require('chalk');
 const replace = require('replace');
 const fs = require('fs');
-
 
 
 // constants

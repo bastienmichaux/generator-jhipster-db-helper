@@ -6,7 +6,6 @@ const packagejs = require('../../package.json'); // gives access to the package.
 const dbh = require('./db-helper-utility.js'); // db-helper utility functions
 
 
-
 // constants
 
 // Stores JHipster variables
@@ -16,14 +15,13 @@ const jhipsterVar = { moduleName: 'db-helper' };
 const jhipsterFunc = {};
 
 
-
 module.exports = generator.extend({
 
     // check current project state, get configs, etc
     initializing: {
         compose() {
             // DEBUG : log where we are
-            dbh.debugLog("initializing: compose");
+            dbh.debugLog('initializing: compose');
 
             this.composeWith('jhipster:modules',
                 { jhipsterVar, jhipsterFunc },
@@ -41,7 +39,7 @@ module.exports = generator.extend({
         const done = this.async();
 
         // DEBUG : log where we are
-        dbh.debugLog("prompting");
+        dbh.debugLog('prompting');
 
         // user interaction on module call goes here
         const prompts = [
@@ -69,7 +67,7 @@ module.exports = generator.extend({
     // write the generator-specific files
     writing() {
         // DEBUG : log where we are
-        dbh.debugLog("writing");
+        dbh.debugLog('writing');
 
         // replace files with Spring's naming strategies
         dbh.replaceNamingStrategies();
@@ -120,7 +118,7 @@ module.exports = generator.extend({
             `To install your dependencies manually, run: ${chalk.yellow.bold(`${this.clientPackageManager} install`)}`;
 
         // DEBUG : log where we are
-        dbh.debugLog("install");
+        dbh.debugLog('install');
 
         if (this.clientFramework === 'angular1') {
             logMsg =
@@ -146,7 +144,7 @@ module.exports = generator.extend({
     // cleanup, say goodbye
     end() {
         // DEBUG : log where we are
-        dbh.debugLog("end");
+        dbh.debugLog('end');
 
         this.log('End of db-helper generator');
     }
