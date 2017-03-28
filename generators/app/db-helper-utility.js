@@ -30,12 +30,14 @@ const physicalNamingStrategyNew = 'org.hibernate.boot.model.naming.PhysicalNamin
 const implicitNamingStrategyOld = 'org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy';
 const implicitNamingStrategyNew = 'org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl';
 
+// return true for a non-empty string
+const isTrueString = x => (typeof x === 'string' && x !== '');
 
 module.exports = {
 
     // use this function as a DEBUG logger
     debugLog(pString) {
-        if (typeof pString === 'string' && pString !== '') {
+        if (isTrueString) {
             console.log(chalk.bold.green(`DBH-DEBUG: ${pString}`));
         } else {
             // log obvious, shameful mistake
