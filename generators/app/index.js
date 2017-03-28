@@ -63,8 +63,12 @@ module.exports = generator.extend({
         */
     },
 
-    // other Yeoman run steps would go here :
+    // other Yeoman run loop steps would go here :
+
+    // Saving configurations and configure the project (creating .editorconfig files and other metadata files)
     // configuring() {}
+
+    // If the method name doesn't match a priority, it will be pushed to this group.
     // default() {}
 
     // write the generator-specific files
@@ -115,6 +119,9 @@ module.exports = generator.extend({
             this.log(`${chalk.red.bold('WARN!')} Could not register as a jhipster entity post creation hook...\n`);
         }
     },
+
+    // Where conflicts are handled (used internally)
+    // conflict() {}
 
     // run installation (npm, bower, etc)
     install() {
