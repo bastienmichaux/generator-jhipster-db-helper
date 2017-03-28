@@ -106,7 +106,7 @@ module.exports = generator.extend({
 
         this.template('dummy.txt', 'dummy.txt');
         try {
-            jhipsterFunc.registerModule('generator-jhipster-db-helper', 'entity', 'post', 'app', 'A JHipster module for already existing databases');
+            jhipsterFunc.registerModule('generator-jhipster-db-helper', 'app', 'post', 'app', 'A JHipster module for already existing databases');
         } catch (err) {
             this.log(`${chalk.red.bold('WARN!')} Could not register as a jhipster entity post creation hook...\n`);
         }
