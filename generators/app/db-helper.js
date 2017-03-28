@@ -19,7 +19,14 @@ const generator = require('yeoman-generator');
 // This module replaces Spring naming strategies with other strategies (to prevent renaming entities)
 // The following assumes that the pertinent configuration files are there and with these current naming strategy.
 // this is true with jhipster v4.1.1
-const filesWithNamingStrategyPaths = ['./pom.xml', './src/main/resources/config/application.yml', './src/test/resources/config/application.yml'];
+const filesWithNamingStrategyPaths = [
+    './pom.xml',
+    './src/main/resources/config/application.yml',
+    './src/test/resources/config/application.yml',
+    './node_modules/generator-jhipster/generators/server/templates/gradle/_liquibase.gradle',
+    './node_modules/generator-jhipster/generators/server/templates/src/main/resources/config/_application.yml',
+    './node_modules/generator-jhipster/generators/server/templates/src/test/resources/config/_application.yml'
+];
 
 // physical naming strategies
 const physicalNamingStrategyOld = 'org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy';
@@ -65,7 +72,7 @@ module.exports = {
     },
 
     // return an object with the entity name and all variants :
-    // name, tableName, entityTableName, etc
+    //   name, tableName, entityTableName, etc
     // TODO : write unit test
     getEntityNameVariations(pEntityName) {
         console.log(chalk.bold.red('getEntityNameVariations NOT IMPLEMENTED YET !'));
