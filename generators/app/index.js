@@ -39,8 +39,6 @@ module.exports = generator.extend({
         // DEBUG : log where we are
         dbh.debugLog('prompting');
 
-        // commented out for the moment, we do not prompt anything (yet)
-        /*
         const done = this.async();
 
         // user interaction on module call goes here
@@ -60,7 +58,6 @@ module.exports = generator.extend({
 
             done();
         });
-        */
     },
 
     // other Yeoman run loop steps would go here :

@@ -81,6 +81,11 @@ module.exports = {
 
     // replace Spring naming strategies with more neutral ones
     // return true if all occurrences are replaced
+    //
+    // note : after running this function, reference to the ancient naming strategies will still be found in :
+    // ./node_modules/generator-jhipster/generators/server/templates/_pom.xml:
+    // however this doesn't concern us
+    //
     // TODO : write local test for the return value
     // TODO : write unit test
     replaceNamingStrategies() {
