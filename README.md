@@ -5,7 +5,9 @@ A JHipster module for already existing databases.
 
 This module should make JHipster work with already existing databases.
 
-We are interested by your contributions ! Check our [notes](notes.md) for details. Read the **contributing** section too in this document.
+**This module is at an early stage. It doesn't do anything interesting yet.**
+
+Check our [notes](notes.md) for details. Read the **contributing** section too in this document.
 
 ## Introduction
 
