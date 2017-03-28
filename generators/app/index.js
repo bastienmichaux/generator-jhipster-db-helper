@@ -36,10 +36,12 @@ module.exports = generator.extend({
 
     // prompt the user for options
     prompting() {
-        const done = this.async();
-
         // DEBUG : log where we are
         dbh.debugLog('prompting');
+
+        // commented out for the moment, we do not prompt anything (yet)
+        /*
+        const done = this.async();
 
         // user interaction on module call goes here
         const prompts = [
@@ -58,6 +60,7 @@ module.exports = generator.extend({
 
             done();
         });
+        */
     },
 
     // other Yeoman run steps would go here :
@@ -70,6 +73,7 @@ module.exports = generator.extend({
         dbh.debugLog('writing');
 
         // replace files with Spring's naming strategies
+        this.log('db-helper replaces your naming strategies.');
         dbh.replaceNamingStrategies();
 
         // function to use directly template
