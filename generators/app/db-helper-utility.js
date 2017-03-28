@@ -46,6 +46,17 @@ module.exports = {
         }
     },
 
+    // use this function to WARN the user
+    warnLog(pString) {
+        if (isTrueString) {
+            console.log(chalk.bold.red(`DBH-WARN: ${pString}`));
+        } else {
+            // log obvious, shameful mistake
+            console.log(chalk.bold.red('warnLog : bad parameter !'));
+            console.log(chalk.red(`pString : type = ${typeof pString}, value = ${pString}`));
+        }
+    },
+
     // test if Spring naming strategies are replaced by our naming strategies
     // return a boolean
     // TODO : write test
