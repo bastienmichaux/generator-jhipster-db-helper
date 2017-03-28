@@ -1,5 +1,6 @@
 // utility functions for generator-jhipster-db-helper
 
+
 /**
  * TODOS :
  * - write proper JsDoc
@@ -9,14 +10,11 @@
  */
 
 
-// imports
-
 const chalk = require('chalk');
 const replace = require('replace');
 const fs = require('fs');
+const generator = require('yeoman-generator');
 
-
-// constants
 
 // This module replaces Spring naming strategies with other strategies (to prevent renaming entities)
 // The following assumes that the pertinent configuration files are there and with these current naming strategy.
