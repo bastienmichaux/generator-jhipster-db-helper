@@ -21,10 +21,11 @@
     "url": "git+https://github.com/bastienmichaux/generator-jhipster-db-helper.git"
   },
   "dependencies": {
-    "yeoman-generator": "1.1.1",
     "chalk": "1.1.3",
+    "generator-jhipster": ">=4.1.0",
     "mkdirp": "0.5.1",
-    "generator-jhipster": ">=4.1.0"
+    "replace": "0.3.0",
+    "yeoman-generator": "1.1.1"
   },
   "devDependencies": {
     "eslint": "^3.18.0",
@@ -44,7 +45,6 @@
     "gulp-sequence": "0.4.6",
     "gulp-shell": "0.6.3",
     "mocha": "3.2.0",
-    "replace": "0.3.0",
     "yeoman-assert": "3.0.0",
     "yeoman-test": "1.6.0"
   },
