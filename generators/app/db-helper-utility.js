@@ -8,13 +8,27 @@
  * - Replace 'console.log' with 'this.log'
  */
 
+// imports
+
 const chalk = require('chalk');
 const replace = require('replace');
 const fs = require('fs');
 
+// constants
+
+// This module replaces Spring naming strategies with other strategies (to prevent renaming entities)
 // The following assumes that the pertinent configuration files are there and with these current naming strategy.
 // this is true with jhipster v4.1.1
 const filesWithNamingStrategyPaths = ["./pom.xml", "./src/main/resources/config/application.yml", "./src/test/resources/config/application.yml"];
+
+// physical naming strategies
+const physicalNamingStrategyOld = "org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy";
+const physicalNamingStrategyNew = "org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl";
+
+// implicit naming strategies
+const implicitNamingStrategyOld = "org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy";
+const implicitNamingStrategyNew = "org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl";
+
 
 module.exports = {
 
@@ -29,36 +43,47 @@ module.exports = {
         }
     },
 
+    // test if Spring naming strategies are replaced by our naming strategies
+    // return a boolean
+    // TODO : write test
+    namingStrategiesReplaced : function () {
+        console.log(chalk.bold.red("getEntityNameVariations NOT IMPLEMENTED YET !"));
+        return false;
+    },
+
     // return an object with the entity name and all variants :
     // name, tableName, entityTableName, etc
+    // TODO : write test
     getEntityNameVariations : function (pEntityName) {
         console.log(chalk.bold.red("getEntityNameVariations NOT IMPLEMENTED YET !"));
         return false;
     },
 
     // replace Spring naming strategies with more neutral ones
+    // return true if all occurrences are replaced
+    // TODO : write test
     replaceNamingStrategies : function () {
         // grab our files from the global space
         const files = filesWithNamingStrategyPaths;
 
-        const physicalOld = "org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy";
-        const physicalNew = "org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl";
+        const physicalOld = physicalNamingStrategyOld;
+        const physicalNew = physicalNamingStrategyNew;
 
-        const implicitOld = "org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy";
-        const implicitNew = "org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl";
+        const implicitOld = implicitNamingStrategyOld;
+        const implicitNew = implicitNamingStrategyNew;
 
         // check that each file exists
         files.forEach( function(path) {
-            if (!fs.existsSync(path)) {
-                throw new Error(path + " doesn't exist!");
+            if (fs.existsSync(path)) {
+                console.log("File " + chalk.cyan(path) + " exists");
             } else {
-                console.log("File " + path + " exists");
+            	throw new Error(path + " doesn't exist!");
             }
         });
 
         // replace the files :
 
-        // replace Spring physical naming strategy
+        // 1) replace Spring physical naming strategy
         replace({
             regex: physicalOld,
             replacement: physicalNew,
@@ -67,7 +92,7 @@ module.exports = {
             silent: true,
         });
 
-        // replace Spring implicit naming strategy
+        // 2) replace Spring implicit naming strategy
         replace({
             regex: implicitOld,
             replacement: implicitNew,
@@ -75,7 +100,6 @@ module.exports = {
             recursive: false,
             silent: true,
         });
-        
 
         return false;
     }

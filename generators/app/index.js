@@ -42,6 +42,7 @@ module.exports = generator.extend({
         // DEBUG : log where we are
         dbh.debugLog("prompting");
 
+        // user interaction on module call goes here
         const prompts = [
             {
                 type: 'input',
@@ -51,9 +52,7 @@ module.exports = generator.extend({
             }
         ];
 
-        // replace files with Spring's naming strategies
-        dbh.replaceNamingStrategies();
-        
+        // call the prompts
         this.prompt(prompts).then((props) => {
             this.props = props;
             // To access props later use this.props.someOption;
@@ -67,10 +66,12 @@ module.exports = generator.extend({
     // default() {}
 
     // write the generator-specific files
-    // TODO : modify naming strategy
     writing() {
         // DEBUG : log where we are
         dbh.debugLog("writing");
+
+        // replace files with Spring's naming strategies
+        dbh.replaceNamingStrategies();
 
         // function to use directly template
         this.template = function (source, destination) {
