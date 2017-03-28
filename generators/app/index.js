@@ -3,7 +3,7 @@
 const generator = require('yeoman-generator');
 const chalk = require('chalk');
 const packagejs = require('../../package.json'); // gives access to the package.json data
-const dbh = require('./db-helper-utility.js'); // db-helper utility functions
+const dbh = require('./db-helper.js'); // db-helper utility functions
 
 
 // Stores JHipster variables
