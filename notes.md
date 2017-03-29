@@ -8,7 +8,7 @@ JHipster is an amazing tool for new apps with empty databases. However it's hard
 
 So, how do you make JHipster work in this scenario? You need to do several changes. The goal of this module is to automate them.
 
-**We may not be aware of all needed changes. PR us if an issue isn't covered !**
+**We may not be aware of all needed changes. Make a pull request if something isn't covered !**
 
 ### 1 : Change the Spring naming strategies 
 
@@ -32,7 +32,7 @@ In the tests we made, `CamelCase` names becomes `underscore_case`. If your reque
     * in `.jhipster/FooBar.json`, set the value of `"entityTableName": "foo_bar"` to `"FooBar"`
     * in your terminal, type `yo jhipster:entity FooBar`, and select `Yes, regenerate the entity`
     * **tip** : select the `d` option to see what differences the regeneration makes to existing files
-1. edit your field names :
+1. edit your Column names :
     * editing the field names in `.jhipster/FooBar.json` won't do any change to your entity files
     * find `FooBar.java` and edit the value of `@Column` for each field that isn't correctly mapped
 
