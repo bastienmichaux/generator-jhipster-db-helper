@@ -111,7 +111,7 @@ You can do this with JHipster (using JDL and `jhipster:jdl-import`), but we stil
 
 ### Warning : regenerating the app
 
-If you regenerate your JHipster app (`yo jhipster`), check all changes to the existing files. Otherwise, you may have to regenerate all your entities.
+If you regenerate your JHipster app (`yo jhipster`), check all changes to the existing files. Otherwise, your app may cease to work as expected.
 
 Regenerating the app will :
 
