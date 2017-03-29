@@ -8,7 +8,7 @@ JHipster is an amazing tool for new apps with empty databases. However it's hard
 
 So, how do you make JHipster work in this scenario? You need to do several changes. The goal of this module is to automate them.
 
-**We may not be aware of all needed changes. Share your DB issues with us !**
+**We may not be aware of all needed changes. PR us if an issue isn't covered !**
 
 ### 1 : Change the Spring naming strategies 
 
