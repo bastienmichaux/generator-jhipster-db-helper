@@ -90,18 +90,16 @@ gives you
 
 Liquibase is a great tool : it gives you version control over your database schema.
 
-JHipster generates Liquibase files for your empty DB.
+JHipster generates Liquibase files for your empty DB. But if you read this, you have an existing DB and you need an initial changelog file that captures it, so you can rollback if something goes wrong.
 
-But if you read this, you have an existing DB and you need an initial changelog file.
-
-*Liquibase is new for us, so please contribute if you can help us with this subject.*
+*Liquibase is new to us, so please contribute if you can help us with this subject.*
 
 **Use Liquibase with an existing DB :**
 
 With an already existing DB, Liquibase has 2 different recommendations :
 
 1. More reliable but harder : register your DB state in an initial changelog file with the [`liquibase generateChangeLog` command](http://www.liquibase.org/documentation/generating_changelogs.html). This process can become more complex depending on your DB state(s), preconditions, whether you already have ran changesets or not.
-2. Easier but less reliable : begin using Liquibase without an initial changelog file. It should be ok as long as you have a backup tool to create your starting seed database.
+2. Easier but less reliable : begin using Liquibase without an initial changelog file. It should be ok as long as you have a backup tool to create your starting seed DB. Otherwise you won't be able to package and share your app.
 
 When you begin using Liquibase, you should continue to use it every time you modify your DB schema.
 
@@ -117,7 +115,7 @@ mvn compile liquibase:diff
 
 This is a planned feature. We want to create a subgenerator that imports database schemas and creates all needed files.
 
-You can do this with JHipster (using JDL and `jhipster:jdl-import`), but we still want to bypass the renaming and validation rules mentioned before.
+You can do this with JHipster (using JDL and `jhipster:jdl-import`), but we still want to bypass some of the renaming and validation rules mentioned before.
 
 ### Warning : regenerating the app
 
