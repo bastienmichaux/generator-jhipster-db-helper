@@ -2,9 +2,9 @@
 
 This was written with JHipster v4.1.0 in mind.
 
-## JHipster and existing databases
+## Make JHipster work with existing databases
 
-JHipster is an amazing tool for new apps with empty databases. However it's harder to work with existing ones.
+JHipster is an amazing tool for new apps with empty databases. However it's harder to work with existing ones, as it isn't what JHipster was designed for.
 
 So, how do you make JHipster work in this scenario? You need to do several changes. The goal of this module is to automate them.
 
@@ -12,22 +12,40 @@ So, how do you make JHipster work in this scenario? You need to do several chang
 
 ### 1 : Change the Spring naming strategies 
 
-Spring Boot has naming strategies for your entity classes. They convert `camelCase` to `underscore_case`. If you have a `FooBar` table, JHipster searches for `foo_bar` and your requests fail. Search for Spring's naming strategies and replace them with :
+Spring Boot naming strategies convert `camelCase` to `underscore_case`. If you have a `FooBar` table, JHipster searches for `foo_bar` and your requests fail. Search for Spring's naming strategies and replace them with more neutral ones.
 
-1. Replace `org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy` with `hibernate.‌boot.model.naming.Ph‌ysicalNamingStrategy‌StandardImpl`
-1. Replace `org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy` with `org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl`
+This module :
+
+1. Replaces `org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy` with `hibernate.‌boot.model.naming.Ph‌ysicalNamingStrategy‌StandardImpl`
+1. Replaces `org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy` with `org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl`
 
 ### 2 : Modify the generated entities
 
 You can create entities with `jhipster:entity`. The Java, Liquibase and web apps files are based on your input... Or are they ?
 
-In all tests we have done, `CamelCase` input becomes `underscore_case`. It's goint to make your requests fail.
+In the tests we made, `CamelCase` names becomes `underscore_case`. If your requests fail, you may need to :
 
-One of our goals is to bypass these renamings without breaking the app.
+1. regenerate the entity :
+    * if it isn't done yet, initialise git to track the changes
+    * add the `.jhipster/` directory and its files to git
+    * go to the `.jhipster/` directory at the root of your application
+    * in the `FooBar.json` file for your entity `FooBar`, set the value of `"entityTableName": "foo_bar"` to `"FooBar"`
+    * in your terminal, type `yo jhipster:entity FooBar`, and select `Yes, regenerate the entity`
+    * **tip** : select the `d` option to see what differences the regeneration makes to existing files
+1. edit your field names :
+    * editing the field names in `.jhipster/FooBar.json` won't do any change to your entity files
+    * find `FooBar.java` and edit the value of `@Column` for each field that isn't correctly mapped
 
-If your DB has mixed naming conventions, check that the entity files have the correct names.
+You need to do this for every entity with `lowerCamelCase` or `UpperCamelCase` names.
 
-**Capitalized field names** : `jhipster:entity` forbids capitalized field names. That's something you'll need to change in your files too.
+One of our goals is to bypass these renamings without breaking the app, and automate the above steps.
+
+**Capitalized field names** : `jhipster:entity` and the JDL language forbid capitalized field names. If your mapping needs it, set the values manually for your `@Column`.
+
+**Acronyms** : beware, acronyms aren't always handled as you'd expect it. Eg:
+
+ * `yo jhipster:entity FooBarAPISettings` gives you `@Table(name = "foo_barapisettings")`
+ * if this entity has a field called `fooBarAPISettingsField`, the column annotation maps on `@Column(name = "foo_bar_api_settings_field")`
 
 ### 3 : `--table-name` option
 
@@ -35,11 +53,7 @@ The `jhipster:entity` sub-generator has an option `--table-name`, so you can spe
 
 ...But `camelCase` names still become `underscore_case`.
 
-Let's say you created this entity :
-
-```
-$ yo jhipster:entity FooBar --table-name FooBarCamelCasedNotUnderscoreCasedPlease
-```
+Let's say you created this entity : `yo jhipster:entity FooBar --table-name FooBarCamelCasedNotUnderscoreCasedPlease`
 
 You still need to set the `@Table` annotation by yourself, because the entity file will look like this :
 
@@ -51,8 +65,12 @@ You still need to set the `@Table` annotation by yourself, because the entity fi
  */
 @Entity
 @Table(name = "foo_bar_camel_cased_not_underscore_cased_please")
-public class FooBar implements Serializable {
+public class FooBar implements Serializable { ...
 ```
+
+**Acronyms** : They are handled unexpectedly too.
+
+* `yo jhipster:entity FooBarAPISettings --table-name MyFooBarAPISettings` gives you `@Table(name = "my_foo_barapisettings")`
 
 ### 4 : Generate Liquibase changelog
 
@@ -62,18 +80,27 @@ JHipster generates Liquibase files. It's easy to do with greenfield projects.
 
 But if you read this, you have an existing database. We aim to generate a Liquibase changelog that captures your DB at the time you begin using `jhipster-db-helper`.
 
-Liquibase is new for us, so **please contribute if you can help us with this subject**.
+Liquibase is new for us, so please contribute if you can help us with this subject.
 
-#### Use Liquibase with an existing DB :
+**Use Liquibase with an existing DB :**
 
 With an already existing DB, Liquibase has 2 different recommendations :
 
-1. The more reliable but harder approach is to register your DB in an initial changelog file. So you can rollback to this state if something goes wrong.
-2. The easier but less reliable approach is to begin using Liquibase without an initial changelog file. It should be ok as long as you have a copy of the DB.
+1. More reliable but harder : register your DB state in an initial changelog file with the [`liquibase generateChangeLog` command](http://www.liquibase.org/documentation/generating_changelogs.html). This process can become more complex depending on your DB state(s), preconditions, whether you already have ran changesets or not.
+2. Easier but less reliable : begin using Liquibase without an initial changelog file. It should be ok as long as you have a backup tool to create your starting seed database.
 
 ### 5 : Import your database schema
 
-We want to create a subgenerator that reads database schemas and creates all needed files.
+This is a planned feature. We want to create a subgenerator that imports database schemas and creates all needed files.
 
 You can do this with JHipster (using JDL and `jhipster:jdl-import`), but we still want to bypass the renaming and validation rules mentioned before.
 
+### Warning : regenerating the app
+
+If you regenerate your JHipster app (`yo jhipster`), check all changes to the existing files. Otherwise, you may have to regenerate all your entities.
+
+Regenerating the app will :
+
+* initialise the Liquibase changelog
+* initialise the cache configuration
+* remove references to existing entities in your front-end and internationalization files
