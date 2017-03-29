@@ -8,7 +8,7 @@ JHipster is an amazing tool for new apps with empty databases. However it's hard
 
 So, how do you make JHipster work in this scenario? You need to do several changes. The goal of this module is to automate them.
 
-*We may not be aware of all needed changes. Make a pull request if something isn't covered !*
+*We may not be aware of all needed changes. Correct us if something isn't covered !*
 
 ### 1 : Change the Spring naming strategies 
 
@@ -92,7 +92,7 @@ Liquibase is a great tool : it gives you version control over your database sche
 
 JHipster generates Liquibase files for your empty DB. But if you read this, you have an existing DB and you need an initial changelog file that captures it, so you can rollback if something goes wrong.
 
-*Liquibase is new to us, so please contribute if you can help us with this subject.*
+*Liquibase is new to us, so please tell us if we're doing it wrong.*
 
 **Use Liquibase with an existing DB :**
 
