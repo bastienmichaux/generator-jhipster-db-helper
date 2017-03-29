@@ -21,7 +21,7 @@ This module :
 
 ### 2 : Modify the generated entities
 
-You can create entities with `jhipster:entity`. The Java, Liquibase and web apps files are based on your input... Or are they ?
+You can create entities with `jhipster:entity`. The entities are based on your input... Or are they ?
 
 In the tests we made, `CamelCase` names becomes `underscore_case`. If your requests fail, you may need to :
 
