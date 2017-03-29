@@ -36,6 +36,8 @@ In the tests we made, `CamelCase` names becomes `underscore_case`. If your reque
     * editing the field names in `.jhipster/FooBar.json` won't do any change to your entity files
     * find `FooBar.java` and edit the value of `@Column` for each field that isn't correctly mapped
 
+> We will cover relationships soon
+
 You need to do this for every entity with `lowerCamelCase` or `UpperCamelCase` names.
 
 One of our goals is to bypass these renamings without breaking the app, and automate the above steps.
@@ -53,7 +55,11 @@ The `jhipster:entity` sub-generator has an option `--table-name`, so you can spe
 
 ...But `camelCase` names still become `underscore_case`.
 
-Let's say you created this entity : `yo jhipster:entity FooBar --table-name FooBarCamelCasedNotUnderscoreCasedPlease`
+Let's say you created this entity :
+
+```
+$ yo jhipster:entity FooBar --table-name FooBarCamelCasedNotUnderscoreCasedPlease
+```
 
 You still need to set the `@Table` annotation by yourself, because the entity file will look like this :
 
@@ -70,7 +76,15 @@ public class FooBar implements Serializable { ...
 
 **Acronyms** : They are handled unexpectedly too.
 
-* `yo jhipster:entity FooBarAPISettings --table-name MyFooBarAPISettings` gives you `@Table(name = "my_foo_barapisettings")`
+```
+$ yo jhipster:entity FooBarAPISettings --table-name MyFooBarAPISettings
+```
+
+gives you
+
+```
+@Table(name = "my_foo_barapisettings")
+```
 
 ### 4 : Generate Liquibase changelog
 
