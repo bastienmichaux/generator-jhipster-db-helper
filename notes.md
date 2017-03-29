@@ -1,6 +1,6 @@
 # Notes
 
-This was written with JHipster v4.1.0 in mind.
+(This was written with JHipster v4.1.1 in mind)
 
 ## Make JHipster work with existing databases
 
@@ -8,7 +8,7 @@ JHipster is an amazing tool for new apps with empty databases. However it's hard
 
 So, how do you make JHipster work in this scenario? You need to do several changes. The goal of this module is to automate them.
 
-**We may not be aware of all needed changes. Make a pull request if something isn't covered !**
+*We may not be aware of all needed changes. Make a pull request if something isn't covered !*
 
 ### 1 : Change the Spring naming strategies 
 
@@ -90,11 +90,11 @@ gives you
 
 Liquibase is a great tool : it gives you version control over your database schema.
 
-JHipster generates Liquibase files. It's easy to do with greenfield projects.
+JHipster generates Liquibase files for your empty DB.
 
-But if you read this, you have an existing database. We aim to generate a Liquibase changelog that captures your DB at the time you begin using `jhipster-db-helper`.
+But if you read this, you have an existing DB and you need an initial changelog file.
 
-Liquibase is new for us, so please contribute if you can help us with this subject.
+*Liquibase is new for us, so please contribute if you can help us with this subject.*
 
 **Use Liquibase with an existing DB :**
 
@@ -102,6 +102,16 @@ With an already existing DB, Liquibase has 2 different recommendations :
 
 1. More reliable but harder : register your DB state in an initial changelog file with the [`liquibase generateChangeLog` command](http://www.liquibase.org/documentation/generating_changelogs.html). This process can become more complex depending on your DB state(s), preconditions, whether you already have ran changesets or not.
 2. Easier but less reliable : begin using Liquibase without an initial changelog file. It should be ok as long as you have a backup tool to create your starting seed database.
+
+When you begin using Liquibase, you should continue to use it every time you modify your DB schema.
+
+If something goes wrong and your app uses Maven, you can compare DB states with :
+
+```
+mvn compile liquibase:diff
+```
+
+[More info on Liquibase Maven plugin here](http://www.liquibase.org/documentation/maven/maven_diff.html)
 
 ### 5 : Import your database schema
 
