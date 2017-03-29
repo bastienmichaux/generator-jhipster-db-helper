@@ -36,7 +36,7 @@ In the tests we made, `CamelCase` names becomes `underscore_case`. If your reque
     * editing the field names in `.jhipster/FooBar.json` won't do any change to your entity files
     * find `FooBar.java` and edit the value of `@Column` for each field that isn't correctly mapped
 
-> We will cover relationships soon
+*(We will cover relationships soon)*
 
 You need to do this for every entity with `lowerCamelCase` or `UpperCamelCase` names.
 
