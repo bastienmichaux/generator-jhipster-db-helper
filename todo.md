@@ -1,4 +1,5 @@
 # TODO LIST
+Here is a list of things we will do but not just right now, so we're writing it down here.
 
 ## Feature reliability
 This is about working functionalities which we need to make sure they're reliable for more complex cases
