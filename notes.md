@@ -1,6 +1,6 @@
 # Notes
 
-(This was written with JHipster v4.1.1 in mind)
+This was written with JHipster v4.1.1 in mind.
 
 ## Make JHipster work with existing databases
 
@@ -126,3 +126,18 @@ Regenerating the app will :
 * initialise the Liquibase changelog
 * initialise the cache configuration
 * remove references to existing entities in your front-end and internationalization files
+
+## Other documentation
+
+This document purpose is to explain what we will do and at what stage we are.
+We also documented other things such as researchs and tests which might interest you.
+
+* [readme][Describe briefly the module, how to install and use it]
+* [entityTableName][The result of the research about how jhipster handle @Table inside the code]
+* [forbiddenCapital][The result of the research and tests about the validation done on user input for a field]
+* [todo][What tasks we'll do after the current work]
+
+[readme]: (../blob/master/README.md)
+[todo]: (../blob/master/todo.md)
+[entityTableName]: (../blob/master/entityTableName.md)
+[forbiddenCapital]: (../blob/master/forbiddenCapital.md)
