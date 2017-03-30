@@ -7,8 +7,8 @@ else
 	echo "FAILED : found wrong naming strategies."
 
 	read -p "Do you wish to display matches ? [Y/n]" -n 1 -r
-	echo $REPLY
-	if [[ $REPLY =~ ^[yY]$ ]]
+	echo
+	if [[ "$REPLY" =~ ^[yY]$ ]]
 	then
 		echo "Resulting grep of WRONG strategies"
 		grep --color=always --recursive --line-number --word-regex --context=3 --group-separator=$'\n---\n' --exclude-dir='node_modules' -e 'org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy' -e 'org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy' $1
@@ -20,8 +20,8 @@ if [ $(grep --recursive --line-number --word-regex --context=3 --group-separator
 	echo "success : correct naming strategies found"
 
 	read -p "Do you wish to display matches ? [Y/n]" -n 1 -r
-	echo $REPLY
-	if [[ $REPLY =~ ^[yY]$ ]]
+	echo
+	if [[ "$REPLY" =~ ^[yY]$ ]]
 	then
 		echo "Resulting grep of correct strategies"
 		grep --color=always --recursive --line-number --word-regex --context=3 --group-separator=$'\n---\n' --exclude-dir='node_modules' -e 'org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl' -e 'org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl' $1
