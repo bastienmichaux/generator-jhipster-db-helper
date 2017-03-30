@@ -1,38 +1,57 @@
-# Documentation on the variable entityTableName inside `entity/index.js`
+# EntityTableName
+This document explains where JHipster entity generator handles the entityTableName and what it does to it.
+Then it explains what removing the value's processing does and how it could actually works.
 
-This documentation is meant to understand how is used the variable  entityTableName as it is the one used for the ORM's table name.
+## Documentation on the variable entityTableName inside `generators/entity`
 
-## Assignement from prompt
+The variable `entityTableName` is the one used for the ORM's table name.
+It is thus vital to understand its usage to be able to map an existing database.
+
+### Assignement from prompt
 
 `this.entityTableName = this.getTableName(this.options['table-name'] || this.name);`
-Recover answer to the prompt or option `table-name` parameter if invoked.
-**This is an unwanted behavior**
+Recover prompt's answer or option `table-name` parameter if invoked and **processes it**.
+**This is an unwanted behavior.**
 
-## Assignement from configuration file
+### Assignement from configuration file
 
-If .jhipster/<name>.json exists with <name> being the entity, it will be used and the user won't be prompted.
-If such is the case, the entityTableName is retrieved from the "entityTableName" field.
+If .jhipster/Entity.json exists, it will be used and the user won't be prompted.
+If such is the case, the entityTableName is retrieved from the "entityTableName" field. This value won't be processed.
 If it doesn't exist, it uses the entity name after processing it.
 
-## Validation 
+### Validation 
 
-Check if it contains letters, digits or _, if it isn't empty, if it is a database reserved keyword or it's too long.
+There is a two steps validation, one for the field name and one for the table name.
+If it gets the value from the option `table-name` or loads it from the configuration file, it doesn't go through the first step.
+This is because it means it doesn't derive table name from field name.
+The first step checks special characters, emptyness, ending with 'Detail' and Java or JHipster keyword.
+The second step checks special characters, emptyness and length for Oracle databases.
 
-## Writing
+There are also validation rules specific to configuration file content and relationships I won't cover here.
+
+### Writing
 
 Store entityTableName into a data object before using this object to create a .json file.
 
-## Other entity
+### Other entity
 
 Similarly to the assignment from configuration file, it reads needed information for each relationship from other party json file.
-If needed information is not found, it will get and process the entity name.
+If needed information is not found, it will get and process the entity name as a fallback.
 
-# Tests sur le fonctionnement des relations après modification sur --table-name
-Ce test a pour but de mettre en évidence le disfonctionnement créé par notre modification sur l'option --table-name. Malheureusement, cette dernière empêche JHipster de créer correctement les clefs étrangères.
+## Tests after modification of the option `table-name`
+This test shows what fails when you do the following modification :
+```
+this.entityTableName = this.getTableName(this.options['table-name'] || this.name);
+```
+becomes 
+```
+this.entityTableName = this.options['table-name'] || this.getTableName(this.name);
+```
+It means we protect the value passed through the option from unwanted processing.
 
-## Données du test
+### Test's data
 
-Création de l'entité "author".
+#### Creation of the entity "author"
 ```
 $ yo jhipster:entity author --table-name EllaAuthor_SUF
 
@@ -110,7 +129,7 @@ book (Book) one-to-many
 ? Do you want pagination on your entity? No
 ```
 
-Création de l'entité "book"
+#### Creation of the entity "book"
 ```
 altissiadev@alt-adrienh:~/JHipster/26$ yo jhipster:entity book --table-name EllaBook_SUF
 
@@ -226,9 +245,9 @@ author (Author) many-to-one
 Everything is configured, generating the entity...
 ```
 
-## ORM obtenus
+### Resulting ORM
 
-Author.java
+#### Author.java
 ```java
 package com.altissia.test_app.domain;
 
@@ -360,6 +379,7 @@ public class Author implements Serializable {
 }
 ```
 
+#### Book.java
 ```java
 package com.altissia.test_app.domain;
 
@@ -510,9 +530,10 @@ public class Book implements Serializable {
 
 ```
 
-## Résultat du test
+### Test's result
 
-La commande `$ mvn -e test` nous informe que notre changement n'a pas été apprécié.
+`$ mvn -e test` informs us that it didn't go well.
+
 ```java
 org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/autoconfigure/orm/jpa/HibernateJpaAutoConfiguration.class]: Invocation of init method failed; nested exception is javax.persistence.PersistenceException: [PersistenceUnit: default] Unable to build Hibernate SessionFactory
 	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1628)
