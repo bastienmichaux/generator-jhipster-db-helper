@@ -1,6 +1,5 @@
 // utility functions for generator-jhipster-db-helper
 
-
 /**
  * TODOS :
  * - write proper JsDoc
@@ -9,16 +8,20 @@
  * Don't forget to run eslint !
  */
 
-
 const chalk = require('chalk');
 const replace = require('replace');
 const fs = require('fs');
 const generator = require('yeoman-generator');
 
 
-// This module replaces Spring naming strategies with other strategies (to prevent renaming entities)
-// The following assumes that the pertinent configuration files are there and with these current naming strategy.
-// this is true with jhipster v4.1.1
+/**
+ * Configuration files in generator-jhipster that include the Spring naming strategies (as of JHipster 4.1.1).
+ * These files are replaced by our module to avoid inconsistencies when mapping over an existing DB.
+ * This constant assumes the files contain the naming strategies and isn't future-proof. Maybe we should consider a dynamic initialisation instead of a static one.
+ * @constant
+ * @todo Add relevant links (StackOverflow) to this doc
+ * @type {string[]}
+ */
 const filesWithNamingStrategyPaths = [
     './pom.xml',
     './src/main/resources/config/application.yml',
@@ -28,20 +31,45 @@ const filesWithNamingStrategyPaths = [
     './node_modules/generator-jhipster/generators/server/templates/src/test/resources/config/_application.yml'
 ];
 
-// physical naming strategies
-const physicalNamingStrategyOld = 'org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy';
-const physicalNamingStrategyNew = 'org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl';
 
-// implicit naming strategies
+/**
+ * Original physical naming strategy used by JHipster. Used for search and replace.
+ * @const
+ * @type {string}
+ */
+const physicalNamingStrategyOld = 'org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy';
+
+
+/**
+ * Original implicit naming strategy used by JHipster. Used for search and replace.
+ * @const
+ * @type {string}
+ */
 const implicitNamingStrategyOld = 'org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy';
+
+
+/**
+ * A more neutral implicit naming strategy used by Db-Helper
+ * @const
+ * @type {string}
+ */
 const implicitNamingStrategyNew = 'org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl';
 
-// return true for a non-empty string
+
+/**
+ * A more neutral physical naming strategy used by Db-Helper
+ * @const
+ * @type {string}
+ */
+const physicalNamingStrategyNew = 'org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl';
+
+
+/** return true for a non-empty string */
 const isTrueString = x => (typeof x === 'string' && x !== '');
 
 module.exports = {
 
-    // use this function as a DEBUG logger
+    /** We use this function as a DEBUG logger during development. Users shouldn't see it. */
     debugLog(pString) {
         if (isTrueString(pString)) {
             console.log(chalk.bold.green(`DBH-DEBUG: ${pString}`));
@@ -52,7 +80,7 @@ module.exports = {
         }
     },
 
-    // use this function to WARN the user
+    /** We use this function to warn the user. */
     warnLog(pString) {
         if (isTrueString) {
             console.log(chalk.bold.red(`DBH-WARN: ${pString}`));
@@ -63,31 +91,36 @@ module.exports = {
         }
     },
 
-    // test if Spring naming strategies are replaced by our naming strategies
-    // return a boolean
-    // TODO : write unit test
+    /**
+     * Test if Spring naming strategies are replaced by our naming strategies
+     * @todo Write unit test
+     * @returns {Boolean}
+     */
     namingStrategiesReplaced() {
         console.log(chalk.bold.red('getEntityNameVariations NOT IMPLEMENTED YET !'));
         return false;
     },
 
-    // return an object with the entity name and all variants :
-    //   name, tableName, entityTableName, etc
-    // TODO : write unit test
+    /**
+     * Return an object with the entity name and all its variants (name, tableName, entityTableName, etc)
+     * @todo Write unit test
+     * @returns {Object}
+     */
     getEntityNameVariations(pEntityName) {
         console.log(chalk.bold.red('getEntityNameVariations NOT IMPLEMENTED YET !'));
         return false;
     },
 
-    // replace Spring naming strategies with more neutral ones
-    // return true if all occurrences are replaced
-    //
-    // note : after running this function, reference to the ancient naming strategies will still be found in :
-    // ./node_modules/generator-jhipster/generators/server/templates/_pom.xml:
-    // however this doesn't concern us
-    //
-    // TODO : write local test for the return value
-    // TODO : write unit test
+    /** replace Spring naming strategies with more neutral ones
+     * return true if all occurrences are replaced
+     *
+     * note : after running this function, reference to the ancient naming strategies will still be found in :
+     * ./node_modules/generator-jhipster/generators/server/templates/_pom.xml:
+     * however this doesn't concern us
+     *
+     * @todo : write local test for the return value
+     * @todo : write unit test
+     */
     replaceNamingStrategies() {
         // grab our files from the global space
         const files = filesWithNamingStrategyPaths;
