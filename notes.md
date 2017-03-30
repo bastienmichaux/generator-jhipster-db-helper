@@ -132,12 +132,8 @@ Regenerating the app will :
 This document purpose is to explain what we will do and at what stage we are.
 We also documented other things such as researchs and tests which might interest you.
 
-* [readme][Describe briefly the module, how to install and use it]
-* [entityTableName][The result of the research about how jhipster handle @Table inside the code]
-* [forbiddenCapital][The result of the research and tests about the validation done on user input for a field]
-* [todo][What tasks we'll do after the current work]
+* [Describe briefly the module, how to install and use it](../blob/master/README.md)
+* [The result of the research about how jhipster handle @Table inside the code](../blob/master/entityTableName.md)
+* [The result of the research and tests about the validation done on user input for a field](../blob/master/forbiddenCapital.md)
+* [What tasks we'll do after the current work](../blob/master/todo.md)
 
-[readme]: ../blob/master/README.md
-[entityTableName]: ../blob/master/entityTableName.md
-[forbiddenCapital]: ../blob/master/forbiddenCapital.md
-[todo]: ../blob/master/todo.md
