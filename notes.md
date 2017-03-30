@@ -137,7 +137,7 @@ We also documented other things such as researchs and tests which might interest
 * [forbiddenCapital][The result of the research and tests about the validation done on user input for a field]
 * [todo][What tasks we'll do after the current work]
 
-[readme]: (../blob/master/README.md)
-[todo]: (../blob/master/todo.md)
-[entityTableName]: (../blob/master/entityTableName.md)
-[forbiddenCapital]: (../blob/master/forbiddenCapital.md)
+[readme]: ../blob/master/README.md
+[entityTableName]: ../blob/master/entityTableName.md
+[forbiddenCapital]: ../blob/master/forbiddenCapital.md
+[todo]: ../blob/master/todo.md
