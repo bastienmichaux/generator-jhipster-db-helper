@@ -12,10 +12,7 @@
 const chalk = require('chalk');
 const replace = require('replace');
 const fs = require('fs');
-const Generator = require('yeoman-generator');
 
-
-console.log("yo dawg");
 
 /**
  * Configuration files in generator-jhipster that include the Spring naming strategies (as of JHipster 4.1.1).
@@ -71,10 +68,7 @@ const physicalNamingStrategyNew = 'org.hibernate.boot.model.naming.PhysicalNamin
 const isTrueString = x => (typeof x === 'string' && x !== '');
 
 
-module.exports = class extends Generator {
-    x () {
-        this.log ("Hooray!!!!");
-    }
+module.exports = {
 
     /** We use this function as a DEBUG logger during development. Users shouldn't see it. */
     debugLog(pString) {
@@ -85,7 +79,7 @@ module.exports = class extends Generator {
                 chalk.red(`DBH: pString isn't a true string: type = ${typeof pString} ; value = ${pString}`)
             );
         }
-    }
+    },
 
     /** We use this function to warn the user. */
     warnLog(pString) {
@@ -96,7 +90,7 @@ module.exports = class extends Generator {
                 chalk.red(`DBH: pString isn't a true string: type = ${typeof pString} ; value = ${pString}`)
             );
         }
-    }
+    },
 
     /** Hooray ! Celebrate something. */
     successLog(pString) {
@@ -107,7 +101,7 @@ module.exports = class extends Generator {
                 chalk.red(`DBH: pString isn't a true string: type = ${typeof pString} ; value = ${pString}`)
             );
         }
-    }
+    },
 
     /**
      * Test if Spring naming strategies are replaced by our naming strategies
@@ -117,7 +111,7 @@ module.exports = class extends Generator {
     namingStrategiesReplaced() {
         console.log(chalk.bold.red('getEntityNameVariations NOT IMPLEMENTED YET !'));
         return false;
-    }
+    },
 
     /**
      * Return an object with the entity name and all its variants (name, tableName, entityTableName, etc).
@@ -131,7 +125,7 @@ module.exports = class extends Generator {
         } else {
             throw new TypeError(`pEntityName isn't a true string: type = ${typeof pEntityName} ; value = ${pEntityName}`);
         }
-    }
+    },
 
     /**
      * replace Spring naming strategies with more neutral ones
@@ -174,6 +168,7 @@ module.exports = class extends Generator {
             recursive: false,
             silent: true,
         });
+        this.debugLog('replaced physical naming strategy');
 
         // 2) replace Spring implicit naming strategy
         replace({
@@ -183,6 +178,7 @@ module.exports = class extends Generator {
             recursive: false,
             silent: true,
         });
+        this.debugLog('replaced implicit naming strategy');
 
         return false;
     }
