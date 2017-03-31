@@ -3,7 +3,10 @@
 const generator = require('yeoman-generator');
 const chalk = require('chalk');
 const packagejs = require('../../package.json'); // gives access to the package.json data
-const dbh = require('./db-helper.js'); // db-helper utility functions
+
+
+const replace = require('replace');
+const fs = require('fs');
 
 
 // Stores JHipster variables
@@ -15,13 +18,181 @@ const jhipsterVar = {
 const jhipsterFunc = {};
 
 
+/**
+ * Configuration files in generator-jhipster that include the Spring naming strategies (as of JHipster 4.1.1).
+ * These files are replaced by our module to avoid inconsistencies when mapping over an existing DB.
+ * This constant could be dynamically initialized instead of being static. It isn't future-proof.
+ * @constant
+ * @todo Add relevant links (StackOverflow) to this doc
+ * @type {string[]}
+ */
+const filesWithNamingStrategyPaths = [
+    './pom.xml',
+    './src/main/resources/config/application.yml',
+    './src/test/resources/config/application.yml',
+    './node_modules/generator-jhipster/generators/server/templates/gradle/_liquibase.gradle',
+    './node_modules/generator-jhipster/generators/server/templates/src/main/resources/config/_application.yml',
+    './node_modules/generator-jhipster/generators/server/templates/src/test/resources/config/_application.yml'
+];
+
+
+/**
+ * Original physical naming strategy used by JHipster. Used for search and replace.
+ * @const
+ * @type {string}
+ */
+const physicalNamingStrategyOld = 'org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy';
+
+
+/**
+ * Original implicit naming strategy used by JHipster. Used for search and replace.
+ * @const
+ * @type {string}
+ */
+const implicitNamingStrategyOld = 'org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy';
+
+
+/**
+ * A more neutral implicit naming strategy used by Db-Helper
+ * @const
+ * @type {string}
+ */
+const implicitNamingStrategyNew = 'org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl';
+
+
+/**
+ * A more neutral physical naming strategy used by Db-Helper
+ * @const
+ * @type {string}
+ */
+const physicalNamingStrategyNew = 'org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl';
+
+
+/** return true for a non-empty string */
+const isTrueString = x => (typeof x === 'string' && x !== '');
+
+
 module.exports = generator.extend({
 
+
+    /** We use this function as a DEBUG logger during development. Users shouldn't see it. */
+    _debugLog (pString) {
+        if (isTrueString(pString)) {
+            this.log(chalk.bold.yellow(`DBH-DEBUG: ${pString}`));
+        } else {
+            throw new TypeError(
+                chalk.red(`DBH: pString isn't a true string: type = ${typeof pString} ; value = ${pString}`)
+            );
+        }
+    },
+
+    /** We use this function to warn the user. */
+    _warnLog (pString) {
+        if (isTrueString) {
+            this.log(chalk.bold.red(`DBH-WARN: ${pString}`));
+        } else {
+            throw new TypeError(
+                chalk.red(`DBH: pString isn't a true string: type = ${typeof pString} ; value = ${pString}`)
+            );
+        }
+    },
+
+    /** Hooray ! Celebrate something. */
+    _successLog (pString) {
+        if (isTrueString) {
+            this.log(chalk.bold.green(`DBH-SUCCESS: ${pString}`));
+        } else {
+            throw new TypeError(
+                chalk.red(`DBH: pString isn't a true string: type = ${typeof pString} ; value = ${pString}`)
+            );
+        }
+    },
+
+    /**
+     * Test if Spring naming strategies are replaced by our naming strategies
+     * @todo Write unit test
+     * @returns {Boolean}
+     */
+    _namingStrategiesReplaced () {
+        this.log(chalk.bold.red('getEntityNameVariations NOT IMPLEMENTED YET !'));
+        return false;
+    },
+
+    /**
+     * Return an object with the entity name and all its variants (name, tableName, entityTableName, etc).
+     * @todo Write unit test
+     * @returns {Object}
+     */
+    _getEntityNameVariations (pEntityName) {
+        this.log(chalk.bold.red('getEntityNameVariations NOT IMPLEMENTED YET !'));
+        if (isTrueString(pEntityName)) {
+            return false;
+        } else {
+            throw new TypeError(`pEntityName isn't a true string: type = ${typeof pEntityName} ; value = ${pEntityName}`);
+        }
+    },
+
+    /**
+     * replace Spring naming strategies with more neutral ones
+     * return true if all occurrences are replaced
+     *
+     * note : after running this function, reference to the ancient naming strategies will still be found in :
+     * ./node_modules/generator-jhipster/generators/server/templates/_pom.xml:
+     * however this doesn't concern us
+     *
+     * @todo : write local test for the return value
+     * @todo : write unit test
+     */
+    _replaceNamingStrategies () {
+        // grab our files from the global space
+        const files = filesWithNamingStrategyPaths;
+
+        const physicalOld = physicalNamingStrategyOld;
+        const physicalNew = physicalNamingStrategyNew;
+
+        const implicitOld = implicitNamingStrategyOld;
+        const implicitNew = implicitNamingStrategyNew;
+
+        // check that each file exists
+        files.forEach((path) => {
+            if (fs.existsSync(path)) {
+                this.log(`File ${chalk.cyan(path)} exists`);
+            } else {
+                // note : 'throw' ends the function here
+                throw new Error(`${path} doesn't exist!`);
+            }
+        });
+
+        // replace the files :
+
+        // 1) replace Spring physical naming strategy
+        replace({
+            regex: physicalOld,
+            replacement: physicalNew,
+            paths: files,
+            recursive: false,
+            silent: true,
+        });
+        this._debugLog('replaced physical naming strategy');
+
+        // 2) replace Spring implicit naming strategy
+        replace({
+            regex: implicitOld,
+            replacement: implicitNew,
+            paths: files,
+            recursive: false,
+            silent: true,
+        });
+        this._debugLog('replaced implicit naming strategy');
+
+        return false;
+    },
+
     // check current project state, get configs, etc
-    initializing: {
+    initializing : {
         compose() {
             // DEBUG : log where we are
-            dbh.debugLog('initializing: compose');
+            this._debugLog('initializing: compose');
 
             this.composeWith('jhipster:modules',
                 { jhipsterVar, jhipsterFunc },
@@ -37,7 +208,7 @@ module.exports = generator.extend({
     // prompt the user for options
     prompting() {
         // DEBUG : log where we are
-        dbh.debugLog('prompting');
+        this._debugLog('prompting');
 
         const done = this.async();
 
@@ -71,11 +242,11 @@ module.exports = generator.extend({
     // write the generator-specific files
     writing() {
         // DEBUG : log where we are
-        dbh.debugLog('writing');
+        this._debugLog('writing');
 
         // replace files with Spring's naming strategies
         this.log('db-helper replaces your naming strategies.');
-        dbh.replaceNamingStrategies();
+        this._replaceNamingStrategies();
 
         // function to use directly template
         this.template = function (source, destination) {
@@ -128,7 +299,7 @@ module.exports = generator.extend({
             `To install your dependencies manually, run: ${chalk.yellow.bold(`${this.clientPackageManager} install`)}`;
 
         // DEBUG : log where we are
-        dbh.debugLog('install');
+        this._debugLog('install');
 
         if (this.clientFramework === 'angular1') {
             logMsg =
@@ -154,7 +325,7 @@ module.exports = generator.extend({
     // cleanup, say goodbye
     end() {
         // DEBUG : log where we are
-        dbh.debugLog('end');
+        this._debugLog('end');
 
         this.log('End of db-helper generator');
     }
