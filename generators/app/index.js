@@ -243,13 +243,16 @@ module.exports = generator.extend({
         const webappDir = jhipsterVar.webappDir;
         this.message = this.props.message;
 
-        /*
         try {
             jhipsterFunc.registerModule('generator-jhipster-db-helper', 'app', 'post', 'app', 'A JHipster module for already existing databases');
         } catch (err) {
             this.log(`${chalk.red.bold('WARN!')} Could not register as a jhipster entity post creation hook...\n`);
         }
-        */
+        try {
+            jhipsterFunc.registerModule('generator-jhipster-db-helper', 'app', 'entity', 'fix-entity', 'A JHipster module to circumvent JHipster limitations about names');
+        } catch (err) {
+            this.log(`${chalk.red.bold('WARN!')} Could not register as a jhipster entity post creation hook...\n`);
+        }
     },
 
     // Where conflicts are handled (used internally)
