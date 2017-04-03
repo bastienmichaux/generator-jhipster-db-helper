@@ -24,8 +24,10 @@ module.exports = generator.extend({
         this.log('Whole entity file');
         this.log(this.options.entityConfig);
 
-        // As of now, I'll use EntityClass as a default entityTableName. This should be prompted
-        jhipsterFunc.updateEntityConfig(this.options.entityConfig.filename, 'entityTableName', this.options.entityConfig.entityClass);
+        // As of now, I'll use EntityClass as a default entityTableName. This value should be user input.
+        let wantedValue = this.options.entityConfig.entityClass;
+
+        jhipsterFunc.updateEntityConfig(this.options.entityConfig.filename, 'entityTableName', wantedValue);
     },
     goodbye() {
         this.log(`${chalk.blue.bold('jhipster-db-helper')} post entity hook ended \n`);
