@@ -26,11 +26,19 @@ describe('JHipster generator db-helper', () => {
                 .withGenerators(deps)
                 .on('end', done);
         });
-
+        /*
         it('generate dummy.txt file', () => {
             assert.file([
                 'dummy.txt'
             ]);
         });
+
+        it('find no occurrences of org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy', () => {
+            //
+        });
+        it('find no occurrences of org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy', () => {
+            //
+        });
+        */
     });
 });
