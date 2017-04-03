@@ -27,17 +27,11 @@ describe('JHipster generator db-helper', () => {
                 .on('end', done);
         });
         /*
-        it('generate dummy.txt file', () => {
-            assert.file([
-                'dummy.txt'
-            ]);
-        });
-
         it('find no occurrences of org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy', () => {
-            //
+            assert.fileContent(file, /org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy/);
         });
         it('find no occurrences of org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy', () => {
-            //
+            assert.fileContent(file, /org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy/);
         });
         */
     });
