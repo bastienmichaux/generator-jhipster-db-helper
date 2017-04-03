@@ -62,6 +62,8 @@ npm update -g generator-jhipster-db-helper
 
 To be DRY in Yeoman generators, use `_privateFunctions`.
 
+Constants go to `generators/dbh-constants.js`.
+
 If you have a bug, contact us at [bastienmichaux@gmail.com](mailto:"bastienmichaux@gmail.com") or create an issue.
 
 ## License
