@@ -218,8 +218,7 @@ module.exports = generator.extend({
         }
     },
 
-    // Where conflicts are handled (used internally)
-    // conflict() {}
+    // conflict: Where conflicts are handled (used internally)
 
     // run installation (npm, bower, etc)
     install() {
