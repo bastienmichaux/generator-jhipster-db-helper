@@ -6,14 +6,14 @@ const chalk = require('chalk');
 module.exports = generator.extend({
     // check current project state, get configs, etc
     initializing() {
-        this._debugLog('fix-entity generator');
-        this._debugLog('initializing');
+        this.log('fix-entity generator');
+        this.log('initializing');
     },
 
     // prompt the user for options
     prompting() {
         // DEBUG : log where we are
-        this._debugLog('prompting');
+        this.log('prompting');
 
         const done = this.async();
 
@@ -37,7 +37,7 @@ module.exports = generator.extend({
     // write the generator-specific files
     writing() {
         // DEBUG : log where we are
-        this._debugLog('writing');
+        this.log('writing');
     },
 
     // Where conflicts are handled (used internally)
@@ -46,12 +46,12 @@ module.exports = generator.extend({
     // run installation (npm, bower, etc)
     install() {
         // DEBUG : log where we are
-        this._debugLog('install');
+        this.log('install');
     },
 
     // cleanup, say goodbye
     end() {
         // DEBUG : log where we are
-        this._debugLog('End of fix-entity generator');
+        this.log('End of fix-entity generator');
     }
 });
