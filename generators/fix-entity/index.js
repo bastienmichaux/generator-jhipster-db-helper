@@ -1,7 +1,7 @@
 // modules used by the generator
 const generator = require('yeoman-generator');
 const chalk = require('chalk');
-
+const prompts = require('./prompts.js')
 
 module.exports = generator.extend({
     // check current project state, get configs, etc
@@ -11,21 +11,9 @@ module.exports = generator.extend({
     },
 
     // prompt the user for options
-    prompting() {
-        // DEBUG : log where we are
-        this.log('prompting');
-
-        const done = this.async();
-
-        // user interaction on module call goes here
-        const prompts = [];
-
-        // call the prompts
-        this.prompt(prompts).then((props) => {
-            this.props = props;
-            // To access props later use this.props.someOption;
-            done();
-        });
+    prompting: {
+        askForTableName: prompts.askForTableName,
+        askForColumnName: prompts.askForColumnName
     },
 
     // other Yeoman run loop steps would go here :
