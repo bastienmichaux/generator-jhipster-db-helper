@@ -232,18 +232,15 @@ module.exports = generator.extend({
         this.prompt(prompts).then((props) => {
             this.props = props;
             // To access props later use this.props.someOption;
-
             done();
         });
     },
 
     // other Yeoman run loop steps would go here :
 
-    // Saving configurations and configure the project (creating .editorconfig files and other metadata files)
-    // configuring() {}
+    // configuring: Saving configurations and configure the project (creating .editorconfig files and other metadata files)
 
-    // If the method name doesn't match a priority, it will be pushed to this group.
-    // default() {}
+    // default: If the method name doesn't match a priority, it will be pushed to this group.
 
     // write the generator-specific files
     writing() {
