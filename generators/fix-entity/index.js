@@ -1,7 +1,7 @@
 // modules used by the generator
 const generator = require('yeoman-generator');
 const chalk = require('chalk');
-const prompts = require('./prompts.js')
+const prompts = require('./prompts.js');
 
 module.exports = generator.extend({
     // check current project state, get configs, etc
