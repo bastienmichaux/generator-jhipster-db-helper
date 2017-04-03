@@ -215,6 +215,18 @@ module.exports = generator.extend({
     prompting() {
         // DEBUG : log where we are
         this._debugLog('prompting');
+
+        const done = this.async();
+
+        // user interaction on module call goes here
+        const prompts = [];
+
+        // call the prompts
+        this.prompt(prompts).then((props) => {
+            this.props = props;
+            // To access props later use this.props.someOption;
+            done();
+        });
     },
 
     // other Yeoman run loop steps would go here :
