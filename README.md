@@ -57,11 +57,12 @@ npm update -g generator-jhipster-db-helper
 4. In the new app folder : `yarn link generator-jhipster-db-helper`
  * Yep it's quite a strokeful. Consider using an alias
 5. In the new app folder : `yo jhipster-db-helper`
-6. Answer the questions. The module should work.
+6. Answer the questions. The module should work. You now have a working test app.
+  * You can directly edit your local repo and test the changes in the app.
 
-If you have a bug, contact us at bastienmichaux@gmail.com.
+To be DRY in Yeoman generators, use `_privateFunctions`.
 
-## Usage
+If you have a bug, contact us at [bastienmichaux@gmail.com](mailto:"bastienmichaux@gmail.com") or create an issue.
 
 ## License
 
