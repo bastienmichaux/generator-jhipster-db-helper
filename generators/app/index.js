@@ -215,25 +215,6 @@ module.exports = generator.extend({
     prompting() {
         // DEBUG : log where we are
         this._debugLog('prompting');
-
-        const done = this.async();
-
-        // user interaction on module call goes here
-        const prompts = [
-            {
-                type: 'input',
-                name: 'message',
-                message: 'Please put something',
-                default: 'hello world!'
-            }
-        ];
-
-        // call the prompts
-        this.prompt(prompts).then((props) => {
-            this.props = props;
-            // To access props later use this.props.someOption;
-            done();
-        });
     },
 
     // other Yeoman run loop steps would go here :
@@ -251,15 +232,7 @@ module.exports = generator.extend({
         this.log('db-helper replaces your naming strategies.');
         this._replaceNamingStrategies();
 
-        // function to use directly template
-        this.template = function (source, destination) {
-            this.fs.copyTpl(
-                this.templatePath(source),
-                this.destinationPath(destination),
-                this
-            );
-        };
-
+        //declarations done by jhipster-module
         this.baseName = jhipsterVar.baseName;
         this.packageName = jhipsterVar.packageName;
         this.angularAppName = jhipsterVar.angularAppName;
@@ -268,22 +241,8 @@ module.exports = generator.extend({
         const javaDir = jhipsterVar.javaDir;
         const resourceDir = jhipsterVar.resourceDir;
         const webappDir = jhipsterVar.webappDir;
-
         this.message = this.props.message;
 
-        this.log('\n--- some config read from config ---');
-        this.log(`baseName=${this.baseName}`);
-        this.log(`packageName=${this.packageName}`);
-        this.log(`angularAppName=${this.angularAppName}`);
-        this.log(`clientFramework=${this.clientFramework}`);
-        this.log(`clientPackageManager=${this.clientPackageManager}`);
-        this.log(`javaDir=${javaDir}`);
-        this.log(`resourceDir=${resourceDir}`);
-        this.log(`webappDir=${webappDir}`);
-        this.log(`\nmessage=${this.message}`);
-        this.log('------\n');
-
-        this.template('dummy.txt', 'dummy.txt');
         /*
         try {
             jhipsterFunc.registerModule('generator-jhipster-db-helper', 'app', 'post', 'app', 'A JHipster module for already existing databases');
@@ -298,16 +257,15 @@ module.exports = generator.extend({
 
     // run installation (npm, bower, etc)
     install() {
-        let logMsg =
-            `To install your dependencies manually, run: ${chalk.yellow.bold(`${this.clientPackageManager} install`)}`;
-
         // DEBUG : log where we are
         this._debugLog('install');
 
+        let logMsg = `To install your dependencies manually, run: ${chalk.yellow.bold(`${this.clientPackageManager} install`)}`;
+
         if (this.clientFramework === 'angular1') {
-            logMsg =
-                `To install your dependencies manually, run: ${chalk.yellow.bold(`${this.clientPackageManager} install & bower install`)}`;
+            logMsg = `To install your dependencies manually, run: ${chalk.yellow.bold(`${this.clientPackageManager} install & bower install`)}`;
         }
+
         const injectDependenciesAndConstants = (err) => {
             if (err) {
                 this.warning('Install of dependencies failed!');
@@ -316,12 +274,14 @@ module.exports = generator.extend({
                 this.spawnCommand('gulp', ['install']);
             }
         };
+
         const installConfig = {
             bower: this.clientFramework === 'angular1',
             npm: this.clientPackageManager !== 'yarn',
             yarn: this.clientPackageManager === 'yarn',
             callback: injectDependenciesAndConstants
         };
+
         this.installDependencies(installConfig);
     },
 
