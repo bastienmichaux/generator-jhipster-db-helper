@@ -1,10 +1,19 @@
-// imports
+/**
+ * TODOS :
+ * - write proper JsDoc
+ * - create an ensemble unit test
+ * - replace 'console.log' with 'this.log'
+ * - maybe replace the NPM module called 'replace' (I know, it's confusing) with lodash.replace function (but beware, this functions uses the arguments property).
+ * Don't forget to run eslint !
+ */
 
+// modules used by the generator
 const generator = require('yeoman-generator');
 const chalk = require('chalk');
 const packagejs = require('../../package.json'); // gives access to the package.json data
 
 
+// modules use by private db-helper functions
 const replace = require('replace');
 const fs = require('fs');
 
@@ -13,6 +22,7 @@ const fs = require('fs');
 const jhipsterVar = {
     moduleName: 'db-helper'
 };
+
 
 // Stores JHipster functions
 const jhipsterFunc = {};
@@ -73,8 +83,6 @@ const isTrueString = x => (typeof x === 'string' && x !== '');
 
 
 module.exports = generator.extend({
-
-
     /** We use this function as a DEBUG logger during development. Users shouldn't see it. */
     _debugLog (pString) {
         if (isTrueString(pString)) {
@@ -173,7 +181,6 @@ module.exports = generator.extend({
             recursive: false,
             silent: true,
         });
-        this._debugLog('replaced physical naming strategy');
 
         // 2) replace Spring implicit naming strategy
         replace({
@@ -183,13 +190,12 @@ module.exports = generator.extend({
             recursive: false,
             silent: true,
         });
-        this._debugLog('replaced implicit naming strategy');
 
         return false;
     },
 
     // check current project state, get configs, etc
-    initializing : {
+    initializing: {
         compose() {
             // DEBUG : log where we are
             this._debugLog('initializing: compose');
