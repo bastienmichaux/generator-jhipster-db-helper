@@ -1,0 +1,10 @@
+{
+  "generator-jhipster-module": {
+    "promptValues": {
+      "githubName": "bastienmichaux",
+      "authorName": "Bastien Michaux",
+      "authorEmail": "bastienmichaux@gmail.com",
+      "authorUrl": ""
+    }
+  }
+}
