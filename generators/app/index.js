@@ -212,7 +212,7 @@ module.exports = generator.extend({
             this.log(`${chalk.red.bold('WARN!')} Could not register as a jhipster entity post creation hook...\n`);
         }
         try {
-            jhipsterFunc.registerModule('generator-jhipster-db-helper', 'app', 'entity', 'fix-entity', 'A JHipster module to circumvent JHipster limitations about names');
+            jhipsterFunc.registerModule('generator-jhipster-db-helper', 'entity', 'post', 'fix-entity', 'A JHipster module to circumvent JHipster limitations about names');
         } catch (err) {
             this.log(`${chalk.red.bold('WARN!')} Could not register as a jhipster entity post creation hook...\n`);
         }
