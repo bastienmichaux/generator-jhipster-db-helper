@@ -16,6 +16,7 @@ const packagejs = require('../../package.json'); // gives access to the package.
 // modules use by private db-helper functions
 const replace = require('replace');
 const fs = require('fs');
+const DBH_CONSTANTS = require('../dbh-constants');
 
 
 // Stores JHipster variables
@@ -26,56 +27,6 @@ const jhipsterVar = {
 
 // Stores JHipster functions
 const jhipsterFunc = {};
-
-
-/**
- * Configuration files in generator-jhipster that include the Spring naming strategies (as of JHipster 4.1.1).
- * These files are replaced by our module to avoid inconsistencies when mapping over an existing DB.
- * This constant could be dynamically initialized instead of being static. It isn't future-proof.
- * @constant
- * @todo Add relevant links (StackOverflow) to this doc
- * @type {string[]}
- */
-const filesWithNamingStrategyPaths = [
-    './pom.xml',
-    './src/main/resources/config/application.yml',
-    './src/test/resources/config/application.yml',
-    './node_modules/generator-jhipster/generators/server/templates/gradle/_liquibase.gradle',
-    './node_modules/generator-jhipster/generators/server/templates/src/main/resources/config/_application.yml',
-    './node_modules/generator-jhipster/generators/server/templates/src/test/resources/config/_application.yml'
-];
-
-
-/**
- * Original physical naming strategy used by JHipster. Used for search and replace.
- * @const
- * @type {string}
- */
-const physicalNamingStrategyOld = 'org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy';
-
-
-/**
- * Original implicit naming strategy used by JHipster. Used for search and replace.
- * @const
- * @type {string}
- */
-const implicitNamingStrategyOld = 'org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy';
-
-
-/**
- * A more neutral implicit naming strategy used by Db-Helper
- * @const
- * @type {string}
- */
-const implicitNamingStrategyNew = 'org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl';
-
-
-/**
- * A more neutral physical naming strategy used by Db-Helper
- * @const
- * @type {string}
- */
-const physicalNamingStrategyNew = 'org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl';
 
 
 /** return true for a non-empty string */
@@ -153,13 +104,13 @@ module.exports = generator.extend({
      */
     _replaceNamingStrategies () {
         // grab our files from the global space
-        const files = filesWithNamingStrategyPaths;
+        const files = DBH_CONSTANTS.filesWithNamingStrategyPaths;
 
-        const physicalOld = physicalNamingStrategyOld;
-        const physicalNew = physicalNamingStrategyNew;
+        const physicalOld = DBH_CONSTANTS.physicalNamingStrategyOld;
+        const physicalNew = DBH_CONSTANTS.physicalNamingStrategyNew;
 
-        const implicitOld = implicitNamingStrategyOld;
-        const implicitNew = implicitNamingStrategyNew;
+        const implicitOld = DBH_CONSTANTS.implicitNamingStrategyOld;
+        const implicitNew = DBH_CONSTANTS.implicitNamingStrategyNew;
 
         // check that each file exists
         files.forEach((path) => {
