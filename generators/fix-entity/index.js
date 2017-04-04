@@ -1,5 +1,6 @@
 // modules used by the generator
 const generator = require('yeoman-generator');
+const assert = require('yeoman-assert');
 const chalk = require('chalk');
 const prompts = require('./prompts.js');
 
@@ -43,28 +44,36 @@ module.exports = generator.extend({
     writing() {
         // DEBUG : log where we are
         this.log('writing');
-        this.log(this.entityConfig);
 
         let ORMFile = jhipsterVar.javaDir + '/domain/' + this.entityConfig.entityClass + '.java';
+        let liquiFile = jhipsterVar.resourceDir + 'config/liquibase/changelog/' + this.entityConfig.data.changelogDate + '_added_entity_' + this.entityConfig.entityClass + '.xml';
         let desiredTableName = this.defaultTableName;
 
-        if (fs.existsSync(ORMFile)) {
-            this.log(`File ${chalk.cyan(ORMFile)} found`);
-            let prefix = '@Table\\(name = "';
-            let suffix = '"\\)';
+        assert.file([ORMFile, liquiFile]);
 
-            replace({
-                regex: prefix + '.*' + suffix,
-                replacement: prefix.replace('\\', '') + desiredTableName + suffix.replace('\\', ''),
-                paths: [ORMFile],
-                recursive: false,
-                silent: true,
-            });
-        } else {
-            throw new Error(`${ORMFile} doesn't exist!`);
-        }
+        let prefix = '@Table\\(name = "';
+        let suffix = '"\\)';
 
-        jhipsterFunc.updateEntityConfig(this.entityConfig.filename, 'entityTableName', desiredTableName);
+        replace({
+            regex: prefix + '.*' + suffix,
+            replacement: prefix.replace('\\', '') + desiredTableName + suffix.replace('\\', ''),
+            paths: [ORMFile],
+            recursive: false,
+            silent: true,
+        });
+
+        prefix = '<createTable tableName="';
+        suffix = '">';
+
+        replace({
+            regex: prefix + '.*' + suffix,
+            replacement: prefix + desiredTableName + suffix,
+            paths: [liquiFile],
+            recursive: false,
+            silent: true,
+        });
+
+        //jhipsterFunc.updateEntityConfig(this.entityConfig.filename, 'entityTableName', desiredTableName);
     },
 
     // conflict() : Where conflicts are handled (used internally)
