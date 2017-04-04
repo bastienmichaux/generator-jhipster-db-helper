@@ -24,7 +24,7 @@ function askForTableName () {
 }
 
 function askForColumnName () {
-    //const done = this.async();
+    const done = this.async();
     this.prompt({
         type: 'input',
         name: 'askForColumnName',
