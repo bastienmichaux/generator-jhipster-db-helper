@@ -16,7 +16,7 @@ function askForTableName() {
             return true;
         },
         message: 'What is the table name for this entity?',
-        default: 'My table name'
+        default: this.defaultTableName
     }).then((prompt) => {
         this.log('askForTableName : then');
         done();
