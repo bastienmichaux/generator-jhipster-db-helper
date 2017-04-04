@@ -8,7 +8,7 @@ const constants = {
      * @todo Add relevant links (StackOverflow) to this doc
      * @type {string[]}
      */
-    filesWithNamingStrategyPaths: [
+    filesWithNamingStrategy: [
         './pom.xml',
         './src/main/resources/config/application.yml',
         './src/test/resources/config/application.yml',
@@ -35,7 +35,7 @@ const constants = {
 
 
     /**
-     * A more neutral implicit naming strategy used by Db-Helper
+     * A more neutral implicit naming strategy used by jhipster-db-helper
      * @const
      * @type {string}
      */
@@ -43,7 +43,7 @@ const constants = {
 
 
     /**
-     * A more neutral physical naming strategy used by Db-Helper
+     * A more neutral physical naming strategy used by jhipster-db-helper
      * @const
      * @type {string}
      */

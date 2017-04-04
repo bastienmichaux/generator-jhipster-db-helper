@@ -104,7 +104,7 @@ module.exports = generator.extend({
      */
     _replaceNamingStrategies () {
         // grab our files from the global space
-        const files = DBH_CONSTANTS.filesWithNamingStrategyPaths;
+        const files = DBH_CONSTANTS.filesWithNamingStrategy;
 
         const physicalOld = DBH_CONSTANTS.physicalNamingStrategyOld;
         const physicalNew = DBH_CONSTANTS.physicalNamingStrategyNew;
@@ -211,6 +211,7 @@ module.exports = generator.extend({
         } catch (err) {
             this.log(`${chalk.red.bold('WARN!')} Could not register as a jhipster entity post creation hook...\n`);
         }
+
         try {
             jhipsterFunc.registerModule('generator-jhipster-db-helper', 'entity', 'post', 'fix-entity', 'A JHipster module to circumvent JHipster limitations about names');
         } catch (err) {

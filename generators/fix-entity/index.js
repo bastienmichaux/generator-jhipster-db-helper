@@ -6,8 +6,8 @@ const prompts = require('./prompts.js');
 module.exports = generator.extend({
     // check current project state, get configs, etc
     initializing() {
-        this.log('fix-entity generator');
-        this.log('initializing');
+        this.log(chalk.bold.cyan('fix-entity generator'));
+        this.log('initializing')
     },
 
     // prompt the user for options
