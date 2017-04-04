@@ -7,7 +7,7 @@ module.exports = {
     askForColumnName
 };
 
-function askForTableName () {
+function askForTableName() {
     const done = this.async();
     this.prompt({
         type: 'input',
@@ -16,14 +16,14 @@ function askForTableName () {
             return true;
         },
         message: 'What is the table name for this entity?',
-        default: 'My table name'
+        default: this.defaultTableName
     }).then((prompt) => {
         this.log('askForTableName : then');
         done();
     });
 }
 
-function askForColumnName () {
+function askForColumnName() {
     const done = this.async();
     this.prompt({
         type: 'input',
