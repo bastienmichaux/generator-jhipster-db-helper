@@ -5,9 +5,7 @@ const fse = require('fs-extra');
 const assert = require('yeoman-assert');
 const helpers = require('yeoman-test');
 
-const deps = [
-    [helpers.createDummyGenerator(), 'jhipster:modules']
-];
+const deps = [];
 
 describe('JHipster generator db-helper', () => {
     describe('simple test', () => {
@@ -26,13 +24,5 @@ describe('JHipster generator db-helper', () => {
                 .withGenerators(deps)
                 .on('end', done);
         });
-        /*
-        it('find no occurrences of org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy', () => {
-            assert.fileContent(file, /org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy/);
-        });
-        it('find no occurrences of org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy', () => {
-            assert.fileContent(file, /org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy/);
-        });
-        */
     });
 });
