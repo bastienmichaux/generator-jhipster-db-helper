@@ -17,6 +17,7 @@ module.exports = generator.extend({
         generator.apply(this, args);
         this.entityConfig = this.options.entityConfig;
         this.defaultTableName = this.options.entityConfig.entityClass;
+        this.tableNameInput;
     },
     // check current project state, get configs, etc
     initializing() {
@@ -47,7 +48,7 @@ module.exports = generator.extend({
 
         let ORMFile = jhipsterVar.javaDir + '/domain/' + this.entityConfig.entityClass + '.java';
         let liquiFile = jhipsterVar.resourceDir + 'config/liquibase/changelog/' + this.entityConfig.data.changelogDate + '_added_entity_' + this.entityConfig.entityClass + '.xml';
-        let desiredTableName = this.defaultTableName;
+        let desiredTableName = this.tableNameInput;
 
         assert.file([ORMFile, liquiFile]);
 

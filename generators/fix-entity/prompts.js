@@ -11,14 +11,14 @@ function askForTableName() {
     const done = this.async();
     this.prompt({
         type: 'input',
-        name: 'askForTableName',
+        name: 'tableName',
         validate: (input) => {
             return true;
         },
         message: 'What is the table name for this entity?',
         default: this.defaultTableName
-    }).then((prompt) => {
-        this.log('askForTableName : then');
+    }).then((props) => {
+        this.tableNameInput = props.tableName;
         done();
     });
 }
