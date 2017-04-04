@@ -47,7 +47,7 @@ module.exports = generator.extend({
 
     /** We use this function to warn the user. */
     _warnLog (pString) {
-        if (isTrueString) {
+        if (isTrueString(pString)) {
             this.log(chalk.bold.red(`DBH-WARN: ${pString}`));
         } else {
             throw new TypeError(
@@ -58,7 +58,7 @@ module.exports = generator.extend({
 
     /** Hooray ! Celebrate something. */
     _successLog (pString) {
-        if (isTrueString) {
+        if (isTrueString(pString)) {
             this.log(chalk.bold.green(`DBH-SUCCESS: ${pString}`));
         } else {
             throw new TypeError(
