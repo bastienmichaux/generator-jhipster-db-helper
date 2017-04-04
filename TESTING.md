@@ -14,6 +14,12 @@ $ get-command yo                                  #windows powershell
 $ node --debug `which yo` <generator> [arguments] #osx/linux
 ```
 
+## Test jhipster-db-helper
+
+```shell
+$ npm test
+```
+
 ## Node.js assert functions
 
 `assert.ok` : test if a value is truthy - equivalent to `assert.equal(!!x, true)`
