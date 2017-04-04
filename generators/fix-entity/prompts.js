@@ -7,7 +7,7 @@ module.exports = {
     askForColumnName
 };
 
-function askForTableName () {
+function askForTableName() {
     const done = this.async();
     this.prompt({
         type: 'input',
@@ -23,7 +23,7 @@ function askForTableName () {
     });
 }
 
-function askForColumnName () {
+function askForColumnName() {
     const done = this.async();
     this.prompt({
         type: 'input',
