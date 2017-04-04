@@ -182,9 +182,9 @@ module.exports = generator.extend({
 
     // other Yeoman run loop steps would go here :
 
-    // configuring: Saving configurations and configure the project (creating .editorconfig files and other metadata files)
+    // configuring() : Saving configurations and configure the project (creating .editorconfig files and other metadata files)
 
-    // default: If the method name doesn't match a priority, it will be pushed to this group.
+    // default() : If the method name doesn't match a priority, it will be pushed to this group.
 
     // write the generator-specific files
     writing() {
@@ -219,7 +219,7 @@ module.exports = generator.extend({
         }
     },
 
-    // conflict: Where conflicts are handled (used internally)
+    // conflict() : Where conflicts are handled (used internally)
 
     // run installation (npm, bower, etc)
     install() {
