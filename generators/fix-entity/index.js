@@ -1,6 +1,7 @@
 // modules used by the generator
 const generator = require('yeoman-generator');
 const chalk = require('chalk');
+const prompts = require('./prompts.js');
 
 const replace = require('replace');
 const fs = require('fs');
@@ -22,28 +23,16 @@ module.exports = generator.extend({
     },
 
     // prompt the user for options
-    prompting() {
-        // DEBUG : log where we are
-        this.log('prompting');
-
-        const done = this.async();
-
-        // user interaction on module call goes here
-        const prompts = [];
-
-        // call the prompts
-        this.prompt(prompts).then((props) => {
-            this.props = props;
-            // To access props later use this.props.someOption;
-            done();
-        });
+    prompting: {
+        askForTableName: prompts.askForTableName,
+        askForColumnName: prompts.askForColumnName
     },
 
     // other Yeoman run loop steps would go here :
 
-    // configuring: Saving configurations and configure the project (creating .editorconfig files and other metadata files)
+    // configuring() : Saving configurations and configure the project (creating .editorconfig files and other metadata files)
 
-    // default: If the method name doesn't match a priority, it will be pushed to this group.
+    // default() : If the method name doesn't match a priority, it will be pushed to this group.
 
     // write the generator-specific files
     writing() {
@@ -71,8 +60,7 @@ module.exports = generator.extend({
         jhipsterFunc.updateEntityConfig(this.options.entityConfig.filename, 'entityTableName', wantedValue);
     },
 
-    // Where conflicts are handled (used internally)
-    // conflict() {}
+    // conflict() : Where conflicts are handled (used internally)
 
     // run installation (npm, bower, etc)
     install() {
@@ -84,5 +72,5 @@ module.exports = generator.extend({
     end() {
         // DEBUG : log where we are
         this.log('End of fix-entity generator');
-    },
+    }
 });

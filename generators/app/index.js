@@ -47,7 +47,7 @@ module.exports = generator.extend({
 
     /** We use this function to warn the user. */
     _warnLog (pString) {
-        if (isTrueString) {
+        if (isTrueString(pString)) {
             this.log(chalk.bold.red(`DBH-WARN: ${pString}`));
         } else {
             throw new TypeError(
@@ -58,7 +58,7 @@ module.exports = generator.extend({
 
     /** Hooray ! Celebrate something. */
     _successLog (pString) {
-        if (isTrueString) {
+        if (isTrueString(pString)) {
             this.log(chalk.bold.green(`DBH-SUCCESS: ${pString}`));
         } else {
             throw new TypeError(
@@ -104,7 +104,7 @@ module.exports = generator.extend({
      */
     _replaceNamingStrategies () {
         // grab our files from the global space
-        const files = DBH_CONSTANTS.filesWithNamingStrategyPaths;
+        const files = DBH_CONSTANTS.filesWithNamingStrategy;
 
         const physicalOld = DBH_CONSTANTS.physicalNamingStrategyOld;
         const physicalNew = DBH_CONSTANTS.physicalNamingStrategyNew;
@@ -182,9 +182,9 @@ module.exports = generator.extend({
 
     // other Yeoman run loop steps would go here :
 
-    // configuring: Saving configurations and configure the project (creating .editorconfig files and other metadata files)
+    // configuring() : Saving configurations and configure the project (creating .editorconfig files and other metadata files)
 
-    // default: If the method name doesn't match a priority, it will be pushed to this group.
+    // default() : If the method name doesn't match a priority, it will be pushed to this group.
 
     // write the generator-specific files
     writing() {
@@ -211,6 +211,7 @@ module.exports = generator.extend({
         } catch (err) {
             this.log(`${chalk.red.bold('WARN!')} Could not register as a jhipster entity post creation hook...\n`);
         }
+
         try {
             jhipsterFunc.registerModule('generator-jhipster-db-helper', 'entity', 'post', 'fix-entity', 'A JHipster module to circumvent JHipster limitations about names');
         } catch (err) {
@@ -218,8 +219,7 @@ module.exports = generator.extend({
         }
     },
 
-    // Where conflicts are handled (used internally)
-    // conflict() {}
+    // conflict() : Where conflicts are handled (used internally)
 
     // run installation (npm, bower, etc)
     install() {
