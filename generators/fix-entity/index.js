@@ -12,6 +12,11 @@ const jhipsterVar = {
 const jhipsterFunc = {};
 
 module.exports = generator.extend({
+    constructor: function (...args) { // eslint-disable-line object-shorthand
+        generator.apply(this, args);
+        this.entityConfig = this.options.entityConfig;
+        this.defaultTableName = this.options.entityConfig.entityClass;
+    },
     // check current project state, get configs, etc
     initializing() {
         this.log('fix-entity generator');
@@ -20,8 +25,6 @@ module.exports = generator.extend({
 			{ jhipsterVar, jhipsterFunc },
 			this.options.testmode ? { local: require.resolve('generator-jhipster/generators/modules') } : null
 		);
-
-        this.defaultTableName = this.options.entityConfig.entityClass;
     },
 
     // prompt the user for options
@@ -40,7 +43,9 @@ module.exports = generator.extend({
     writing() {
         // DEBUG : log where we are
         this.log('writing');
-        let ORMFile = jhipsterVar.javaDir + '/domain/' + this.options.entityConfig.entityClass + '.java';
+        this.log(this.entityConfig);
+
+        let ORMFile = jhipsterVar.javaDir + '/domain/' + this.entityConfig.entityClass + '.java';
         let desiredTableName = this.defaultTableName;
 
         if (fs.existsSync(ORMFile)) {
@@ -59,7 +64,7 @@ module.exports = generator.extend({
             throw new Error(`${ORMFile} doesn't exist!`);
         }
 
-        jhipsterFunc.updateEntityConfig(this.options.entityConfig.filename, 'entityTableName', desiredTableName);
+        jhipsterFunc.updateEntityConfig(this.entityConfig.filename, 'entityTableName', desiredTableName);
     },
 
     // conflict() : Where conflicts are handled (used internally)
