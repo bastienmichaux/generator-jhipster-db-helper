@@ -14,6 +14,8 @@ This is about working functionalities which we need to make sure they're reliabl
 	* We should print current strategy for each file
 	* We should try to modify a file only if it hasn't the correct strategy
 	* We should print a message about if we modify the file or not
+* Prompting
+	* Depending on user configuration (database type, options, ...), we must offer different defaults, use others flags, use different validation, ...
 
 ## Unit Tests
 
