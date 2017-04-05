@@ -4,7 +4,7 @@ const generator = require('yeoman-generator');
 
 module.exports = {
     askForTableName,
-    askForColumnName
+    askForColumnsName
 };
 
 function askForTableName() {
@@ -23,18 +23,21 @@ function askForTableName() {
     });
 }
 
-function askForColumnName() {
+function askForColumnsName() {
     const done = this.async();
-    this.prompt({
-        type: 'input',
-        name: 'askForColumnName',
-        validate: (input) => {
-            return true;
-        },
-        message: 'What is the column name for this field?',
-        default: 'My column name'
-    }).then((prompt) => {
-        this.log('askForColumnName : then');
+    const prompt = [
+        {
+            type: 'input',
+            name: 'columnName',
+            validate: (input) => {
+                return true;
+            },
+            message: 'What is the column name for this field?',
+            default: 'My column name'
+        }
+    ];
+    this.prompt(prompt).then((props) => {
+        this.columnsInput.push(props.columnName);
         done();
     });
 }

@@ -19,7 +19,10 @@ module.exports = generator.extend({
         generator.apply(this, args);
         this.entityConfig = this.options.entityConfig;
         this.defaultTableName = this.options.entityConfig.entityClass;
+        this.fields = this.options.entityConfig.data.fields;
+
         this.tableNameInput;
+        this.columnsInput = [];
     },
 
 
@@ -37,7 +40,7 @@ module.exports = generator.extend({
     // prompt the user for options
     prompting: {
         askForTableName: prompts.askForTableName,
-        askForColumnName: prompts.askForColumnName
+        askForColumnName: prompts.askForColumnsName
     },
 
 
@@ -54,6 +57,9 @@ module.exports = generator.extend({
      * Allows consistent mapping with an existing database table without modifying JHipster's entity subgenerator.
      **/
     writing() {
+        this.log(chalk.red('PRINT ENTITY')); // TODO
+        this.log(this.entityConfig); // TODO
+        this.log(this.entityConfig.data.fields); // TODO
         // DEBUG : log where we are
         this.log('writing');
 
