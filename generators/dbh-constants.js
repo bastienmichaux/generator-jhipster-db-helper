@@ -11,8 +11,8 @@ const constants = {
     filesWithNamingStrategy: [
         './pom.xml',
         './src/main/resources/config/application.yml',
-        './src/test/resources/config/application.yml',
-        './gradle/liquibase.gradle',
+        './src/test/resources/config/application.yml'/*,
+        './gradle/liquibase.gradle',*/
     ],
 
 
