@@ -12,9 +12,7 @@ const constants = {
         './pom.xml',
         './src/main/resources/config/application.yml',
         './src/test/resources/config/application.yml',
-        './node_modules/generator-jhipster/generators/server/templates/gradle/_liquibase.gradle',
-        './node_modules/generator-jhipster/generators/server/templates/src/main/resources/config/_application.yml',
-        './node_modules/generator-jhipster/generators/server/templates/src/test/resources/config/_application.yml'
+        './gradle/liquibase.gradle',
     ],
 
 
