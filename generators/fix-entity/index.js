@@ -60,6 +60,7 @@ module.exports = generator.extend({
         this.log(chalk.red('PRINT ENTITY')); // TODO
         this.log(this.entityConfig); // TODO
         this.log(this.entityConfig.data.fields); // TODO
+        this.log(this.columnsInput); // TODO
         // DEBUG : log where we are
         this.log('writing');
 
