@@ -14,7 +14,6 @@ const packagejs = require('../../package.json'); // gives access to the package.
 
 
 // modules use by private db-helper functions
-const replace = require('replace');
 const fs = require('fs');
 const DBH_CONSTANTS = require('../dbh-constants');
 
