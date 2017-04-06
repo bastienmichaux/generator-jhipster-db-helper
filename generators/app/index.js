@@ -8,15 +8,14 @@
  */
 
 // modules used by the generator
-const generator = require('yeoman-generator');
-const chalk = require('chalk');
-const packagejs = require('../../package.json'); // gives access to the package.json data
-
-
-// modules use by private db-helper functions
-const fs = require('fs');
-const DBH_CONSTANTS = require('../dbh-constants');
-const dbh = require('../dbh.js');
+const generator = require('yeoman-generator'),
+    chalk = require('chalk'),
+    // gives access to the package.json data
+    packagejs = require('../../package.json'),
+    // modules use by private db-helper functions
+    fs = require('fs'),
+    DBH_CONSTANTS = require('../dbh-constants'),
+    dbh = require('../dbh.js');
 
 
 // Stores JHipster variables
