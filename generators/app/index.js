@@ -153,26 +153,6 @@ module.exports = generator.extend({
                         return;
                     }
                 });
-
-                // replace the files :
-
-                // 1) replace Spring physical naming strategy
-                replace({
-                    regex: physicalOld,
-                    replacement: physicalNew,
-                    paths: existingFiles,
-                    recursive: false,
-                    silent: true,
-                });
-
-                // 2) replace Spring implicit naming strategy
-                replace({
-                    regex: implicitOld,
-                    replacement: implicitNew,
-                    paths: existingFiles,
-                    recursive: false,
-                    silent: true,
-                });
             },
 
             // if promise is rejected
