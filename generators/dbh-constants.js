@@ -15,6 +15,14 @@ const constants = {
         './gradle/liquibase.gradle',*/
     ],
 
+    /**
+     * The application file for the current JHipster app.
+     * @constant
+     * @todo Delete this constant and replace its references once we know how to grab it from the calling application.
+     * @type {string}
+     */
+    applicationConfigFile: './.yo-rc.json',
+
 
     /**
      * Original physical naming strategy used by JHipster. Used for search and replace.
