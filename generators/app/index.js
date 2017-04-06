@@ -1,10 +1,7 @@
 /**
- * TODOS :
- * - write proper JsDoc
+ * TODO :
  * - create an ensemble unit test
- * - replace 'console.log' with 'this.log'
- * - maybe replace the NPM module called 'replace' (I know, it's confusing) with lodash.replace function (but beware, this functions uses the arguments property).
- * Don't forget to run eslint !
+ * - Don't forget to run eslint !
  */
 
 // modules used by the generator
@@ -34,17 +31,6 @@ const isTrueString = dbh.isTrueString;
 
 
 module.exports = generator.extend({
-    /** We use this function as a DEBUG logger during development. Users shouldn't see it. */
-    _debugLog (pString) {
-        if (isTrueString(pString)) {
-            this.log(chalk.bold.yellow(`DBH-DEBUG: ${pString}`));
-        } else {
-            throw new TypeError(
-                chalk.red(`DBH: pString isn't a true string: type = ${typeof pString} ; value = ${pString}`)
-            );
-        }
-    },
-
     /**
      * replace Spring naming strategies with more neutral ones
      * return true if all occurrences are replaced
@@ -138,7 +124,7 @@ module.exports = generator.extend({
     initializing: {
         compose() {
             // DEBUG : log where we are
-            this._debugLog('initializing: compose');
+            this.log(chalk.bold.yellow('initializing: compose'));
 
             this.composeWith('jhipster:modules',
                 { jhipsterVar, jhipsterFunc },
@@ -154,7 +140,7 @@ module.exports = generator.extend({
     // prompt the user for options
     prompting() {
         // DEBUG : log where we are
-        this._debugLog('prompting');
+        this.log(chalk.bold.yellow('prompting'));
 
         const done = this.async();
 
@@ -178,7 +164,7 @@ module.exports = generator.extend({
     // write the generator-specific files
     writing() {
         // DEBUG : log where we are
-        this._debugLog('writing');
+        this.log(chalk.bold.yellow('writing'));
 
         // replace files with Spring's naming strategies
         this.log('db-helper replaces your naming strategies.');
@@ -213,7 +199,7 @@ module.exports = generator.extend({
     // run installation (npm, bower, etc)
     install() {
         // DEBUG : log where we are
-        this._debugLog('install');
+        this.log(chalk.bold.yellow('install'));
 
         let logMsg = `To install your dependencies manually, run: ${chalk.yellow.bold(`${this.clientPackageManager} install`)}`;
 
@@ -243,8 +229,7 @@ module.exports = generator.extend({
     // cleanup, say goodbye
     end() {
         // DEBUG : log where we are
-        this._debugLog('end');
-
+        this.log(chalk.bold.yellow('end'));
         this.log('End of db-helper generator');
     }
 });
