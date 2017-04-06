@@ -61,7 +61,7 @@ module.exports = generator.extend({
     // prompt the user for options
     prompting: {
         askForTableName: prompts.askForTableName,
-        askForColumnName: prompts.askForColumnsName
+        askForColumnsName: prompts.askForColumnsName
     },
 
 
