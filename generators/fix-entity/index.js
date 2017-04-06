@@ -2,7 +2,6 @@ const generator = require('yeoman-generator');
 const assert = require('yeoman-assert');
 const chalk = require('chalk');
 const prompts = require('./prompts.js');
-const replace = require('replace');
 const fs = require('fs');
 
 
@@ -21,7 +20,7 @@ module.exports = generator.extend({
         this.defaultTableName = this.options.entityConfig.entityClass;
         this.fields = this.options.entityConfig.data.fields;
 
-        this.tableNameInput;
+        this.tableNameInput = null;
         this.columnsInput = [];
 
         /**
