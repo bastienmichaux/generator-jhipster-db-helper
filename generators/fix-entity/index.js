@@ -5,7 +5,7 @@ const generator = require('yeoman-generator'),
 
 
 const jhipsterVar = {
-    moduleName: 'fix-entity '
+    moduleName: 'fix-entity'
 };
 
 
@@ -114,8 +114,6 @@ module.exports = generator.extend({
                 throw new Error('File not found (' + file + ': ' + files[file]['path'] + ')');
             }
         }
-
-
     },
 
 
