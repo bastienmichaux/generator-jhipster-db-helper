@@ -2,7 +2,6 @@ const generator = require('yeoman-generator');
 const assert = require('yeoman-assert');
 const chalk = require('chalk');
 const prompts = require('./prompts.js');
-const replace = require('replace');
 const fs = require('fs');
 
 
@@ -21,8 +20,31 @@ module.exports = generator.extend({
         this.defaultTableName = this.options.entityConfig.entityClass;
         this.fields = this.options.entityConfig.data.fields;
 
-        this.tableNameInput;
+        this.tableNameInput = null;
         this.columnsInput = [];
+
+        /**
+         * replaces the content of a file located by its prefix and suffix by a new value
+         * doesn't take the old value into account
+         *
+         * @param file will be modified
+         * @param prefix is before the value we want to change
+         * @param suffix is after the value we want to change
+         * @param value will replace the current value in between prefix and suffix
+         */
+        this.replaceContent = function (file, prefix, suffix, value) {
+            // TODO May want to put escapeRegExp somewhere else
+            /**
+             * return a copy of str with all regex characters escaped
+             *
+             * @param str possibly contains regex characters
+             * @returns {XML|*|string|void}
+             */
+            function escapeRegExp(str) {
+                return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
+            }
+            jhipsterFunc.replaceContent(file, escapeRegExp(prefix) + '.*' + escapeRegExp(suffix), prefix + value + suffix, true);
+        };
     },
 
 
@@ -57,10 +79,6 @@ module.exports = generator.extend({
      * Allows consistent mapping with an existing database table without modifying JHipster's entity subgenerator.
      **/
     writing() {
-        this.log(chalk.red('PRINT ENTITY')); // TODO
-        this.log(this.entityConfig); // TODO
-        this.log(this.entityConfig.data.fields); // TODO
-        this.log(this.columnsInput); // TODO
         // DEBUG : log where we are
         this.log('writing');
 
@@ -77,34 +95,14 @@ module.exports = generator.extend({
 
         assert.file([ORMFile, liquibaseFile]);
 
-        // replace the value of the 'name' attribute for @Table in the Java entity class
-
-        let prefix = '@Table\\(name = "';
-        let suffix = '"\\)';
-
-        replace({
-            regex: prefix + '.*' + suffix,
-            replacement: prefix.replace('\\', '') + desiredTableName + suffix.replace('\\', ''),
-            paths: [ORMFile],
-            recursive: false,
-            silent: true,
-        });
-
-        // replace the value of the 'tableName' attribute in the liquibase _added_entity file for this entity
-
-        prefix = '<createTable tableName="';
-        suffix = '">';
-
-        replace({
-            regex: prefix + '.*' + suffix,
-            replacement: prefix + desiredTableName + suffix,
-            paths: [liquibaseFile],
-            recursive: false,
-            silent: true,
-        });
-
         // update the entity json file
         jhipsterFunc.updateEntityConfig(this.entityConfig.filename, 'entityTableName', desiredTableName);
+
+        // replace the value of the 'name' attribute for @Table in the Java entity class
+        this.replaceContent(ORMFile, '@Table(name = "', '")', desiredTableName);
+
+        // replace the value of the 'tableName' attribute in the liquibase _added_entity file for this entity
+        this.replaceContent(liquibaseFile, '<createTable tableName="', '">', desiredTableName);
     },
 
 
