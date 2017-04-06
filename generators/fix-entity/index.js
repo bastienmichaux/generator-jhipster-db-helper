@@ -1,8 +1,7 @@
-const generator = require('yeoman-generator');
-const assert = require('yeoman-assert');
-const chalk = require('chalk');
-const prompts = require('./prompts.js');
-const fs = require('fs');
+const generator = require('yeoman-generator'),
+    chalk = require('chalk'),
+    prompts = require('./prompts.js'),
+    fs = require('fs');
 
 
 const jhipsterVar = {
@@ -17,7 +16,7 @@ module.exports = generator.extend({
     constructor: function (...args) { // eslint-disable-line object-shorthand
         generator.apply(this, args);
         this.entityConfig = this.options.entityConfig;
-        this.defaultTableName = this.options.entityConfig.entityClass;
+        this.defaultTableName = this.options.entityConfig.entityTableName;
         this.fields = this.options.entityConfig.data.fields;
 
         this.tableNameInput = null;
@@ -82,27 +81,41 @@ module.exports = generator.extend({
         // DEBUG : log where we are
         this.log('writing');
 
-        // path of the Java entity class
-        // something like : src/main/java/package/domain/Foo.java
-        let ORMFile = jhipsterVar.javaDir + '/domain/' + this.entityConfig.entityClass + '.java';
-
-        // path of the Liquibase changelog file
-        // something like : src/main/resources/config/liquibase/changelog/20150128232313_added_entity_Foo.xml
-        let liquibaseFile = jhipsterVar.resourceDir + 'config/liquibase/changelog/' + this.entityConfig.data.changelogDate + '_added_entity_' + this.entityConfig.entityClass + '.xml';
-
         // wanted table name (replaces JHipster's automatically created table name)
         let desiredTableName = this.tableNameInput;
-
-        assert.file([ORMFile, liquibaseFile]);
 
         // update the entity json file
         jhipsterFunc.updateEntityConfig(this.entityConfig.filename, 'entityTableName', desiredTableName);
 
-        // replace the value of the 'name' attribute for @Table in the Java entity class
-        this.replaceContent(ORMFile, '@Table(name = "', '")', desiredTableName);
+        // The files where we must change the value
+        const files = {
+            // path of the entity Java ORM
+            // something like : src/main/java/package/domain/Foo.java
+            ORMFile: {
+                path: jhipsterVar.javaDir + '/domain/' + this.entityConfig.entityClass + '.java',
+                prefix: '@Table(name = "',
+                suffix: '")'
+            },
+            // path of the Liquibase changelog file
+            // something like : src/main/resources/config/liquibase/changelog/20150128232313_added_entity_Foo.xml
+            liquibaseFile: {
+                path: jhipsterVar.resourceDir + 'config/liquibase/changelog/' + this.entityConfig.data.changelogDate + '_added_entity_' + this.entityConfig.entityClass + '.xml',
+                prefix: '<createTable tableName="',
+                suffix: '">'
+            }
+        };
 
-        // replace the value of the 'tableName' attribute in the liquibase _added_entity file for this entity
-        this.replaceContent(liquibaseFile, '<createTable tableName="', '">', desiredTableName);
+        // Replacing the values
+        for (var file in files) {
+            // hasOwnProperty to avoid inherited properties
+            if (files.hasOwnProperty(file) && fs.existsSync(files[file]['path'])) {
+                this.replaceContent(files[file]['path'], files[file]['prefix'], files[file]['suffix'], desiredTableName);
+            } else if(files.hasOwnProperty(file)) {
+                throw new Error('File not found (' + file + ': ' + files[file]['path'] + ')');
+            }
+        }
+
+
     },
 
 
