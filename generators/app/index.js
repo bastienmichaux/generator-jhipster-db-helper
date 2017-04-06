@@ -115,31 +115,15 @@ module.exports = generator.extend({
         // check that each file exists
         files.forEach((path) => {
             if (fs.existsSync(path)) {
-                this.log(`File ${chalk.cyan(path)} exists`);
+                this.log(`File ${chalk.cyan(path)} found`);
+                // 1) replace Spring physical naming strategy
+                jhipsterFunc.replaceContent(path, physicalOld, physicalNew);
+                // 2) replace Spring implicit naming strategy
+                jhipsterFunc.replaceContent(path, implicitOld, implicitNew);
             } else {
                 // note : 'throw' ends the function here
                 throw new Error(`${path} doesn't exist!`);
             }
-        });
-
-        // replace the files :
-
-        // 1) replace Spring physical naming strategy
-        replace({
-            regex: physicalOld,
-            replacement: physicalNew,
-            paths: files,
-            recursive: false,
-            silent: true,
-        });
-
-        // 2) replace Spring implicit naming strategy
-        replace({
-            regex: implicitOld,
-            replacement: implicitNew,
-            paths: files,
-            recursive: false,
-            silent: true,
         });
 
         return false;
