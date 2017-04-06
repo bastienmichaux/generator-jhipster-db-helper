@@ -16,6 +16,7 @@ const packagejs = require('../../package.json'); // gives access to the package.
 // modules use by private db-helper functions
 const fs = require('fs');
 const DBH_CONSTANTS = require('../dbh-constants');
+const dbh = require('../dbh.js');
 
 
 // Stores JHipster variables
@@ -29,7 +30,7 @@ const jhipsterFunc = {};
 
 
 /** return true for a non-empty string */
-const isTrueString = x => (typeof x === 'string' && x !== '');
+const isTrueString = dbh.isTrueString;
 
 
 module.exports = generator.extend({
@@ -102,6 +103,7 @@ module.exports = generator.extend({
      * @todo : write unit test
      */
     _replaceNamingStrategies () {
+
         // grab our files from the global space
         const files = DBH_CONSTANTS.filesWithNamingStrategy;
 
@@ -111,21 +113,71 @@ module.exports = generator.extend({
         const implicitOld = DBH_CONSTANTS.implicitNamingStrategyOld;
         const implicitNew = DBH_CONSTANTS.implicitNamingStrategyNew;
 
-        // check that each file exists
-        files.forEach((path) => {
-            if (fs.existsSync(path)) {
-                this.log(`File ${chalk.cyan(path)} found`);
-                // 1) replace Spring physical naming strategy
-                jhipsterFunc.replaceContent(path, physicalOld, physicalNew);
-                // 2) replace Spring implicit naming strategy
-                jhipsterFunc.replaceContent(path, implicitOld, implicitNew);
-            } else {
-                // note : 'throw' ends the function here
-                throw new Error(`${path} doesn't exist!`);
-            }
-        });
+        // used to filter the files with naming strategy
 
-        return false;
+        const removeGradleFiles = (item) => {return item !== './gradle/liquibase.gradle'};
+        const removeMavenFiles = (item) => {return item !== './pom.xml'};
+        var existingFiles = []; // files minus the not installed files
+
+        // use a promise to get the current application config
+        dbh.getApplicationConfig().then(
+            // if promise is resolved,
+            // get the build tool of the application config
+            promiseResponse => {
+                const buildTool = promiseResponse['generator-jhipster']['buildTool'];
+
+                // filter the non-existing file(s)
+                // ie : if app uses Maven, remove Gradle file(s)
+                // @TODO : no hardcoded values
+                if (buildTool === 'maven') {
+                    existingFiles = files.filter(removeGradleFiles);
+                } else if (buildTool === 'gradle') {
+                    existingFiles = files.filter(removeMavenFiles);
+                } else {
+                    throw new Error (`build tool ${buildTool} unknown`);
+                }
+
+                // check that each file exists
+                // TODO: move to another promise
+                existingFiles.forEach((path) => {
+                    if (fs.existsSync(path)) {
+                        this.log(`File ${chalk.cyan(path)} found`);
+                        // 1) replace Spring physical naming strategy
+                        jhipsterFunc.replaceContent(path, physicalOld, physicalNew);
+                        // 2) replace Spring implicit naming strategy
+                        jhipsterFunc.replaceContent(path, implicitOld, implicitNew);
+                    } else {
+                        // note : 'throw' ends the function here
+                        //throw new Error(`${path} doesn't exist!`);
+                        this.log(`${path} doesn't exist!`);
+                        return;
+                    }
+                });
+
+                // replace the files :
+
+                // 1) replace Spring physical naming strategy
+                replace({
+                    regex: physicalOld,
+                    replacement: physicalNew,
+                    paths: existingFiles,
+                    recursive: false,
+                    silent: true,
+                });
+
+                // 2) replace Spring implicit naming strategy
+                replace({
+                    regex: implicitOld,
+                    replacement: implicitNew,
+                    paths: existingFiles,
+                    recursive: false,
+                    silent: true,
+                });
+            },
+
+            // if promise is rejected
+            promiseError => this.log(promiseError)
+        );
     },
 
     // check current project state, get configs, etc
