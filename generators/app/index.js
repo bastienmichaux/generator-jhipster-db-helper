@@ -8,14 +8,15 @@
  */
 
 // modules used by the generator
-const generator = require('yeoman-generator'),
-    chalk = require('chalk'),
-    // gives access to the package.json data
-    packagejs = require('../../package.json'),
-    // modules use by private db-helper functions
-    fs = require('fs'),
-    DBH_CONSTANTS = require('../dbh-constants'),
-    dbh = require('../dbh.js');
+const generator = require('yeoman-generator');
+const chalk = require('chalk');
+const packagejs = require('../../package.json'); // gives access to the package.json data
+
+
+// modules use by private db-helper functions
+const fs = require('fs');
+const DBH_CONSTANTS = require('../dbh-constants');
+const dbh = require('../dbh.js');
 
 
 // Stores JHipster variables
@@ -41,52 +42,6 @@ module.exports = generator.extend({
             throw new TypeError(
                 chalk.red(`DBH: pString isn't a true string: type = ${typeof pString} ; value = ${pString}`)
             );
-        }
-    },
-
-    /** We use this function to warn the user. */
-    _warnLog (pString) {
-        if (isTrueString(pString)) {
-            this.log(chalk.bold.red(`DBH-WARN: ${pString}`));
-        } else {
-            throw new TypeError(
-                chalk.red(`DBH: pString isn't a true string: type = ${typeof pString} ; value = ${pString}`)
-            );
-        }
-    },
-
-    /** Hooray ! Celebrate something. */
-    _successLog (pString) {
-        if (isTrueString(pString)) {
-            this.log(chalk.bold.green(`DBH-SUCCESS: ${pString}`));
-        } else {
-            throw new TypeError(
-                chalk.red(`DBH: pString isn't a true string: type = ${typeof pString} ; value = ${pString}`)
-            );
-        }
-    },
-
-    /**
-     * Test if Spring naming strategies are replaced by our naming strategies
-     * @todo Write unit test
-     * @returns {Boolean}
-     */
-    _namingStrategiesReplaced () {
-        this.log(chalk.bold.red('getEntityNameVariations NOT IMPLEMENTED YET !'));
-        return false;
-    },
-
-    /**
-     * Return an object with the entity name and all its variants (name, tableName, entityTableName, etc).
-     * @todo Write unit test
-     * @returns {Object}
-     */
-    _getEntityNameVariations (pEntityName) {
-        this.log(chalk.bold.red('getEntityNameVariations NOT IMPLEMENTED YET !'));
-        if (isTrueString(pEntityName)) {
-            return false;
-        } else {
-            throw new TypeError(`pEntityName isn't a true string: type = ${typeof pEntityName} ; value = ${pEntityName}`);
         }
     },
 
@@ -151,6 +106,26 @@ module.exports = generator.extend({
                         this.log(`${path} doesn't exist!`);
                         return;
                     }
+                });
+
+                // replace the files :
+
+                // 1) replace Spring physical naming strategy
+                replace({
+                    regex: physicalOld,
+                    replacement: physicalNew,
+                    paths: existingFiles,
+                    recursive: false,
+                    silent: true,
+                });
+
+                // 2) replace Spring implicit naming strategy
+                replace({
+                    regex: implicitOld,
+                    replacement: implicitNew,
+                    paths: existingFiles,
+                    recursive: false,
+                    silent: true,
                 });
             },
 
