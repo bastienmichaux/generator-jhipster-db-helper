@@ -9,7 +9,7 @@ Check our [notes](notes.md) for details. Read the **contributing** section too i
 
 ## Introduction
 
-This is a [JHipster](http://jhipster.github.io/) module, that is meant to be used in a JHipster application.
+This is a [JHipster](http://jhipster.github.io/) module, meant to be used in a JHipster application.
 
 ## Prerequisites
 
@@ -19,53 +19,57 @@ As this is a [JHipster](http://jhipster.github.io/) module, we expect you have J
 
 ## Installation
 
+Create a new JHipster app and choose a SQL database. 
+
 ### With Yarn
 
-To install this module:
+To install this module: `yarn global add generator-jhipster-db-helper`
 
-```bash
-yarn global add generator-jhipster-db-helper
-```
-
-To update this module:
-
-```bash
-yarn global upgrade generator-jhipster-db-helper
-```
+To update this module: `yarn global upgrade generator-jhipster-db-helper`
 
 ### With NPM
 
-To install this module:
+To install this module: `npm install -g generator-jhipster-db-helper`
 
-```bash
-npm install -g generator-jhipster-db-helper
-```
+To update this module: `npm update -g generator-jhipster-db-helper`
 
-To update this module:
+## What this module does
 
-```bash
-npm update -g generator-jhipster-db-helper
-```
+In a new app, run `generator-jhipster-db-helper`.
+
+This will make some changes to your JHipster files. These changes make mapping on your existing database easier.
+
+After creating a new entity (`jhipster:entity MyEntity`), this module asks you :
+
+* what is the table name for your entity
+* for each field, what is the column name
+
+**Planned features** :
+
+* import your database schema into JHipster and create entities
+* relationship handling (not done yet)
 
 ## Contributing
 
-* Fork this module and create a new branch
-* In the module folder, `$ yarn link`
-* Create a new JHipster app in an empty folder : `$ yo jhipster`
-* In the new app folder : `$ yarn link generator-jhipster-db-helper`
-
-> Yep it's quite a strokeful. Consider using an alias
-
-* In the new app folder : `yo jhipster-db-helper`
+* Fork this module and create your local branch
+* In the module folder, `yarn link`
+* Create a new JHipster app in an empty folder : `yo jhipster`
+* In the new app folder :
+  * `yarn link generator-jhipster-db-helper`
+  * `yo jhipster-db-helper`
 * Answer the questions. The module should work. You now have a working test app.
+* Pull your changes to a new branch
 
-You can edit your local repo and test the changes in the app. No need to rebuild or regen anything.
+You can edit your local repository and test the changes in the app. No need to rebuild or regen anything.
 
-Something doesn't work as expected ? Create an issue.
+Check our [todo list](todo.md) and our [notes](NOTES.md). You can also contact us !
+
+* Adrien : ahorgnies@altissia.com
+* Bastien : bmichaux@altissia.com
 
 ## License
 
-Apache-2.0
+Apache-2.0 © and the JHipster contributors
 
 
 [npm-image]: https://img.shields.io/npm/v/generator-jhipster-db-helper.svg
