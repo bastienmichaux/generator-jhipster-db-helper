@@ -39,14 +39,21 @@ module.exports = generator.extend({
         const jsonEntity = this.fs.readJSON('.jhipster/' + this.defaultTableName + '.json');
 
         this.log(chalk.red('PRINTING ' + this.defaultTableName + '.json')); // TODO
-        this.log(typeof jsonEntity); // TODO
         this.log(jsonEntity); // TODO
+        this.log(chalk.red('PRINTING fields')); // TODO
+        this.log(this.fields); // TODO
 
+        this.log(chalk.red('Searching column names')); // TODO
         jsonEntity.fields.forEach(function (field) {
             log(field); // TODO
             if(field.columnName === undefined) {
+                // TODO do nothings
                 log(field.fieldName + ' has no associated columnName'); // TODO
                 field.columnName = 'PREFIX_' + field.fieldName + '_SUFFIX';
+            } else {
+                // TODO add a columnName entry in the corresponding field object from the array this.fields
+                // select field from this.fields where field.fieldName LIKE jsonEntity.fieldName
+
             }
         });
 
@@ -54,6 +61,7 @@ module.exports = generator.extend({
         this.log(typeof jsonEntity); // TODO
         this.log(jsonEntity); // TODO
 
+        this.log(chalk.red('Searching column names')); // TODO
         jsonEntity.fields.forEach(function (field) {
             log(field); // TODO
             if(field.columnName === undefined) {
