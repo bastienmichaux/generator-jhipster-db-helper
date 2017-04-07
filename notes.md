@@ -78,7 +78,7 @@ public class FooBar implements Serializable { ...
 $ yo jhipster:entity FooBarAPISettings --table-name MyFooBarAPISettings
 ```
 
-In src/package/java/domain/MyFooBarAPISettings.java :
+In `src/main/java/package/domain/MyFooBarAPISettings.java` :
 
 ```
 @Table(name = "my_foo_barapisettings")
