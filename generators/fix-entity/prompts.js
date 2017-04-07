@@ -34,11 +34,14 @@ function askForColumnsName() {
     this.log(chalk.green('Asking column names for ' + this.fields.length + ' fields'));
     const done = this.async();
     this.fieldsPile = this.fields.slice();
-    this.field = this.fieldsPile.pop(); // TODO this is not DRY (see askForColumnsName)
+	this.field = this.fieldsPile.pop();
     askForColumnName.call(this, done);
 }
 
 function askForColumnName(done) {
+	// TODO check if the column field has already been added to this.fields
+	// TODO display current field AND if present column name when asking for a new column name
+	// TODO set default as column name value
     const prompts = [
         {
             type: 'input',
@@ -59,7 +62,7 @@ function askForColumnName(done) {
 
         this.columnsInput.push(columnMap);
 
-        this.field = this.fieldsPile.pop(); // TODO this is not DRY (see askForColumnsName)
+        this.field = this.fieldsPile.pop();
         if(this.field !== undefined) {
             askForColumnName.call(this, done);
         } else {
