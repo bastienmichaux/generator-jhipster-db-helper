@@ -21,29 +21,6 @@ module.exports = generator.extend({
 
         this.tableNameInput = null;
         this.columnsInput = [];
-
-        /**
-         * replaces the content of a file located by its prefix and suffix by a new value
-         * doesn't take the old value into account
-         *
-         * @param file will be modified
-         * @param prefix is before the value we want to change
-         * @param suffix is after the value we want to change
-         * @param value will replace the current value in between prefix and suffix
-         */
-        this.replaceContent = function (file, prefix, suffix, value) {
-            // TODO May want to put escapeRegExp somewhere else
-            /**
-             * return a copy of str with all regex characters escaped
-             *
-             * @param str possibly contains regex characters
-             * @returns {XML|*|string|void}
-             */
-            function escapeRegExp(str) {
-                return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
-            }
-            jhipsterFunc.replaceContent(file, escapeRegExp(prefix) + '.*' + escapeRegExp(suffix), prefix + value + suffix, true);
-        };
     },
 
 
@@ -55,6 +32,9 @@ module.exports = generator.extend({
 			{ jhipsterVar, jhipsterFunc },
 			this.options.testmode ? { local: require.resolve('generator-jhipster/generators/modules') } : null
 		);
+
+		// TODO find column names and add them to this.fields
+		// parse the json the see if there are any column name, if there is, add it to this.fields
     },
 
 
@@ -81,11 +61,54 @@ module.exports = generator.extend({
         // DEBUG : log where we are
         this.log('writing');
 
-        // wanted table name (replaces JHipster's automatically created table name)
-        let desiredTableName = this.tableNameInput;
+        this.log(chalk.red('PRINTING FIELDS'));
+        this.log(this.fields);
+
+        /**
+         *
+         * @param files object which each member is a file in the form of {path: string, prefix: string, suffix: string}
+         * @param userInput the value which will replace whatever is between the matching prefix and suffix for each file.
+         */
+        function injectUserInput(files, userInput) {
+            /**
+             * replaces the content of a file located by its prefix and suffix by a new value
+             * doesn't take the old value into account
+             *
+             * @param file will be modified
+             * @param prefix is before the value we want to change
+             * @param suffix is after the value we want to change
+             * @param value will replace the current value in between prefix and suffix
+             */
+            function replaceContent(file, prefix, suffix, value) {
+                /**
+                 * return a copy of str with all regex characters escaped
+                 *
+                 * @param str possibly contains regex characters
+                 * @returns {XML|*|string|void}
+                 */
+                function escapeRegExp(str) {
+                    return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
+                }
+                jhipsterFunc.replaceContent(file, escapeRegExp(prefix) + '.*' + escapeRegExp(suffix), prefix + value + suffix, true);
+            };
+
+            // Replacing the values
+            for (var file in files) {
+                // hasOwnProperty to avoid inherited properties
+                if (files.hasOwnProperty(file) && fs.existsSync(files[file]['path'])) {
+                    replaceContent(files[file]['path'], files[file]['prefix'], files[file]['suffix'], userInput);
+                } else if(files.hasOwnProperty(file)) {
+                    throw new Error('File not found (' + file + ': ' + files[file]['path'] + ')');
+                }
+            }
+
+        }
+
 
         // update the entity json file
-        jhipsterFunc.updateEntityConfig(this.entityConfig.filename, 'entityTableName', desiredTableName);
+        jhipsterFunc.updateEntityConfig(this.entityConfig.filename, 'entityTableName', this.tableNameInput);
+
+        // TODO dynamicly generate the replacement tasks
 
         // The files where we must change the value
         const files = {
@@ -114,6 +137,9 @@ module.exports = generator.extend({
                 throw new Error('File not found (' + file + ': ' + files[file]['path'] + ')');
             }
         }
+
+        injectUserInput(files, this.tableNameInput);
+		// TODO replace values
     },
 
 
