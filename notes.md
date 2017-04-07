@@ -1,12 +1,10 @@
-# Notes
+# Make JHipster work with existing databases
 
-This was written with JHipster v4.1.1 in mind.
-
-## Make JHipster work with existing databases
+(This was written with JHipster v4.1.1 in mind)
 
 JHipster is an amazing tool for new apps with empty databases. However it's harder to work with existing ones, as it isn't what JHipster was designed for.
 
-So, how do you make JHipster work in this scenario? You need to do several changes. The goal of this module is to automate them.
+So, how do you make JHipster work in this scenario? You need to do several changes. This module automates
 
 *We may not be aware of all needed changes. Correct us if something isn't covered !*
 
@@ -74,13 +72,13 @@ You still need to set the `@Table` annotation by yourself, because the entity fi
 public class FooBar implements Serializable { ...
 ```
 
-**Acronyms** : They are handled unexpectedly too.
+**Acronyms** : Same as above :
 
 ```
 $ yo jhipster:entity FooBarAPISettings --table-name MyFooBarAPISettings
 ```
 
-gives you
+In src/package/java/domain/MyFooBarAPISettings.java :
 
 ```
 @Table(name = "my_foo_barapisettings")
@@ -129,11 +127,9 @@ Regenerating the app will :
 
 ## Other documentation
 
-This document purpose is to explain what we will do and at what stage we are.
-We also documented other things such as researchs and tests which might interest you.
+These researchs and tests may have some interest for you.
 
 * [Describe briefly the module, how to install and use it](./README.md)
-* [The result of the research about how jhipster handle @Table inside the code](./entityTableName.md)
-* [The result of the research and tests about the validation done on user input for a field](./forbiddenCapital.md)
-* [What tasks we'll do after the current work](./todo.md)
-
+* [How jhipster handles @Table inside the code](./entityTableName.md)
+* [Our research and tests about the validation done on user input for a field](./forbiddenCapital.md)
+* [Our to-do list !](./todo.md)
