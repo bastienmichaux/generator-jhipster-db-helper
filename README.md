@@ -1,7 +1,7 @@
 # generator-jhipster-db-helper
 [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url]
 
-A JHipster module for already existing databases.
+This module makes mapping on an existing database easier.
 
 **This module is at an early stage, feedback is welcome ;)**
 
@@ -11,15 +11,15 @@ Check our [notes](notes.md) for details. Read the **contributing** section too i
 
 This is a [JHipster](http://jhipster.github.io/) module, meant to be used in a JHipster application.
 
-## Prerequisites
+## Installation
+
+### Prerequisites
 
 As this is a [JHipster](http://jhipster.github.io/) module, we expect you have JHipster and its related tools already installed:
 
 - [Installing JHipster](https://jhipster.github.io/installation.html)
 
-## Installation
-
-Create a new JHipster app and choose a SQL database. 
+Create a new JHipster app and choose a SQL database.
 
 ### With Yarn
 
@@ -39,15 +39,14 @@ In a new app, run `generator-jhipster-db-helper`.
 
 This will make some changes to your JHipster files. These changes make mapping on your existing database easier.
 
-After creating a new entity (`jhipster:entity MyEntity`), this module asks you :
+After creating or regenerating an entity (`jhipster:entity MyEntity`), this module asks you :
 
-* what is the table name for your entity
-* for each field, what is the column name
+* What is the table name for your entity
+* For each field, what is the column name
 
 **Planned features** :
 
-* import your database schema into JHipster and create entities
-* relationship handling (not done yet)
+* Import your database schema into JHipster
 
 ## Contributing
 
@@ -57,12 +56,12 @@ After creating a new entity (`jhipster:entity MyEntity`), this module asks you :
 * In the new app folder :
   * `yarn link generator-jhipster-db-helper`
   * `yo jhipster-db-helper`
-* Answer the questions. The module should work. You now have a working test app.
-* Pull your changes to a new branch
 
 You can edit your local repository and test the changes in the app. No need to rebuild or regen anything.
 
-Check our [todo list](todo.md) and our [notes](NOTES.md). You can also contact us !
+When contributing, please push to a new branch instead of pushing to master.
+
+Check our [todo list](todo.md) and our [notes](NOTES.md). Feel free to contact us !
 
 * Adrien : ahorgnies@altissia.com
 * Bastien : bmichaux@altissia.com
