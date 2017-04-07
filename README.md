@@ -3,9 +3,7 @@
 
 A JHipster module for already existing databases.
 
-This module should make JHipster work with already existing databases.
-
-**This module is at an early stage. It doesn't do anything interesting yet.**
+**This module is at an early stage, feedback is welcome ;)**
 
 Check our [notes](notes.md) for details. Read the **contributing** section too in this document.
 
@@ -51,24 +49,23 @@ npm update -g generator-jhipster-db-helper
 
 ## Contributing
 
-1. Fork this module and create a new branch
-2. In the module folder, type `yarn link`
-3. Create a new JHipster app in an empty folder : `yo jhipster`
-4. In the new app folder : `yarn link generator-jhipster-db-helper`
- * Yep it's quite a strokeful. Consider using an alias
-5. In the new app folder : `yo jhipster-db-helper`
-6. Answer the questions. The module should work. You now have a working test app.
-  * You can directly edit your local repo and test the changes in the app.
+* Fork this module and create a new branch
+* In the module folder, `$ yarn link`
+* Create a new JHipster app in an empty folder : `$ yo jhipster`
+* In the new app folder : `$ yarn link generator-jhipster-db-helper`
 
-To be DRY in Yeoman generators, use `_privateFunctions`.
+> Yep it's quite a strokeful. Consider using an alias
 
-Constants go to `generators/dbh-constants.js`.
+* In the new app folder : `yo jhipster-db-helper`
+* Answer the questions. The module should work. You now have a working test app.
 
-If you have a bug, contact us at [bastienmichaux@gmail.com](mailto:"bastienmichaux@gmail.com") or create an issue.
+You can edit your local repo and test the changes in the app. No need to rebuild or regen anything.
+
+Something doesn't work as expected ? Create an issue.
 
 ## License
 
-Apache-2.0 © @bastienmichaux, @adrienHorgnies and the JHipster contributors
+Apache-2.0
 
 
 [npm-image]: https://img.shields.io/npm/v/generator-jhipster-db-helper.svg
