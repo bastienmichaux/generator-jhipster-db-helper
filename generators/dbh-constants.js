@@ -41,7 +41,7 @@ const constants = {
 
 
     /**
-     * A more neutral implicit naming strategy used by jhipster-db-helper
+     * A more neutral implicit naming strategy used by jhipster-db-helper. [Doc]{https://github.com/hibernate/hibernate-orm/blob/master/hibernate-core/src/main/java/org/hibernate/boot/model/naming/ImplicitNamingStrategyJpaCompliantImpl.java}
      * @const
      * @type {string}
      */
@@ -49,7 +49,7 @@ const constants = {
 
 
     /**
-     * A more neutral physical naming strategy used by jhipster-db-helper
+     * A more neutral physical naming strategy used by jhipster-db-helper. [Doc]{https://github.com/hibernate/hibernate-orm/blob/master/hibernate-core/src/main/java/org/hibernate/boot/model/naming/PhysicalNamingStrategyStandardImpl.java}
      * @const
      * @type {string}
      */
