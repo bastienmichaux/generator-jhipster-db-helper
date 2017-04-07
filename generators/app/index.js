@@ -1,9 +1,3 @@
-/**
- * TODO :
- * - create an ensemble unit test
- * - Don't forget to run eslint !
- */
-
 // modules used by the generator
 const generator = require('yeoman-generator');
 const chalk = require('chalk');
