@@ -31,6 +31,7 @@ module.exports = generator.extend({
      *
      * @todo : write local test for the return value
      * @todo : write unit test
+     * @todo : no hardcoded values for removeGradleFiles and removeMavenFiles
      */
     _replaceNamingStrategies() {
         // grab our files from the global space
@@ -46,14 +47,14 @@ module.exports = generator.extend({
 
         const removeGradleFiles = item => item !== './gradle/liquibase.gradle';
         const removeMavenFiles = item => item !== './pom.xml';
-        var existingFiles = []; // files minus the not installed files
+        let existingFiles = []; // files minus the not installed files
 
         // use a promise to get the current application config
         dbh.getApplicationConfig().then(
             // if promise is resolved,
             // get the build tool of the application config
             (promiseResponse) => {
-                const buildTool = promiseResponse['generator-jhipster'].buildTool;
+                const buildTool = promiseResponse['generator-jhipster']['buildTool'];
 
                 // filter the non-existing file(s)
                 // ie : if app uses Maven, remove Gradle file(s)
