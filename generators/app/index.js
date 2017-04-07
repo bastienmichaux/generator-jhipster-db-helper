@@ -26,10 +26,6 @@ const jhipsterVar = {
 const jhipsterFunc = {};
 
 
-/** return true for a non-empty string */
-const isTrueString = dbh.isTrueString;
-
-
 module.exports = generator.extend({
     /**
      * replace Spring naming strategies with more neutral ones
@@ -42,8 +38,7 @@ module.exports = generator.extend({
      * @todo : write local test for the return value
      * @todo : write unit test
      */
-    _replaceNamingStrategies () {
-
+    _replaceNamingStrategies() {
         // grab our files from the global space
         const files = DBH_CONSTANTS.filesWithNamingStrategy;
 
@@ -55,26 +50,25 @@ module.exports = generator.extend({
 
         // used to filter the files with naming strategy
 
-        const removeGradleFiles = (item) => {return item !== './gradle/liquibase.gradle'};
-        const removeMavenFiles = (item) => {return item !== './pom.xml'};
+        const removeGradleFiles = item => item !== './gradle/liquibase.gradle';
+        const removeMavenFiles = item => item !== './pom.xml';
         var existingFiles = []; // files minus the not installed files
 
         // use a promise to get the current application config
         dbh.getApplicationConfig().then(
             // if promise is resolved,
             // get the build tool of the application config
-            promiseResponse => {
-                const buildTool = promiseResponse['generator-jhipster']['buildTool'];
+            (promiseResponse) => {
+                const buildTool = promiseResponse['generator-jhipster'].buildTool;
 
                 // filter the non-existing file(s)
                 // ie : if app uses Maven, remove Gradle file(s)
-                // @TODO : no hardcoded values
                 if (buildTool === 'maven') {
                     existingFiles = files.filter(removeGradleFiles);
                 } else if (buildTool === 'gradle') {
                     existingFiles = files.filter(removeMavenFiles);
                 } else {
-                    throw new Error (`build tool ${buildTool} unknown`);
+                    throw new Error(`build tool ${buildTool} unknown`);
                 }
 
                 // check that each file exists
@@ -87,31 +81,10 @@ module.exports = generator.extend({
                         // 2) replace Spring implicit naming strategy
                         jhipsterFunc.replaceContent(path, implicitOld, implicitNew);
                     } else {
-                        // note : 'throw' ends the function here
-                        //throw new Error(`${path} doesn't exist!`);
+                        // note : 'throw' should end the function here but doesn't do it
+                        // meanwhile, use a return instead
                         this.log(`${path} doesn't exist!`);
-                        return;
                     }
-                });
-
-                // replace the files :
-
-                // 1) replace Spring physical naming strategy
-                replace({
-                    regex: physicalOld,
-                    replacement: physicalNew,
-                    paths: existingFiles,
-                    recursive: false,
-                    silent: true,
-                });
-
-                // 2) replace Spring implicit naming strategy
-                replace({
-                    regex: implicitOld,
-                    replacement: implicitNew,
-                    paths: existingFiles,
-                    recursive: false,
-                    silent: true,
                 });
             },
 
@@ -170,7 +143,7 @@ module.exports = generator.extend({
         this.log('db-helper replaces your naming strategies.');
         this._replaceNamingStrategies();
 
-        //declarations done by jhipster-module
+        // declarations done by jhipster-module
         this.baseName = jhipsterVar.baseName;
         this.packageName = jhipsterVar.packageName;
         this.angularAppName = jhipsterVar.angularAppName;
@@ -229,7 +202,6 @@ module.exports = generator.extend({
     // cleanup, say goodbye
     end() {
         // DEBUG : log where we are
-        this.log(chalk.bold.yellow('end'));
-        this.log('End of db-helper generator');
+        this.log(chalk.bold.yellow('End of db-helper generator'));
     }
 });

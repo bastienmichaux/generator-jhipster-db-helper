@@ -37,7 +37,7 @@ const constants = {
      * @const
      * @type {string}
      */
-    implicitNamingStrategyOld : 'org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy',
+    implicitNamingStrategyOld: 'org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy',
 
 
     /**
@@ -45,7 +45,7 @@ const constants = {
      * @const
      * @type {string}
      */
-    implicitNamingStrategyNew : 'org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl',
+    implicitNamingStrategyNew: 'org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl',
 
 
     /**
@@ -53,7 +53,7 @@ const constants = {
      * @const
      * @type {string}
      */
-    physicalNamingStrategyNew : 'org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl'
+    physicalNamingStrategyNew: 'org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl'
 };
 
 module.exports = constants;
