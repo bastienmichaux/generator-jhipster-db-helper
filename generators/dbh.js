@@ -2,10 +2,7 @@ const DBH_CONSTANTS = require('./dbh-constants');
 const fs = require('fs');
 
 
-const isTrueString = x => (typeof x === 'string' && x !== '');
-
-
-/** return the content of .yo-rc.json */
+/** return the content of .yo-rc.json as a JSON object */
 const getApplicationConfig = () => new Promise((resolve, reject) => {
     const appConfigFile = DBH_CONSTANTS.applicationConfigFile;
     // if file exists, return its output as a JSON object
@@ -25,6 +22,10 @@ const getApplicationConfig = () => new Promise((resolve, reject) => {
         throw new Error(`getApplicationConfig: file ${appConfigFile} not found`);
     }
 });
+
+
+/** assert parameter is a non-empty string */
+const isTrueString = x => (typeof x === 'string' && x !== '');
 
 
 module.exports = {

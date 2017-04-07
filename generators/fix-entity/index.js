@@ -106,7 +106,7 @@ module.exports = generator.extend({
         };
 
         // Replacing the values
-        for (var file in files) {
+        for (let file in files) {
             // hasOwnProperty to avoid inherited properties
             if (files.hasOwnProperty(file) && fs.existsSync(files[file]['path'])) {
                 this.replaceContent(files[file]['path'], files[file]['prefix'], files[file]['suffix'], desiredTableName);
