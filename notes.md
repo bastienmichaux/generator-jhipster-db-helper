@@ -10,7 +10,7 @@ So, how do you make JHipster work in this scenario? You need to do several chang
 
 ### 1 : Change the Spring naming strategies 
 
-Spring Boot naming strategies convert `camelCase` to `underscore_case`. If you have a `FooBar` table, JHipster searches for `foo_bar` and your requests fail. Search for Spring's naming strategies and replace them with more neutral ones.
+When creating an entity, Spring Boot converts `camelCase` names to `underscore_case`. If you have a `FooBar` table, JHipster searches for `foo_bar` and your requests fail. Search for Spring's naming strategies and replace them with more neutral ones.
 
 This module :
 
