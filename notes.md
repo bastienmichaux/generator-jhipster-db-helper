@@ -26,7 +26,6 @@ In the tests we made, `CamelCase` names becomes `underscore_case`. If your reque
 1. regenerate the entity :
     * if it isn't done yet, initialise git to track the changes
     * add the `.jhipster/` directory and its files to git
-    * go to the `.jhipster/` directory at the root of your application
     * in `.jhipster/FooBar.json`, set the value of `"entityTableName": "foo_bar"` to `"FooBar"`
     * in your terminal, type `yo jhipster:entity FooBar`, and select `Yes, regenerate the entity`
     * **tip** : select the `d` option to see what differences the regeneration makes to existing files
