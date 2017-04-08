@@ -61,7 +61,7 @@ You can edit your local repository and test the changes in the app. No need to r
 
 When contributing, please push to a new branch instead of pushing to master.
 
-Check our [todo list](todo.md) and our [notes](NOTES.md). Feel free to contact us !
+Check our [todo list](todo.md) and our [notes](notes.md). Feel free to contact us !
 
 * Adrien : ahorgnies@altissia.com
 * Bastien : bmichaux@altissia.com
