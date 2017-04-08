@@ -1,7 +1,7 @@
 # generator-jhipster-db-helper
 [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url]
 
-This module makes mapping on an existing database easier.
+This JHipster module makes mapping on an existing database easier.
 
 **This module is at an early stage, feedback is welcome ;)**
 
