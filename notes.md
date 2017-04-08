@@ -4,7 +4,7 @@
 
 JHipster is an amazing tool for new apps with empty databases. However it's harder to work with existing ones, as it isn't what JHipster was designed for.
 
-So, how do you make JHipster work in this scenario? You need to do several changes. This module automates
+So, how do you make JHipster work in this scenario? You need to do several changes. This module automates most of them.
 
 *We may not be aware of all needed changes. Correct us if something isn't covered !*
 
