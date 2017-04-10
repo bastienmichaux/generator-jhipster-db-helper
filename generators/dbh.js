@@ -2,7 +2,7 @@ const DBH_CONSTANTS = require('./dbh-constants');
 const fs = require('fs');
 
 
-const isTrueString = x => (typeof x === 'string' && x !== '');
+const isTrueString = x => typeof x === 'string' && x !== '';
 
 
 /** return the content of .yo-rc.json */

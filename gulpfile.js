@@ -58,9 +58,13 @@ gulp.task('git-commit', () => {
 gulp.task('git-push', (cb) => {
     const v = version();
     git.push('origin', 'master', (err) => {
-        if (err) return cb(err);
+        if (err) {
+            return cb(err);
+        }
         git.tag(v, v, (err) => {
-            if (err) return cb(err);
+            if (err) {
+                return cb(err);
+            }
             git.push('origin', 'master', {
                 args: '--tags'
             }, cb);
