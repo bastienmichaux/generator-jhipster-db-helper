@@ -64,12 +64,19 @@ function askForColumnName(done) {
     ];
 
     this.prompt(prompts).then((props) => {
-        const columnMap = {
+        // We must add other values so we can add columnName to the correct field
+        // If columnName was undefined, it means we must add it
+        const columnItem = {
             fieldName: this.field.fieldName,
-            columnName: props.columnName
+            oldColumnName: this.field.columnName,
+            newColumnName: props.columnName
         };
 
-        this.columnsInput.push(columnMap);
+        this.log(chalk.blue('PROMPT'));
+        this.log(columnItem);
+        this.log(props.columnName);
+
+        this.columnsInput.push(columnItem);
 
         this.field = this.fieldsPile.pop();
         if(this.field !== undefined) {
