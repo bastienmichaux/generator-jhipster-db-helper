@@ -33,13 +33,17 @@ function askForColumnsName() {
 
     this.log(chalk.green('Asking column names for ' + this.fields.length + ' fields'));
     const done = this.async();
+
+    // work on a copy
     this.fieldsPile = this.fields.slice();
+    // feed the first item for the first question
 	this.field = this.fieldsPile.pop();
     askForColumnName.call(this, done);
 }
 
 function askForColumnName(done) {
     let messageAddentum, defaultValue;
+
     if(this.field.columnName !== undefined) {
         messageAddentum = '(currently : ' + this.field.columnName + ')';
         defaultValue = this.field.columnName;
@@ -61,21 +65,11 @@ function askForColumnName(done) {
     ];
 
     this.prompt(prompts).then((props) => {
-        // We must add other values so we can add columnName to the correct field
-        // If columnName was undefined, it means we must add it
-        const columnItem = {
-            fieldName: this.field.fieldName,
-            oldColumnName: this.field.columnName,
-            newColumnName: props.columnName
-        };
+        this.field.newColumnName = props.columnName;
 
-        this.log(chalk.blue('PROMPT'));
-        this.log(columnItem);
-        this.log(props.columnName);
-
-        this.columnsInput.push(columnItem);
-
+        this.columnsInput.push(this.field);
         this.field = this.fieldsPile.pop();
+
         if(this.field !== undefined) {
             askForColumnName.call(this, done);
         } else {
