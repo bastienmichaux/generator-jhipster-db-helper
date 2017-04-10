@@ -90,8 +90,8 @@ module.exports = generator.extend({
                 jhipsterFunc.replaceContent(files.config, `(\\s*)${fieldNameMatch}`, `$1${fieldNameMatch},$1"columnName": "${columnItem.newColumnName}"`, true);
             } else {
                 // We update existing columnName
-                log(chalk.blue(`(${columnItem.fieldName}) UPDATING columnName from ${columnItem.columnName}to${columnItem.newColumnName}`));
-                jhipsterFunc.replaceContent(files.config, `"columnName": "${columnItem.columnName}`, `"columnName": "${columnItem.newColumnName}`);
+                log(chalk.blue('(' + columnItem.fieldName + ') UPDATING columnName from ' + columnItem.columnName + ' to ' + columnItem.newColumnName));
+                jhipsterFunc.replaceContent(files.config, '"columnName": "' + columnItem.columnName, '"columnName": "' + columnItem.newColumnName);
             }
 
             // TODO entity generator uses fieldNameAsDatabaseColumn and not props.columnName anymore, we don't dispose of the former thou.
