@@ -84,9 +84,12 @@ module.exports = generator.extend({
             }
         }
         // Update the tableName
-        jhipsterFunc.replaceContent(files.config, `"entityTableName": "${this.defaultTableName}`, `"entityTableName": "${this.tableNameInput}`);
-        jhipsterFunc.replaceContent(files.ORM, `@Table(name = "${this.defaultTableName}`, `@Table(name = "${this.tableNameInput}`);
-        jhipsterFunc.replaceContent(files.liquibase, `<createTable tableName="${this.defaultTableName}`, `<createTable tableName="${this.tableNameInput}`);
+        this.log(this.entityConfig);
+        this.log(this.fs.readJSON(files.config));
+        this.log(chalk.blue('table name from ' + this.entityConfig.entityTableName + ' to ' + this.tableNameInput));
+        jhipsterFunc.replaceContent(files.config, '"entityTableName": "' + this.entityConfig.entityTableName, '"entityTableName": "' + this.tableNameInput);
+        jhipsterFunc.replaceContent(files.ORM, '@Table(name = "' + this.entityConfig.entityTableName, '@Table(name = "' + this.tableNameInput);
+        jhipsterFunc.replaceContent(files.liquibase, '<createTable tableName="' + this.entityConfig.entityTableName, '<createTable tableName="' + this.tableNameInput);
 
         // Add/update the columnName for each field
         this.columnsInput.forEach((columnItem) => {
@@ -96,11 +99,13 @@ module.exports = generator.extend({
                 // We add columnName under fieldName
                 log(chalk.blue(`(${columnItem.fieldName}) ADDING columnName ${columnItem.newColumnName}`));
                 // '(\\s*)' is for capturing indentation
-                jhipsterFunc.replaceContent(files.config, `(\\s*)${fieldNameMatch}`, `$1${fieldNameMatch},$1"columnName": "${columnItem.newColumnName}"`, true);
-            } else {
+                jhipsterFunc.replaceContent(files.config, '(\\s*)' + fieldNameMatch, '$1' + fieldNameMatch + ',$1"columnName": "' + columnItem.newColumnName + '"', true);
+            } else if(columnItem.columnName != columnItem.newColumnName){
                 // We update existing columnName
                 log(chalk.blue('(' + columnItem.fieldName + ') UPDATING columnName from ' + columnItem.columnName + ' to ' + columnItem.newColumnName));
                 jhipsterFunc.replaceContent(files.config, '"columnName": "' + columnItem.columnName, '"columnName": "' + columnItem.newColumnName);
+            } else {
+                log(chalk.blue('(' + columnItem.fieldName + ') KEEP columnName ' + columnItem.newColumnName));
             }
 
             // TODO entity generator uses fieldNameAsDatabaseColumn and not props.columnName anymore, we don't dispose of the former thou.

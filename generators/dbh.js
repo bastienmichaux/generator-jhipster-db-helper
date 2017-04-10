@@ -2,7 +2,7 @@ const DBH_CONSTANTS = require('./dbh-constants');
 const fs = require('fs');
 
 
-/** return the content of .yo-rc.json as a JSON object */
+/** return the content of .yo-rc.json */
 const getApplicationConfig = () => new Promise((resolve, reject) => {
     const appConfigFile = DBH_CONSTANTS.applicationConfigFile;
     // if file exists, return its output as a JSON object
