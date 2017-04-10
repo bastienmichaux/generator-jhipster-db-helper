@@ -39,7 +39,6 @@ function askForColumnsName() {
 }
 
 function askForColumnName(done) {
-<<<<<<< 534ac87fd54e1d05343951ccff5522666dddae3d
     let messageAddentum, defaultValue;
     if(this.field.columnName !== undefined) {
         messageAddentum = '(currently : ' + this.field.columnName + ')';
