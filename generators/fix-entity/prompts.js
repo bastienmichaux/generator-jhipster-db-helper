@@ -39,9 +39,15 @@ function askForColumnsName() {
 }
 
 function askForColumnName(done) {
-	// TODO check if the column field has already been added to this.fields
-	// TODO display current field AND if present column name when asking for a new column name
-	// TODO set default as column name value
+    let messageAddentum, defaultValue;
+    if(this.field.columnName !== undefined) {
+        messageAddentum = '(currently : ' + this.field.columnName + ')';
+        defaultValue = this.field.columnName;
+    } else {
+        messageAddentum = '';
+        defaultValue = this.field.fieldName;
+    }
+
     const prompts = [
         {
             type: 'input',
@@ -49,8 +55,8 @@ function askForColumnName(done) {
             validate: (input) => {
                 return true;
             },
-            message: 'What column name do you want for field "' + this.field.fieldName + '" ?',
-            default: this.field.fieldName
+            message: 'What column name do you want for field "' + this.field.fieldName + '" ? ' + messageAddentum,
+            default: defaultValue
         }
     ];
 
