@@ -46,7 +46,7 @@ module.exports = generator.extend({
 
         const removeGradleFiles = item => item !== './gradle/liquibase.gradle';
         const removeMavenFiles = item => item !== './pom.xml';
-        var existingFiles = []; // files minus the not installed files
+        let existingFiles = []; // files minus the not installed files
 
         // use a promise to get the current application config
         dbh.getApplicationConfig().then(
@@ -69,7 +69,6 @@ module.exports = generator.extend({
                 // TODO: move to another promise
                 existingFiles.forEach((path) => {
                     if (fs.existsSync(path)) {
-                        this.log(`File ${chalk.cyan(path)} found`);
                         // 1) replace Spring physical naming strategy
                         jhipsterFunc.replaceContent(path, physicalOld, physicalNew);
                         // 2) replace Spring implicit naming strategy

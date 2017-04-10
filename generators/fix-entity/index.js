@@ -1,7 +1,7 @@
-const generator = require('yeoman-generator'),
-    chalk = require('chalk'),
-    prompts = require('./prompts.js'),
-    fs = require('fs');
+const generator = require('yeoman-generator');
+const chalk = require('chalk');
+const prompts = require('./prompts.js');
+const fs = require('fs');
 
 
 const jhipsterVar = {
@@ -29,11 +29,11 @@ module.exports = generator.extend({
         this.log('fix-entity generator');
         this.log('initializing');
         this.composeWith('jhipster:modules',
-			{ jhipsterVar, jhipsterFunc },
-			this.options.testmode ? { local: require.resolve('generator-jhipster/generators/modules') } : null
-		);
+            { jhipsterVar, jhipsterFunc },
+            this.options.testmode ? { local: require.resolve('generator-jhipster/generators/modules') } : null
+        );
 
-        /*/ TODO remove on prod
+        /* / TODO remove on prod
         this.log(chalk.blue('entityConfig'));
         this.log(this.entityConfig);
         this.log(chalk.blue('fields'));
@@ -70,33 +70,33 @@ module.exports = generator.extend({
 
         const files = {
             config: this.entityConfig.filename,
-            ORM: jhipsterVar.javaDir + '/domain/' + this.entityConfig.entityClass + '.java',
-            liquibase: jhipsterVar.resourceDir + 'config/liquibase/changelog/' + this.entityConfig.data.changelogDate + '_added_entity_' + this.entityConfig.entityClass + '.xml'
+            ORM: `${jhipsterVar.javaDir}/domain/${this.entityConfig.entityClass}.java`,
+            liquibase: `${jhipsterVar.resourceDir}config/liquibase/changelog/${this.entityConfig.data.changelogDate}_added_entity_${this.entityConfig.entityClass}.xml`
         };
 
         // Update the tableName
-        jhipsterFunc.replaceContent(files.config, '"entityTableName": "' + this.defaultTableName, '"entityTableName": "' + this.tableNameInput);
-        jhipsterFunc.replaceContent(files.ORM, '@Table(name = "' + this.defaultTableName, '@Table(name = "' + this.tableNameInput);
-        jhipsterFunc.replaceContent(files.liquibase, '<createTable tableName="' + this.defaultTableName, '<createTable tableName="' + this.tableNameInput);
+        jhipsterFunc.replaceContent(files.config, `"entityTableName": "${this.defaultTableName}`, `"entityTableName": "${this.tableNameInput}`);
+        jhipsterFunc.replaceContent(files.ORM, `@Table(name = "${this.defaultTableName}`, `@Table(name = "${this.tableNameInput}`);
+        jhipsterFunc.replaceContent(files.liquibase, `<createTable tableName="${this.defaultTableName}`, `<createTable tableName="${this.tableNameInput}`);
 
         // Add/update the columnName for each field
-        this.columnsInput.forEach(function (columnItem) {
-            const fieldNameMatch = '"fieldName": "' + columnItem.fieldName + '"';
+        this.columnsInput.forEach((columnItem) => {
+            const fieldNameMatch = `"fieldName": "${columnItem.fieldName}"`;
 
-            if(columnItem.columnName === undefined) {
+            if (columnItem.columnName === undefined) {
                 // We add columnName under fieldName
-                log(chalk.blue('(' + columnItem.fieldName + ') ADDING columnName ' + columnItem.newColumnName));
+                log(chalk.blue(`(${columnItem.fieldName}) ADDING columnName ${columnItem.newColumnName}`));
                 // '(\\s*)' is for capturing indentation
-                jhipsterFunc.replaceContent(files.config, '(\\s*)' + fieldNameMatch, '$1' + fieldNameMatch + ',$1"columnName": "' + columnItem.newColumnName + '"', true);
+                jhipsterFunc.replaceContent(files.config, `(\\s*)${fieldNameMatch}`, `$1${fieldNameMatch},$1"columnName": "${columnItem.newColumnName}"`, true);
             } else {
                 // We update existing columnName
-                log(chalk.blue('(' + columnItem.fieldName + ') UPDATING columnName from ' + columnItem.columnName + 'to' + columnItem.newColumnName));
-                jhipsterFunc.replaceContent(files.config, '"columnName": "' + columnItem.columnName, '"columnName": "' + columnItem.newColumnName);
+                log(chalk.blue(`(${columnItem.fieldName}) UPDATING columnName from ${columnItem.columnName}to${columnItem.newColumnName}`));
+                jhipsterFunc.replaceContent(files.config, `"columnName": "${columnItem.columnName}`, `"columnName": "${columnItem.newColumnName}`);
             }
 
             // TODO entity generator uses fieldNameAsDatabaseColumn and not props.columnName anymore, we don't dispose of the former thou.
-            jhipsterFunc.replaceContent(files.ORM, '@Column(name = "' + columnItem.fieldNameUnderscored, '@Column(name = "' + columnItem.newColumnName);
-            jhipsterFunc.replaceContent(files.liquibase, '<column name="' + columnItem.fieldNameUnderscored, '<column name="' + columnItem.newColumnName);
+            jhipsterFunc.replaceContent(files.ORM, `@Column(name = "${columnItem.fieldNameUnderscored}`, `@Column(name = "${columnItem.newColumnName}`);
+            jhipsterFunc.replaceContent(files.liquibase, `<column name="${columnItem.fieldNameUnderscored}`, `<column name="${columnItem.newColumnName}`);
         });
     },
 

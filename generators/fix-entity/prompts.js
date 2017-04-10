@@ -7,15 +7,17 @@ module.exports = {
     askForColumnsName
 };
 
+/**
+ * Ask the table name for an entity
+ * @todo: add rules to the validate method
+ */
 function askForTableName() {
     const done = this.async();
     this.prompt([
         {
             type: 'input',
             name: 'tableName',
-            validate: (input) => {
-                return true;
-            },
+            validate: input => true,
             message: 'What is the table name for this entity?',
             default: this.defaultTableName
         }
@@ -25,30 +27,36 @@ function askForTableName() {
     });
 }
 
+/** For each field of an entity, ask the actual column name */
 function askForColumnsName() {
     // Don't ask columns name if there aren't any field
-    if(this.fields === undefined || this.fields.length === 0) {
+    if (this.fields === undefined || this.fields.length === 0) {
         return;
     }
 
-    this.log(chalk.green('Asking column names for ' + this.fields.length + ' fields'));
+    this.log(chalk.green(`Asking column names for ${this.fields.length} fields`));
     const done = this.async();
 
     // work on a copy
     this.fieldsPile = this.fields.slice();
     // feed the first item for the first question
-	this.field = this.fieldsPile.pop();
+    this.field = this.fieldsPile.pop();
     askForColumnName.call(this, done);
 }
 
+/**
+ * Ask the column name for the field of an entity
+ * @todo: add rules to the validate method
+ **/
 function askForColumnName(done) {
-    let messageAddentum, defaultValue;
+    let messageAddendum = '';
+    let defaultValue = '';
 
-    if(this.field.columnName !== undefined) {
-        messageAddentum = '(currently : ' + this.field.columnName + ')';
+    if (this.field.columnName !== undefined) {
+        messageAddendum = `(currently : ${this.field.columnName})`;
         defaultValue = this.field.columnName;
     } else {
-        messageAddentum = '';
+        messageAddendum = '';
         defaultValue = this.field.fieldName;
     }
 
@@ -56,10 +64,8 @@ function askForColumnName(done) {
         {
             type: 'input',
             name: 'columnName',
-            validate: (input) => {
-                return true;
-            },
-            message: 'What column name do you want for field "' + this.field.fieldName + '" ? ' + messageAddentum,
+            validate: input => true,
+            message: `What column name do you want for field "${this.field.fieldName}" ? ${messageAddendum}`,
             default: defaultValue
         }
     ];
@@ -70,7 +76,7 @@ function askForColumnName(done) {
         this.columnsInput.push(this.field);
         this.field = this.fieldsPile.pop();
 
-        if(this.field !== undefined) {
+        if (this.field !== undefined) {
             askForColumnName.call(this, done);
         } else {
             done();
