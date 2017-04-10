@@ -55,9 +55,12 @@ module.exports = generator.extend({
      * Allows consistent mapping with an existing database table without modifying JHipster's entity subgenerator.
      **/
     writing() {
+        const log = this.log;
         // DEBUG : log where we are
         this.log('writing');
 
+        this.log(chalk.red('PRINTING ENTITY'));
+        this.log(this.entityConfig);
         this.log(chalk.red('PRINTING FIELDS'));
         this.log(this.fields);
 
@@ -101,32 +104,36 @@ module.exports = generator.extend({
 
         }
 
+        const files = {
+            config: '.jhipster/' + this.defaultTableName + '.json',
+            ORM: jhipsterVar.javaDir + '/domain/' + this.entityConfig.entityClass + '.java',
+            liquibase: jhipsterVar.resourceDir + 'config/liquibase/changelog/' + this.entityConfig.data.changelogDate + '_added_entity_' + this.entityConfig.entityClass + '.xml'
+        };
 
-        // update the entity json file
-        jhipsterFunc.updateEntityConfig(this.entityConfig.filename, 'entityTableName', this.tableNameInput);
+        // Update the tableName
+        jhipsterFunc.replaceContent(files.config, '"entityTableName": "' + this.defaultTableName, '"entityTableName": "' + this.tableNameInput);
+        jhipsterFunc.replaceContent(files.ORM, '@Table(name = "' + this.defaultTableName, '@Table(name = "' + this.tableNameInput);
+        jhipsterFunc.replaceContent(files.liquibase, '<createTable tableName="' + this.defaultTableName, '<createTable tableName="' + this.tableNameInput);
+
+        // Add/update the columnName for each field
+        this.columnsInput.forEach(function (columnItem) {
+            const matchConfig = '"fieldName": "' + columnItem.fieldName + '"';
+            if(columnItem.oldColumnName === undefined) {
+                // We add columnName under fieldName
+                log(chalk.blue('ADDING columnName ' + columnItem.newColumnName + 'for ' + columnItem.fieldName));
+                jhipsterFunc.replaceContent(files.config, matchConfig, matchConfig + ',\n"columnName": "' + columnItem.newColumnName + '"');
+            } else {
+                // We update existing columnName
+                log(chalk.blue('UPDATING columnName for ' + columnItem.fieldName));
+                jhipsterFunc.replaceContent(files.config, '"columnName": "' + columnItem.oldColumnName, '"columnName": "' + columnItem.newColumnName);
+            }
+            // jhipsterFunc.replaceContent(files.ORM, '@Table(name = "' + this.defaultTableName, '@Table(name = "' + this.tableNameInput);
+            // jhipsterFunc.replaceContent(files.liquibase, '<createTable tableName="' + this.defaultTableName, '<createTable tableName="' + this.tableNameInput);
+        });
 
         // TODO dynamicly generate the replacement tasks
 
-        // The files where we must change the value
-        const files = {
-            // path of the entity Java ORM
-            // something like : src/main/java/package/domain/Foo.java
-            ORMFile: {
-                path: jhipsterVar.javaDir + '/domain/' + this.entityConfig.entityClass + '.java',
-                prefix: '@Table(name = "',
-                suffix: '")'
-            },
-            // path of the Liquibase changelog file
-            // something like : src/main/resources/config/liquibase/changelog/20150128232313_added_entity_Foo.xml
-            liquibaseFile: {
-                path: jhipsterVar.resourceDir + 'config/liquibase/changelog/' + this.entityConfig.data.changelogDate + '_added_entity_' + this.entityConfig.entityClass + '.xml',
-                prefix: '<createTable tableName="',
-                suffix: '">'
-            }
-        };
-
-
-        injectUserInput(files, this.tableNameInput);
+        // injectUserInput(files, this.defaultTableName + '.json'); TODO
 		// TODO replace values
     },
 
