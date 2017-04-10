@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ls .jhipster/$1.json
-cat .jhipster/$1.json | grep --color=always '"fieldName": ".*",'
+cat .jhipster/$1.json | grep --color=always -n -e '"fieldName": ".*",' -e '"columnName": ".*",'
 echo
 
 ls src/main/java/com/altissia/testapp/domain/$1.java
