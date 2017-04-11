@@ -2,8 +2,8 @@
 
 const path = require('path');
 const fse = require('fs-extra');
-const yeomanAssert = require('yeoman-assert');
-const yeomanTest = require('yeoman-test');
+const assert = require('yeoman-assert');
+const helpers = require('yeoman-test');
 
 const dbhApp = require('../generators/app/index.js');
 
@@ -11,13 +11,13 @@ const dbhApp = require('../generators/app/index.js');
 const dbhConstants = require('../generators/dbh-constants');
 
 const deps = [
-    [yeomanTest.createDummyGenerator(), 'jhipster:modules']
+    [helpers.createDummyGenerator(), 'jhipster:modules']
 ];
 
 describe('JHipster generator db-helper', function () {
     describe('post entity hook', function () {
         beforeEach(function (done) {
-            yeomanTest
+            helpers
             .run(path.join(__dirname, '../generators/app/index.js'))
             .inTmpDir((dir) => {
                 fse.copySync(path.join(__dirname, '../test/templates/default'), dir);
