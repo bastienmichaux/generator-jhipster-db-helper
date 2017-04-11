@@ -12,4 +12,8 @@ describe('Dbh', function () {
         assert(!dbh.isTrueString(null));
         assert(!dbh.isTrueString(undefined));
     });
+
+    // pending tests for getApplicationConfig
+    it('getApplicationConfig: works as expected provided a correct .yo-rc.json file');
+    it('getApplicationConfig: throws an error when file is not found');
 });

@@ -71,6 +71,7 @@ module.exports = generator.extend({
         // DEBUG : log where we are
         this.log('writing');
 
+
         const files = {
             config: this.entityConfig.filename,
             ORM: `${jhipsterVar.javaDir}/domain/${this.entityConfig.entityClass}.java`,
