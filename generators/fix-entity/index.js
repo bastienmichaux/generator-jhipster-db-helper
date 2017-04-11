@@ -34,6 +34,7 @@ module.exports = generator.extend({
         );
 
         /* / TODO remove on prod
+        this.prodDatabaseType = jhipsterVar.prodDatabaseType;
         this.log(chalk.blue('<<<<<BEFORE'));
         this.log(chalk.blue('entityConfig'));
         this.log(this.entityConfig);
