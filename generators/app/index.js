@@ -54,7 +54,7 @@ module.exports = generator.extend({
             // if promise is resolved,
             // get the build tool of the application config
             (promiseResponse) => {
-                const buildTool = promiseResponse['generator-jhipster']['buildTool'];
+                const buildTool = promiseResponse['generator-jhipster'].buildTool;
 
                 // filter the non-existing file(s)
                 // ie : if app uses Maven, remove Gradle file(s)
@@ -70,7 +70,6 @@ module.exports = generator.extend({
                 // TODO: move to another promise
                 existingFiles.forEach((path) => {
                     if (fs.existsSync(path)) {
-                        this.log(`File ${chalk.cyan(path)} found`);
                         // 1) replace Spring physical naming strategy
                         jhipsterFunc.replaceContent(path, physicalOld, physicalNew);
                         // 2) replace Spring implicit naming strategy
@@ -144,9 +143,6 @@ module.exports = generator.extend({
         this.angularAppName = jhipsterVar.angularAppName;
         this.clientFramework = jhipsterVar.clientFramework;
         this.clientPackageManager = jhipsterVar.clientPackageManager;
-        const javaDir = jhipsterVar.javaDir;
-        const resourceDir = jhipsterVar.resourceDir;
-        const webappDir = jhipsterVar.webappDir;
         this.message = this.props.message;
 
         try {

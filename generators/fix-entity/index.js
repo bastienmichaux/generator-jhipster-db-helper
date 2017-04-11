@@ -1,7 +1,7 @@
-const generator = require('yeoman-generator'),
-    chalk = require('chalk'),
-    prompts = require('./prompts.js'),
-    fs = require('fs');
+const generator = require('yeoman-generator');
+const chalk = require('chalk');
+const prompts = require('./prompts.js');
+const fs = require('fs');
 
 
 const jhipsterVar = {
@@ -16,34 +16,11 @@ module.exports = generator.extend({
     constructor: function (...args) { // eslint-disable-line object-shorthand
         generator.apply(this, args);
         this.entityConfig = this.options.entityConfig;
-        this.defaultTableName = this.options.entityConfig.entityTableName;
+        this.defaultTableName = this.options.entityConfig.entityClass;
         this.fields = this.options.entityConfig.data.fields;
 
-        this.tableNameInput = null;
-        this.columnsInput = [];
-
-        /**
-         * replaces the content of a file located by its prefix and suffix by a new value
-         * doesn't take the old value into account
-         *
-         * @param file will be modified
-         * @param prefix is before the value we want to change
-         * @param suffix is after the value we want to change
-         * @param value will replace the current value in between prefix and suffix
-         */
-        this.replaceContent = function (file, prefix, suffix, value) {
-            // TODO May want to put escapeRegExp somewhere else
-            /**
-             * return a copy of str with all regex characters escaped
-             *
-             * @param str possibly contains regex characters
-             * @returns {XML|*|string|void}
-             */
-            function escapeRegExp(str) {
-                return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
-            }
-            jhipsterFunc.replaceContent(file, escapeRegExp(prefix) + '.*' + escapeRegExp(suffix), prefix + value + suffix, true);
-        };
+        this.tableNameInput = null; // prompts.js will fill it with user input
+        this.columnsInput = []; // prompts.js will fill it with this.fields + user input
     },
 
 
@@ -52,9 +29,21 @@ module.exports = generator.extend({
         this.log('fix-entity generator');
         this.log('initializing');
         this.composeWith('jhipster:modules',
-			{ jhipsterVar, jhipsterFunc },
-			this.options.testmode ? { local: require.resolve('generator-jhipster/generators/modules') } : null
-		);
+            { jhipsterVar, jhipsterFunc },
+            this.options.testmode ? { local: require.resolve('generator-jhipster/generators/modules') } : null
+        );
+
+        /* TODO remove on prod
+        this.log(chalk.blue('<<<<<BEFORE'));
+        this.log(chalk.blue('entityConfig'));
+        this.log(this.entityConfig);
+        this.log(chalk.blue('fields'));
+        this.log(this.fields);
+        this.log(chalk.blue('json');
+        this.log(this.fs.readJSON(files.config));
+        this.log(chalk.blue('jhipsterVar'));
+        this.log(jhipsterVar);
+        //*/
     },
 
 
@@ -78,42 +67,50 @@ module.exports = generator.extend({
      * Allows consistent mapping with an existing database table without modifying JHipster's entity subgenerator.
      **/
     writing() {
+        const log = this.log;
         // DEBUG : log where we are
         this.log('writing');
 
-        // wanted table name (replaces JHipster's automatically created table name)
-        let desiredTableName = this.tableNameInput;
-
-        // update the entity json file
-        jhipsterFunc.updateEntityConfig(this.entityConfig.filename, 'entityTableName', desiredTableName);
-
-        // The files where we must change the value
         const files = {
-            // path of the entity Java ORM
-            // something like : src/main/java/package/domain/Foo.java
-            ORMFile: {
-                path: jhipsterVar.javaDir + '/domain/' + this.entityConfig.entityClass + '.java',
-                prefix: '@Table(name = "',
-                suffix: '")'
-            },
-            // path of the Liquibase changelog file
-            // something like : src/main/resources/config/liquibase/changelog/20150128232313_added_entity_Foo.xml
-            liquibaseFile: {
-                path: jhipsterVar.resourceDir + 'config/liquibase/changelog/' + this.entityConfig.data.changelogDate + '_added_entity_' + this.entityConfig.entityClass + '.xml',
-                prefix: '<createTable tableName="',
-                suffix: '">'
-            }
+            config: this.entityConfig.filename,
+            ORM: `${jhipsterVar.javaDir}/domain/${this.entityConfig.entityClass}.java`,
+            liquibase: `${jhipsterVar.resourceDir}config/liquibase/changelog/${this.entityConfig.data.changelogDate}_added_entity_${this.entityConfig.entityClass}.xml`
         };
 
-        // Replacing the values
         for (let file in files) {
             // hasOwnProperty to avoid inherited properties
-            if (files.hasOwnProperty(file) && fs.existsSync(files[file]['path'])) {
-                this.replaceContent(files[file]['path'], files[file]['prefix'], files[file]['suffix'], desiredTableName);
-            } else if(files.hasOwnProperty(file)) {
-                throw new Error('File not found (' + file + ': ' + files[file]['path'] + ')');
+            if (files.hasOwnProperty(file) && !fs.existsSync(files[file])) {
+                throw new Error('JHipster-db-helper : File not found (' + file + ': ' + files[file] + ').');
             }
         }
+
+        // Update the tableName
+        this.log(chalk.blue('tableName from ' + this.entityConfig.entityTableName + ' to ' + this.tableNameInput));
+        jhipsterFunc.replaceContent(files.config, '"entityTableName": "' + this.entityConfig.entityTableName, '"entityTableName": "' + this.tableNameInput);
+        jhipsterFunc.replaceContent(files.ORM, '@Table(name = "' + this.entityConfig.entityTableName, '@Table(name = "' + this.tableNameInput);
+        jhipsterFunc.replaceContent(files.liquibase, '<createTable tableName="' + this.entityConfig.entityTableName, '<createTable tableName="' + this.tableNameInput);
+
+        // Add/update the columnName for each field
+        this.columnsInput.forEach((columnItem) => {
+            const fieldNameMatch = `"fieldName": "${columnItem.fieldName}"`;
+
+            if (columnItem.columnName === undefined) {
+                // We add columnName under fieldName
+                log(chalk.blue(`(${columnItem.fieldName}) ADDING columnName ${columnItem.newColumnName}`));
+                // '(\\s*)' is for capturing indentation
+                jhipsterFunc.replaceContent(files.config, '(\\s*)' + fieldNameMatch, '$1' + fieldNameMatch + ',$1"columnName": "' + columnItem.newColumnName + '"', true);
+            } else if(columnItem.columnName != columnItem.newColumnName){
+                // We update existing columnName
+                log(chalk.blue('(' + columnItem.fieldName + ') UPDATING columnName from ' + columnItem.columnName + ' to ' + columnItem.newColumnName));
+                jhipsterFunc.replaceContent(files.config, '"columnName": "' + columnItem.columnName, '"columnName": "' + columnItem.newColumnName);
+            } else {
+                log(chalk.blue('(' + columnItem.fieldName + ') KEEP columnName ' + columnItem.newColumnName));
+            }
+
+            // TODO entity generator uses fieldNameAsDatabaseColumn and not fieldNameUnderscored anymore, we don't dispose of the former thou.
+            jhipsterFunc.replaceContent(files.ORM, `@Column(name = "${columnItem.fieldNameUnderscored}`, `@Column(name = "${columnItem.newColumnName}`);
+            jhipsterFunc.replaceContent(files.liquibase, `<column name="${columnItem.fieldNameUnderscored}`, `<column name="${columnItem.newColumnName}`);
+        });
     },
 
 
@@ -129,6 +126,17 @@ module.exports = generator.extend({
 
     // cleanup, say goodbye
     end() {
+        /* TODO remove on prod
+        this.log(chalk.blue('AFTER>>>>>'));
+        this.log(chalk.blue('entityConfig'));
+        this.log(this.entityConfig);
+        this.log(chalk.blue('fields'));
+        this.log(this.fields);
+        this.log(chalk.blue('json');
+        this.log(this.fs.readJSON(files.config));
+        this.log(chalk.blue('jhipsterVar'));
+        this.log(jhipsterVar);
+        //*/
         // DEBUG : log where we are
         this.log('End of fix-entity generator');
     }
