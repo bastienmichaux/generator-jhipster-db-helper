@@ -19,8 +19,8 @@ module.exports = generator.extend({
         this.defaultTableName = this.options.entityConfig.entityClass;
         this.fields = this.options.entityConfig.data.fields;
 
-        this.tableNameInput = null; // will contain the name for @Table
-        this.columnsInput = []; // will contain an object {fieldName:string, columnName:string}
+        this.tableNameInput = null; // prompts.js will fill it with user input
+        this.columnsInput = []; // prompts.js will fill it with this.fields + user input
     },
 
 
@@ -33,7 +33,7 @@ module.exports = generator.extend({
             this.options.testmode ? { local: require.resolve('generator-jhipster/generators/modules') } : null
         );
 
-        //* / TODO remove on prod
+        /* / TODO remove on prod
         this.log(chalk.blue('<<<<<BEFORE'));
         this.log(chalk.blue('entityConfig'));
         this.log(this.entityConfig);
@@ -78,7 +78,7 @@ module.exports = generator.extend({
         };
 
         // Update the tableName
-        this.log(chalk.blue('table name from ' + this.entityConfig.entityTableName + ' to ' + this.tableNameInput));
+        this.log(chalk.blue('tableName from ' + this.entityConfig.entityTableName + ' to ' + this.tableNameInput));
         jhipsterFunc.replaceContent(files.config, '"entityTableName": "' + this.entityConfig.entityTableName, '"entityTableName": "' + this.tableNameInput);
         jhipsterFunc.replaceContent(files.ORM, '@Table(name = "' + this.entityConfig.entityTableName, '@Table(name = "' + this.tableNameInput);
         jhipsterFunc.replaceContent(files.liquibase, '<createTable tableName="' + this.entityConfig.entityTableName, '<createTable tableName="' + this.tableNameInput);
@@ -100,7 +100,7 @@ module.exports = generator.extend({
                 log(chalk.blue('(' + columnItem.fieldName + ') KEEP columnName ' + columnItem.newColumnName));
             }
 
-            // TODO entity generator uses fieldNameAsDatabaseColumn and not props.columnName anymore, we don't dispose of the former thou.
+            // TODO entity generator uses fieldNameAsDatabaseColumn and not fieldNameUnderscored anymore, we don't dispose of the former thou.
             jhipsterFunc.replaceContent(files.ORM, `@Column(name = "${columnItem.fieldNameUnderscored}`, `@Column(name = "${columnItem.newColumnName}`);
             jhipsterFunc.replaceContent(files.liquibase, `<column name="${columnItem.fieldNameUnderscored}`, `<column name="${columnItem.newColumnName}`);
         });
@@ -119,7 +119,7 @@ module.exports = generator.extend({
 
     // cleanup, say goodbye
     end() {
-        //* / TODO remove on prod
+        /* / TODO remove on prod
         this.log(chalk.blue('AFTER>>>>>'));
         this.log(chalk.blue('entityConfig'));
         this.log(this.entityConfig);
