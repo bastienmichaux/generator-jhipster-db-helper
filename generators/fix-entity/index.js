@@ -33,6 +33,8 @@ module.exports = generator.extend({
             this.options.testmode ? { local: require.resolve('generator-jhipster/generators/modules') } : null
         );
 
+        this.prodDatabaseType = jhipsterVar.prodDatabaseType;
+
         /* TODO remove on prod
         this.log(chalk.blue('<<<<<BEFORE'));
         this.log(chalk.blue('entityConfig'));

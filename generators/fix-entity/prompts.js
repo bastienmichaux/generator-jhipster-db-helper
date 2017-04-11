@@ -17,7 +17,18 @@ function askForTableName() {
         {
             type: 'input',
             name: 'tableName',
-            validate: input => true,
+            validate: input => {
+                if (!(/^([a-zA-Z0-9_]*)$/.test(input))) {
+                    return 'The table name cannot contain special characters';
+                } else if (input === '') {
+                    return 'The table name cannot be empty';
+                } else if (this.prodDatabaseType === 'oracle' && input.length > 14) {
+                    return 'The table name is too long for Oracle, try a shorter name';
+                } else if (input.length > 30) {
+                    return 'The table name is too long, try a shorter name';
+                }
+                return true;
+            },
             message: 'What is the table name for this entity?',
             default: this.defaultTableName
         }
@@ -64,7 +75,16 @@ function askForColumnName(done) {
         {
             type: 'input',
             name: 'columnName',
-            validate: input => true,
+            validate: input => {
+                if (!(/^([a-zA-Z0-9_]*)$/.test(input))) {
+                    return 'Your column name cannot contain special characters';
+                } else if (input === '') {
+                    return 'Your column name cannot be empty';
+                } else if (this.prodDatabaseType === 'oracle' && input.length > 30) {
+                    return 'The column name cannot be of more than 30 characters';
+                }
+                return true;
+            },
             message: `What column name do you want for field "${this.field.fieldName}" ? ${messageAddendum}`,
             default: defaultValue
         }
