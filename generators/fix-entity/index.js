@@ -33,11 +33,14 @@ module.exports = generator.extend({
             this.options.testmode ? { local: require.resolve('generator-jhipster/generators/modules') } : null
         );
 
-        /* / TODO remove on prod
+        //* / TODO remove on prod
+        this.log(chalk.blue('<<<<<BEFORE'));
         this.log(chalk.blue('entityConfig'));
         this.log(this.entityConfig);
         this.log(chalk.blue('fields'));
         this.log(this.fields);
+        this.log(chalk.blue('json');
+        this.log(this.fs.readJSON(files.config));
         this.log(chalk.blue('jhipsterVar'));
         this.log(jhipsterVar);
         //*/
@@ -84,8 +87,6 @@ module.exports = generator.extend({
             }
         }
         // Update the tableName
-        this.log(this.entityConfig);
-        this.log(this.fs.readJSON(files.config));
         this.log(chalk.blue('table name from ' + this.entityConfig.entityTableName + ' to ' + this.tableNameInput));
         jhipsterFunc.replaceContent(files.config, '"entityTableName": "' + this.entityConfig.entityTableName, '"entityTableName": "' + this.tableNameInput);
         jhipsterFunc.replaceContent(files.ORM, '@Table(name = "' + this.entityConfig.entityTableName, '@Table(name = "' + this.tableNameInput);
@@ -127,6 +128,17 @@ module.exports = generator.extend({
 
     // cleanup, say goodbye
     end() {
+        //* / TODO remove on prod
+        this.log(chalk.blue('AFTER>>>>>'));
+        this.log(chalk.blue('entityConfig'));
+        this.log(this.entityConfig);
+        this.log(chalk.blue('fields'));
+        this.log(this.fields);
+        this.log(chalk.blue('json');
+        this.log(this.fs.readJSON(files.config));
+        this.log(chalk.blue('jhipsterVar'));
+        this.log(jhipsterVar);
+        //*/
         // DEBUG : log where we are
         this.log('End of fix-entity generator');
     }
