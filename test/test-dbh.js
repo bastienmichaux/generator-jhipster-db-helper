@@ -7,10 +7,10 @@ const dbh = require('../generators/dbh.js');
 
 describe('Dbh', function () {
     it('is a true string', function () {
-        assert(dbh.isTrueString('x'));
-        assert(!dbh.isTrueString(''));
-        assert(!dbh.isTrueString(null));
-        assert(!dbh.isTrueString(undefined));
+        yeomanAssert(dbh.isTrueString('x'));
+        yeomanAssert(!dbh.isTrueString(''));
+        yeomanAssert(!dbh.isTrueString(null));
+        yeomanAssert(!dbh.isTrueString(undefined));
     });
 
     // pending tests for getApplicationConfig
