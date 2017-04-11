@@ -34,7 +34,7 @@ function askForColumnsName() {
         return;
     }
 
-    this.log(chalk.green(`Asking column names for ${this.fields.length} fields`));
+    this.log(chalk.green(`Asking column names for ${this.fields.length} field(s)`));
     const done = this.async();
 
     // work on a copy
