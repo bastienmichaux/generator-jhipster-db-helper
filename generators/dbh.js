@@ -3,11 +3,14 @@ const fs = require('fs');
 
 
 /** return the content of .yo-rc.json as a JSON object */
-const getAppConfig = path => new Promise((resolve, reject) => {
-    const appConfigFile = path;
+const getAppConfig = directory => new Promise((resolve, reject) => {
+    const path = directory + DBH_CONSTANTS.appConfigFile;
+    if (!isTrueString(path)) {
+        throw new Error(`getAppConfig: bad parameter: ${typeof path} ${path})`);
+    }
     // if file exists, return its output as a JSON object
-    if (fs.existsSync(appConfigFile)) {
-        fs.readFile(appConfigFile, 'utf8', (err, data) => {
+    if (fs.existsSync(path)) {
+        fs.readFile(path, 'utf8', (err, data) => {
             if (err) {
                 throw new Error(err);
             }
@@ -19,7 +22,7 @@ const getAppConfig = path => new Promise((resolve, reject) => {
             }
         });
     } else {
-        throw new Error(`getAppConfig: file ${appConfigFile} not found`);
+        throw new Error(`getAppConfig: file ${path} not found`);
     }
 });
 

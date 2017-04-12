@@ -21,7 +21,7 @@ const constants = {
      * @todo Delete this constant and replace its references once we know how to grab it from the calling application.
      * @type {string}
      */
-    appConfigFile: './.yo-rc.json',
+    appConfigFile: '.yo-rc.json',
 
 
     /**
