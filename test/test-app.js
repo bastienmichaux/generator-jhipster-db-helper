@@ -5,8 +5,6 @@ const fse = require('fs-extra');
 const assert = require('yeoman-assert');
 const helpers = require('yeoman-test');
 
-const dbhApp = require('../generators/app/index.js');
-
 // @todo : find a smarter alternative to this goddamn ugly path
 const dbhConstants = require('../generators/dbh-constants');
 
@@ -32,27 +30,11 @@ describe('JHipster generator db-helper', function () {
 
         // test the naming strategies replacement
 
-        it('finds the spring naming strategies before the post app hook', function () {
+        it('finds the spring naming strategies before the post app hook');
 
-        });
+        it('finds the spring naming strategies replaced after the post hook');
 
-        it('finds the spring naming strategies replaced after the post hook', function () {
-
-        });
-
-        // test retrieval of the app build tool (Maven or Gradle)
-
-        it('_replaceNamingStrategies(): removes the Gradle files when the app uses Gradle', function () {
-
-        });
-
-        it('_replaceNamingStrategies(): removes the Maven files when the app uses Gradle', function () {
-
-        });
-
-        it('_replaceNamingStrategies(): throws an error when the app uses an invalid buildTool name', function () {
-
-        });
+        it('_replaceNamingStrategies(): throws an error when the app uses an invalid buildTool name');
 
         /*
         it('find no occurrences of org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy', () => {
