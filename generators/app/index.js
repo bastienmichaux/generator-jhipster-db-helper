@@ -50,7 +50,7 @@ module.exports = generator.extend({
         let existingFiles = []; // files minus the not installed files
 
         // use a promise to get the current application config
-        dbh.getAppConfig('./.yo-rc.json').then(
+        dbh.getAppConfig('./').then(
             // if promise is resolved,
             // get the build tool of the application config
             (promiseResponse) => {
