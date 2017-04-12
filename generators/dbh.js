@@ -2,24 +2,24 @@ const DBH_CONSTANTS = require('./dbh-constants');
 const fs = require('fs');
 
 
-/** return the content of .yo-rc.json */
-const getApplicationConfig = () => new Promise((resolve, reject) => {
-    const appConfigFile = DBH_CONSTANTS.applicationConfigFile;
+/** return the content of .yo-rc.json as a JSON object */
+const getAppConfig = path => new Promise((resolve, reject) => {
+    const appConfigFile = path;
     // if file exists, return its output as a JSON object
     if (fs.existsSync(appConfigFile)) {
         fs.readFile(appConfigFile, 'utf8', (err, data) => {
             if (err) {
                 throw new Error(err);
             }
-            const applicationConfig = JSON.parse(data);
-            if (applicationConfig) {
-                resolve(applicationConfig);
+            const appConfigToJson = JSON.parse(data);
+            if (appConfigToJson) {
+                resolve(appConfigToJson);
             } else {
-                reject(`getApplicationConfig: no output. Type: ${typeof applicationConfig}, value: ${applicationConfig}`);
+                reject(`getAppConfig: no output. Type: ${typeof appConfigToJson}, value: ${appConfigToJson}`);
             }
         });
     } else {
-        throw new Error(`getApplicationConfig: file ${appConfigFile} not found`);
+        throw new Error(`getAppConfig: file ${appConfigFile} not found`);
     }
 });
 
@@ -29,6 +29,6 @@ const isTrueString = x => (typeof x === 'string' && x !== '');
 
 
 module.exports = {
-    getApplicationConfig,
+    getAppConfig,
     isTrueString
 };
