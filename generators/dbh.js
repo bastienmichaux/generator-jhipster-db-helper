@@ -28,7 +28,7 @@ const getAppConfig = directory => new Promise((resolve, reject) => {
 
 
 /** assert parameter is a non-empty string */
-const isTrueString = x => (typeof x === 'string' && x !== '');
+const isTrueString = x => typeof x === 'string' && x !== '';
 
 
 module.exports = {
