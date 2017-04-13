@@ -99,13 +99,14 @@ module.exports = generator.extend({
                 log(chalk.blue(`(${columnItem.fieldName}) ADDING columnName ${columnItem.newColumnName}`));
                 // '(\\s*)' is for capturing indentation
                 jhipsterFunc.replaceContent(files.config, '(\\s*)' + fieldNameMatch, '$1' + fieldNameMatch + ',$1"columnName": "' + columnItem.newColumnName + '"', true);
-            } else if(columnItem.columnName != columnItem.newColumnName){
+            } else if (columnItem.columnName != columnItem.newColumnName) {
                 // We update existing columnName
                 log(chalk.blue('(' + columnItem.fieldName + ') UPDATING columnName from ' + columnItem.columnName + ' to ' + columnItem.newColumnName));
                 jhipsterFunc.replaceContent(files.config, '"columnName": "' + columnItem.columnName, '"columnName": "' + columnItem.newColumnName);
             } else {
                 log(chalk.blue('(' + columnItem.fieldName + ') KEEP columnName ' + columnItem.newColumnName));
             }
+        }
 
         // Update the tableName
         this.log(chalk.blue('tableName from ' + this.entityConfig.entityTableName + ' to ' + this.tableNameInput));
@@ -114,7 +115,7 @@ module.exports = generator.extend({
         jhipsterFunc.replaceContent(files.liquibase, '<createTable tableName="' + this.entityConfig.entityTableName, '<createTable tableName="' + this.tableNameInput);
 
         // Add/update the columnName for each field
-        this.columnsInput.forEach((columnItem) => {
+        this.columnsInput.forEach(columnItem => {
             const fieldNameMatch = `"fieldName": "${columnItem.fieldName}"`;
 
             if (columnItem.columnName === undefined) {
@@ -138,7 +139,6 @@ module.exports = generator.extend({
 
 
     // conflict() : Where conflicts are handled (used internally)
-
 
     // run installation (npm, bower, etc)
     install() {
