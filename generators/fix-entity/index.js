@@ -87,7 +87,7 @@ module.exports = generator.extend({
         }
 
         // Add/Change/Keep tableNameDBH
-        {
+        const replaceTableName = () => {
             const pattern = `"entityTableName": "${this.entityTableName}"`;
             const key = 'tableNameDBH';
             const oldValue = this.tableNameDBH;
@@ -103,7 +103,8 @@ module.exports = generator.extend({
             // We search either for our value or jhipster value, so it works even if user didn't accept JHipster overwrite after a regeneration
             jhipsterFunc.replaceContent(files.ORM, `@Table\\(name = "(${this.entityTableName}|${oldValue})`, `@Table(name = "${newValue}`, true);
             jhipsterFunc.replaceContent(files.liquibase, `\\<createTable tableName="(${this.entityTableName}|${oldValue})`, `<createTable tableName="${newValue}`);
-        }
+        };
+        replaceTableName();
 
         // Add/Change/Keep columnNameDBH for each field
         this.columnsInput.forEach((columnItem) => {
