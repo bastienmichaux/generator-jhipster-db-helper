@@ -32,6 +32,9 @@ module.exports = generator.extend({
 			{ jhipsterVar, jhipsterFunc },
 			this.options.testmode ? { local: require.resolve('generator-jhipster/generators/modules') } : null
 		);
+
+		// TODO find column names and add them to this.fields
+		// parse the json the see if there are any column name, if there is, add it to this.fields
     },
 
 

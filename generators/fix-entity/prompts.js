@@ -39,6 +39,7 @@ function askForColumnsName() {
 }
 
 function askForColumnName(done) {
+<<<<<<< 534ac87fd54e1d05343951ccff5522666dddae3d
     let messageAddentum, defaultValue;
     if(this.field.columnName !== undefined) {
         messageAddentum = '(currently : ' + this.field.columnName + ')';
@@ -48,6 +49,9 @@ function askForColumnName(done) {
         defaultValue = this.field.fieldName;
     }
 
+	// TODO check if the column field has already been added to this.fields
+	// TODO display current field AND if present column name when asking for a new column name
+	// TODO set default as column name value
     const prompts = [
         {
             type: 'input',
