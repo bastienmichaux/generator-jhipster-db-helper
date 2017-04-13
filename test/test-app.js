@@ -35,14 +35,5 @@ describe('JHipster generator db-helper', function () {
         it('finds the spring naming strategies replaced after the post hook');
 
         it('_replaceNamingStrategies(): throws an error when the app uses an invalid buildTool name');
-
-        /*
-        it('find no occurrences of org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy', () => {
-            assert.fileContent(file, /org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy/);
-        });
-        it('find no occurrences of org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy', () => {
-            assert.fileContent(file, /org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy/);
-        });
-        */
     });
 });
