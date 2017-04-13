@@ -18,7 +18,7 @@ function askForTableName() {
             type: 'input',
             name: 'tableName',
             validate: input => {
-                if (!(/^([a-zA-Z0-9_]*)$/.test(input))) {
+                if (!/^([a-zA-Z0-9_]*)$/.test(input)) {
                     return 'The table name cannot contain special characters';
                 } else if (input === '') {
                     return 'The table name cannot be empty';
@@ -57,15 +57,17 @@ function askForColumnsName() {
 
 /**
  * Ask the column name for the field of an entity
- * @todo: add rules to the validate method
+ * This function use this.fieldsPile, at each call it will pop an item from it and ask its question about it.
+ * Then it will associate the answer with this item and push it to this.columnsInput.
+ * So at the end of the recursion, this.fieldsPile will be empty and this.columnsInput full with what was in the former.
  **/
 function askForColumnName(done) {
     let messageAddendum = '';
     let defaultValue = '';
 
-    if (this.field.columnName !== undefined) {
-        messageAddendum = `(currently : ${this.field.columnName})`;
-        defaultValue = this.field.columnName;
+    if (this.field.dbh_columnName !== undefined) {
+        messageAddendum = `(currently : ${this.field.dbh_columnName})`;
+        defaultValue = this.field.dbh_columnName;
     } else {
         messageAddendum = '';
         defaultValue = this.field.fieldName;
@@ -74,9 +76,9 @@ function askForColumnName(done) {
     const prompts = [
         {
             type: 'input',
-            name: 'columnName',
+            name: 'dbh_columnName',
             validate: input => {
-                if (!(/^([a-zA-Z0-9_]*)$/.test(input))) {
+                if (!/^([a-zA-Z0-9_]*)$/.test(input)) {
                     return 'Your column name cannot contain special characters';
                 } else if (input === '') {
                     return 'Your column name cannot be empty';
@@ -85,15 +87,17 @@ function askForColumnName(done) {
                 }
                 return true;
             },
-            message: `What column name do you want for field "${this.field.fieldName}" ? ${messageAddendum}`,
+            message: `What column name do you want for the field "${this.field.fieldName}" ? ${messageAddendum}`,
             default: defaultValue
         }
     ];
 
     this.prompt(prompts).then((props) => {
-        this.field.newColumnName = props.columnName;
+        this.field.newColumnName = props.dbh_columnName;
 
+        // push just processed item
         this.columnsInput.push(this.field);
+        // pop item for next recursion
         this.field = this.fieldsPile.pop();
 
         if (this.field !== undefined) {

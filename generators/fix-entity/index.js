@@ -35,14 +35,12 @@ module.exports = generator.extend({
 
         this.prodDatabaseType = jhipsterVar.prodDatabaseType;
 
-        /* TODO remove on prod
-        this.log(chalk.blue('<<<<<BEFORE'));
+        //* TODO remove on prod
+        this.log(chalk.blue('<<<<< BEFORE'));
         this.log(chalk.blue('entityConfig'));
         this.log(this.entityConfig);
         this.log(chalk.blue('fields'));
         this.log(this.fields);
-        this.log(chalk.blue('json');
-        this.log(this.fs.readJSON(files.config));
         this.log(chalk.blue('jhipsterVar'));
         this.log(jhipsterVar);
         //*/
@@ -96,18 +94,19 @@ module.exports = generator.extend({
         // Add/update the columnName for each field
         this.columnsInput.forEach((columnItem) => {
             const fieldNameMatch = `"fieldName": "${columnItem.fieldName}"`;
+            // const key = "dbh_columnName";
 
-            if (columnItem.columnName === undefined) {
+            if (columnItem.dbh_columnName === undefined) {
                 // We add columnName under fieldName
-                log(chalk.blue(`(${columnItem.fieldName}) ADDING columnName ${columnItem.newColumnName}`));
+                log(chalk.blue(`(${columnItem.fieldName}) ADDING dbh_columnName ${columnItem.newColumnName}`));
                 // '(\\s*)' is for capturing indentation
-                jhipsterFunc.replaceContent(files.config, '(\\s*)' + fieldNameMatch, '$1' + fieldNameMatch + ',$1"columnName": "' + columnItem.newColumnName + '"', true);
-            } else if(columnItem.columnName != columnItem.newColumnName){
-                // We update existing columnName
-                log(chalk.blue('(' + columnItem.fieldName + ') UPDATING columnName from ' + columnItem.columnName + ' to ' + columnItem.newColumnName));
-                jhipsterFunc.replaceContent(files.config, '"columnName": "' + columnItem.columnName, '"columnName": "' + columnItem.newColumnName);
+                jhipsterFunc.replaceContent(files.config, '(\\s*)' + fieldNameMatch, '$1' + fieldNameMatch + ',$1"dbh_columnName": "' + columnItem.newColumnName + '"', true);
+            } else if(columnItem.dbh_columnName !== columnItem.newColumnName){
+                // We update existing dbh_columnName
+                log(chalk.blue('(' + columnItem.fieldName + ') UPDATING columnName from ' + columnItem.dbh_columnName + ' to ' + columnItem.newColumnName));
+                jhipsterFunc.replaceContent(files.config, '"dbh_columnName": "' + columnItem.dbh_columnName, '"dbh_columnName": "' + columnItem.newColumnName);
             } else {
-                log(chalk.blue('(' + columnItem.fieldName + ') KEEP columnName ' + columnItem.newColumnName));
+                log(chalk.blue('(' + columnItem.fieldName + ') KEEP columnName ' + columnItem.dbh_columnName));
             }
 
             // TODO entity generator uses fieldNameAsDatabaseColumn and not fieldNameUnderscored anymore, we don't dispose of the former thou.
@@ -129,17 +128,6 @@ module.exports = generator.extend({
 
     // cleanup, say goodbye
     end() {
-        /* TODO remove on prod
-        this.log(chalk.blue('AFTER>>>>>'));
-        this.log(chalk.blue('entityConfig'));
-        this.log(this.entityConfig);
-        this.log(chalk.blue('fields'));
-        this.log(this.fields);
-        this.log(chalk.blue('json');
-        this.log(this.fs.readJSON(files.config));
-        this.log(chalk.blue('jhipsterVar'));
-        this.log(jhipsterVar);
-        //*/
         // DEBUG : log where we are
         this.log('End of fix-entity generator');
     }
