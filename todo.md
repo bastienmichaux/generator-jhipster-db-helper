@@ -11,7 +11,14 @@ This is about working functionalities which we need to make sure they're reliabl
 
 * Prompting
 	* Depending on user configuration (database type, options, ...), we must offer different defaults, use others flags, use different validation, ...
-	* We should validate user input
+* Entity (re)generation
+	* If a user regenerate an entity, depending he accepts overwrite or not from entity generator, we can't use the same search value. We can : 
+		* either use a regex alternative (jhipster_value|our_value) 
+		* make replacements for both value (easy but ugly)
+		* detect value (basically it's catching the value with a regex)
+	* The defaults we offer should be :
+		* current value from our module if existent (won't exist at entity creation)
+		* jhipster actual value (need to do a PR as jhipster doesn't give all the values)
 
 ## Unit Tests
 
