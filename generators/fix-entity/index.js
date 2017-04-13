@@ -33,9 +33,8 @@ module.exports = generator.extend({
             this.options.testmode ? { local: require.resolve('generator-jhipster/generators/modules') } : null
         );
 
+        /* / TODO remove on prod
         this.prodDatabaseType = jhipsterVar.prodDatabaseType;
-
-        /* TODO remove on prod
         this.log(chalk.blue('<<<<<BEFORE'));
         this.log(chalk.blue('entityConfig'));
         this.log(this.entityConfig);
@@ -73,7 +72,6 @@ module.exports = generator.extend({
         // DEBUG : log where we are
         this.log('writing');
 
-
         const files = {
             config: this.entityConfig.filename,
             ORM: `${jhipsterVar.javaDir}/domain/${this.entityConfig.entityClass}.java`,
@@ -86,6 +84,28 @@ module.exports = generator.extend({
                 throw new Error('JHipster-db-helper : File not found (' + file + ': ' + files[file] + ').');
             }
         }
+        // Update the tableName
+        this.log(chalk.blue('tableName from ' + this.entityConfig.entityTableName + ' to ' + this.tableNameInput));
+        jhipsterFunc.replaceContent(files.config, '"entityTableName": "' + this.entityConfig.entityTableName, '"entityTableName": "' + this.tableNameInput);
+        jhipsterFunc.replaceContent(files.ORM, '@Table(name = "' + this.entityConfig.entityTableName, '@Table(name = "' + this.tableNameInput);
+        jhipsterFunc.replaceContent(files.liquibase, '<createTable tableName="' + this.entityConfig.entityTableName, '<createTable tableName="' + this.tableNameInput);
+
+        // Add/update the columnName for each field
+        this.columnsInput.forEach((columnItem) => {
+            const fieldNameMatch = `"fieldName": "${columnItem.fieldName}"`;
+
+            if (columnItem.columnName === undefined) {
+                // We add columnName under fieldName
+                log(chalk.blue(`(${columnItem.fieldName}) ADDING columnName ${columnItem.newColumnName}`));
+                // '(\\s*)' is for capturing indentation
+                jhipsterFunc.replaceContent(files.config, '(\\s*)' + fieldNameMatch, '$1' + fieldNameMatch + ',$1"columnName": "' + columnItem.newColumnName + '"', true);
+            } else if(columnItem.columnName != columnItem.newColumnName){
+                // We update existing columnName
+                log(chalk.blue('(' + columnItem.fieldName + ') UPDATING columnName from ' + columnItem.columnName + ' to ' + columnItem.newColumnName));
+                jhipsterFunc.replaceContent(files.config, '"columnName": "' + columnItem.columnName, '"columnName": "' + columnItem.newColumnName);
+            } else {
+                log(chalk.blue('(' + columnItem.fieldName + ') KEEP columnName ' + columnItem.newColumnName));
+            }
 
         // Update the tableName
         this.log(chalk.blue('tableName from ' + this.entityConfig.entityTableName + ' to ' + this.tableNameInput));

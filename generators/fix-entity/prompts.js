@@ -71,6 +71,9 @@ function askForColumnName(done) {
         defaultValue = this.field.fieldName;
     }
 
+	// TODO check if the column field has already been added to this.fields
+	// TODO display current field AND if present column name when asking for a new column name
+	// TODO set default as column name value
     const prompts = [
         {
             type: 'input',

@@ -54,5 +54,11 @@ describe('Dbh', function () {
                 dbh.getAppConfig('xyz').done();
             }, Error);
         });
+
+        it('throws an error with a wrong parameter type', function () {
+            assert.throws(function () {
+                dbh.getAppConfig(123).done();
+            }, Error);
+        });
     });
 });
