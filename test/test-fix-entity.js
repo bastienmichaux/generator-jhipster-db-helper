@@ -10,7 +10,3 @@ const assert = require('yeoman-assert');
 const helpers = require('yeoman-test');
 
 const deps = [];
-
-describe('fix-entity.js', function () {
-   it('');
-});

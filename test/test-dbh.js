@@ -5,15 +5,60 @@ const helpers = require('yeoman-test');
 
 const dbh = require('../generators/dbh.js');
 
-describe('Dbh', function () {
-    it('is a true string', function () {
-        assert(dbh.isTrueString('x'));
-        assert(!dbh.isTrueString(''));
-        assert(!dbh.isTrueString(null));
-        assert(!dbh.isTrueString(undefined));
-    });
+const expectedAppConfig = {
+    "generator-jhipster": {
+        "baseName": "sampleMysql",
+        "packageName": "com.mycompany.myapp",
+        "packageFolder": "com/mycompany/myapp",
+        "authenticationType": "session",
+        "hibernateCache": "ehcache",
+        "clusteredHttpSession": "no",
+        "websocket": "no",
+        "databaseType": "sql",
+        "devDatabaseType": "h2Disk",
+        "prodDatabaseType": "mysql",
+        "searchEngine": "no",
+        "useSass": false,
+        "buildTool": "maven",
+        "frontendBuilder": "grunt",
+        "enableTranslation": true,
+        "enableSocialSignIn": false,
+        "rememberMeKey": "2bb60a80889aa6e6767e9ccd8714982681152aa5",
+        "testFrameworks": [
+            "gatling"
+        ]
+    }
+};
 
-    // pending tests for getApplicationConfig
-    it('getApplicationConfig: works as expected provided a correct .yo-rc.json file');
-    it('getApplicationConfig: throws an error when file is not found');
+describe('Dbh', function () {
+    describe('getApplicationConfig', function () {
+        it('gets the expected object from a JSON file', function () {
+            return (
+                dbh.getAppConfig(__dirname + '/templates/default/').then(
+                    function (onResolve) {
+                        const appConfig = onResolve;
+                        return assert.deepStrictEqual(appConfig, expectedAppConfig);
+                    },
+                    function (onReject) {
+                        console.error(onReject);
+                    }
+                )
+                .catch(function (err) {
+                    console.error(err.message);
+                })
+            );
+        });
+
+        it('throws an error when .yo-rc.json isnt found', function () {
+            assert.throws(function () {
+                dbh.getAppConfig('xyz').done();
+            }, Error);
+        });
+
+        it('throws an error with a wrong parameter type', function () {
+            assert.throws(function () {
+                dbh.getAppConfig(123).done();
+            }, Error);
+        });
+    });
 });

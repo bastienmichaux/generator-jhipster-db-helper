@@ -36,10 +36,9 @@ module.exports = generator.extend({
             this.options.testmode ? { local: require.resolve('generator-jhipster/generators/modules') } : null
         );
 
+        /* / TODO remove on prod
         this.prodDatabaseType = jhipsterVar.prodDatabaseType;
-
-        /* TODO remove on prod
-        this.log(chalk.blue('<<<<< BEFORE'));
+        this.log(chalk.blue('<<<<<BEFORE'));
         this.log(chalk.blue('entityConfig'));
         this.log(this.entityConfig);
         this.log(chalk.blue('fields'));
@@ -73,7 +72,6 @@ module.exports = generator.extend({
         const log = this.log;
         // DEBUG : log where we are
         this.log('writing');
-
 
         const files = {
             config: this.entityConfig.filename,
@@ -127,7 +125,6 @@ module.exports = generator.extend({
 
 
     // conflict() : Where conflicts are handled (used internally)
-
 
     // run installation (npm, bower, etc)
     install() {

@@ -1,25 +1,24 @@
 const DBH_CONSTANTS = require('./dbh-constants');
 const fs = require('fs');
 
-
 /** return the content of .yo-rc.json as a JSON object */
-const getApplicationConfig = () => new Promise((resolve, reject) => {
-    const appConfigFile = DBH_CONSTANTS.applicationConfigFile;
+const getAppConfig = directory => new Promise((resolve, reject) => {
+    const path = directory + DBH_CONSTANTS.appConfigFile;
     // if file exists, return its output as a JSON object
-    if (fs.existsSync(appConfigFile)) {
-        fs.readFile(appConfigFile, 'utf8', (err, data) => {
+    if (fs.existsSync(path)) {
+        fs.readFile(path, 'utf8', (err, data) => {
             if (err) {
-                throw new Error(err);
+                reject(new Error(err));
             }
-            const applicationConfig = JSON.parse(data);
-            if (applicationConfig) {
-                resolve(applicationConfig);
+            const appConfigToJson = JSON.parse(data);
+            if (appConfigToJson) {
+                resolve(appConfigToJson);
             } else {
-                reject(`getApplicationConfig: no output. Type: ${typeof applicationConfig}, value: ${applicationConfig}`);
+                reject(new Error(`getAppConfig: no output. Type: ${typeof appConfigToJson}, value: ${appConfigToJson}`));
             }
         });
     } else {
-        throw new Error(`getApplicationConfig: file ${appConfigFile} not found`);
+        reject(new Error(`getAppConfig: file ${path} not found`));
     }
 });
 
@@ -29,6 +28,6 @@ const isTrueString = x => typeof x === 'string' && x !== '';
 
 
 module.exports = {
-    getApplicationConfig,
+    getAppConfig,
     isTrueString
 };
