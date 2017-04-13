@@ -65,18 +65,20 @@ function askForColumnsName() {
 }
 
 /**
+ * Use ${this.field} which is set either by askForColumnsName or previous recursive call
+ *
  * Ask the column name for the field of an entity
- * This function use this.fieldsPile, at each call it will pop an item from it and ask its question about it.
- * Then it will associate the answer with this item and push it to this.columnsInput.
- * So at the end of the recursion, this.fieldsPile will be empty and this.columnsInput full with what was in the former.
+ * This function use ${this.fieldsPile}, at each call it will pop an item from it and ask its question about it.
+ * Then it will associate the answer with this item and push it to ${this.columnsInput}.
+ * So at the end of the recursion, ${this.fieldsPile} will be empty and this.columnsInput full with what was in the former.
  **/
 function askForColumnName(done) {
     let messageAddendum = '';
     let defaultValue = null;
 
-    if (this.field.dbh_columnName !== undefined) {
-        messageAddendum = `(currently : ${this.field.dbh_columnName})`;
-        defaultValue = this.field.dbh_columnName;
+    if (this.field.columnNameDBH !== undefined) {
+        messageAddendum = `(currently : ${this.field.columnNameDBH})`;
+        defaultValue = this.field.columnNameDBH;
     } else {
         defaultValue = this.field.fieldName;
     }
@@ -84,7 +86,7 @@ function askForColumnName(done) {
     const prompts = [
         {
             type: 'input',
-            name: 'dbh_columnName',
+            name: 'columnNameDBH',
             validate: input => {
                 if (!/^([a-zA-Z0-9_]*)$/.test(input)) {
                     return 'Your column name cannot contain special characters';
@@ -101,7 +103,7 @@ function askForColumnName(done) {
     ];
 
     this.prompt(prompts).then((props) => {
-        this.field.columnNameInput = props.dbh_columnName;
+        this.field.columnNameInput = props.columnNameDBH;
 
         // push just processed item
         this.columnsInput.push(this.field);
