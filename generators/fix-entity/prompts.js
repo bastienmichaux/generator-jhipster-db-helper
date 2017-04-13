@@ -11,17 +11,7 @@ module.exports = {
  * Ask the table name for an entity
  */
 function askForTableName() {
-    let messageAddendum = '';
-    let defaultValue = null;
-
     const validateTableName = dbh.validateTableName;
-
-    if (this.tableNameDBH !== undefined) {
-        messageAddendum = `(currently : ${this.tableNameDBH})`;
-        defaultValue = this.tableNameDBH;
-    } else {
-        defaultValue = this.entityTableName;
-    }
 
     const done = this.async();
     this.prompt([
@@ -29,8 +19,8 @@ function askForTableName() {
             type: 'input',
             name: 'tableNameDBH',
             validate: input => validateTableName(input),
-            message: 'What is the table name for this entity ?' + messageAddendum,
-            default: defaultValue
+            message: 'What is the table name for this entity ?',
+            default: this.tableNameDBH === undefined ? this.entityTableName : this.tableNameDBH
         }
     ]).then((props) => {
         this.tableNameInput = props.tableNameDBH;
@@ -64,29 +54,15 @@ function askForColumnsName() {
  * So at the end of the recursion, ${this.fieldsPile} will be empty and this.columnsInput full with what was in the former.
  **/
 function askForColumnName(done) {
-    let messageAddendum = '';
-    let defaultValue = null;
-
     const validateColumnName = dbh.validateColumnName;
 
-    if (this.field.columnNameDBH !== undefined) {
-        messageAddendum = `(currently : ${this.field.columnNameDBH})`;
-        defaultValue = this.field.columnNameDBH;
-    } else {
-        // Value used by JHipster
-        defaultValue = this.field.fieldNameAsDatabaseColumn;
-    }
-
-	// TODO check if the column field has already been added to this.fields
-	// TODO display current field AND if present column name when asking for a new column name
-	// TODO set default as column name value
     const prompts = [
         {
             type: 'input',
             name: 'columnNameDBH',
             validate: input => validateColumnName(input),
-            message: `What column name do you want for the field "${this.field.fieldName}" ? ${messageAddendum}`,
-            default: defaultValue
+            message: `What column name do you want for the field "${this.field.fieldName}" ?`,
+            default: this.field.columnNameDBH === undefined ? this.field.fieldNameAsDatabaseColumn : this.field.columnNameDBH
         }
     ];
 
