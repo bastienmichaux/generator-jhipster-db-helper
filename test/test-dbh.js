@@ -48,6 +48,11 @@ describe('Dbh', function () {
                 })
             );
         });
-        it('throws an error when .yo-rc.json isnt found');
+
+        it('throws an error when .yo-rc.json isnt found', function () {
+            assert.throws(function () {
+                dbh.getAppConfig('xyz').done();
+            }, Error);
+        });
     });
 });
