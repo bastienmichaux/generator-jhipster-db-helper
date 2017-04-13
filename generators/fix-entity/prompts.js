@@ -18,7 +18,7 @@ function askForTableName() {
         {
             type: 'input',
             name: 'tableNameDBH',
-            validate: input => validateTableName(input),
+            validate: input => validateTableName(input, this.prodDatabaseType),
             message: 'What is the table name for this entity ?',
             default: this.tableNameDBH === undefined ? this.entityTableName : this.tableNameDBH
         }
@@ -60,7 +60,7 @@ function askForColumnName(done) {
         {
             type: 'input',
             name: 'columnNameDBH',
-            validate: input => validateColumnName(input),
+            validate: input => validateColumnName(input, this.prodDatabaseType),
             message: `What column name do you want for the field "${this.field.fieldName}" ?`,
             default: this.field.columnNameDBH === undefined ? this.field.fieldNameAsDatabaseColumn : this.field.columnNameDBH
         }
