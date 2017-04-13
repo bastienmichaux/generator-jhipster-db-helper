@@ -1,6 +1,6 @@
 const chalk = require('chalk');
 const generator = require('yeoman-generator');
-
+const dbh = require('../dbh.js');
 
 module.exports = {
     askForTableName,
@@ -14,6 +14,8 @@ function askForTableName() {
     let messageAddendum = '';
     let defaultValue = null;
 
+    const validateTableName = dbh.validateTableName;
+
     if (this.tableNameDBH !== undefined) {
         messageAddendum = `(currently : ${this.tableNameDBH})`;
         defaultValue = this.tableNameDBH;
@@ -26,18 +28,7 @@ function askForTableName() {
         {
             type: 'input',
             name: 'tableNameDBH',
-            validate: input => {
-                if (!/^([a-zA-Z0-9_]*)$/.test(input)) {
-                    return 'The table name cannot contain special characters';
-                } else if (input === '') {
-                    return 'The table name cannot be empty';
-                } else if (this.prodDatabaseType === 'oracle' && input.length > 14) {
-                    return 'The table name is too long for Oracle, try a shorter name';
-                } else if (input.length > 30) {
-                    return 'The table name is too long, try a shorter name';
-                }
-                return true;
-            },
+            validate: input => validateTableName(input),
             message: 'What is the table name for this entity ?' + messageAddendum,
             default: defaultValue
         }
