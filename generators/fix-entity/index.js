@@ -26,6 +26,7 @@ module.exports = generator.extend({
 
     // check current project state, get configs, etc
     initializing() {
+        const log = this.log; // TODO
         this.log('fix-entity generator');
         this.log('initializing');
         this.composeWith('jhipster:modules',
@@ -34,7 +35,34 @@ module.exports = generator.extend({
 		);
 
 		// TODO find column names and add them to this.fields
-		// parse the json the see if there are any column name, if there is, add it to this.fields
+        // parse the json the see if there are any column name, if there is, add it to this.fields
+        const jsonEntity = this.fs.readJSON('.jhipster/' + this.defaultTableName + '.json');
+
+        this.log(chalk.red('PRINTING ' + this.defaultTableName + '.json')); // TODO
+        this.log(typeof jsonEntity); // TODO
+        this.log(jsonEntity); // TODO
+
+        jsonEntity.fields.forEach(function (field) {
+            log(field); // TODO
+            if(field.columnName === undefined) {
+                log(field.fieldName + ' has no associated columnName'); // TODO
+                field.columnName = 'PREFIX_' + field.fieldName + '_SUFFIX';
+            }
+        });
+
+        this.log(chalk.red('PRINTING ' + this.defaultTableName + '.json')); // TODO
+        this.log(typeof jsonEntity); // TODO
+        this.log(jsonEntity); // TODO
+
+        jsonEntity.fields.forEach(function (field) {
+            log(field); // TODO
+            if(field.columnName === undefined) {
+                log(field.fieldName + ' has no associated columnName'); // TODO
+                field.columnName = 'pouet';
+            } else {
+                log(field.fieldName + ' has associated columnName : ' + field.columnName); // TODO
+            }
+        });
     },
 
 
