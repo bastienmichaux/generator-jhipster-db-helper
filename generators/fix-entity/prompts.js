@@ -9,14 +9,23 @@ module.exports = {
 
 /**
  * Ask the table name for an entity
- * @todo: add rules to the validate method
  */
 function askForTableName() {
+    let messageAddendum = '';
+    let defaultValue = null;
+
+    if (this.tableNameDBH !== undefined) {
+        messageAddendum = `(currently : ${this.tableNameDBH})`;
+        defaultValue = this.tableNameDBH;
+    } else {
+        defaultValue = this.entityTableName;
+    }
+
     const done = this.async();
     this.prompt([
         {
             type: 'input',
-            name: 'tableName',
+            name: 'tableNameDBH',
             validate: input => {
                 if (!/^([a-zA-Z0-9_]*)$/.test(input)) {
                     return 'The table name cannot contain special characters';
@@ -29,11 +38,11 @@ function askForTableName() {
                 }
                 return true;
             },
-            message: 'What is the table name for this entity?',
-            default: this.defaultTableName
+            message: 'What is the table name for this entity ?' + messageAddendum,
+            default: defaultValue
         }
     ]).then((props) => {
-        this.tableNameInput = props.tableName;
+        this.tableNameInput = props.tableNameDBH;
         done();
     });
 }
@@ -63,13 +72,12 @@ function askForColumnsName() {
  **/
 function askForColumnName(done) {
     let messageAddendum = '';
-    let defaultValue = '';
+    let defaultValue = null;
 
     if (this.field.dbh_columnName !== undefined) {
         messageAddendum = `(currently : ${this.field.dbh_columnName})`;
         defaultValue = this.field.dbh_columnName;
     } else {
-        messageAddendum = '';
         defaultValue = this.field.fieldName;
     }
 
@@ -93,7 +101,7 @@ function askForColumnName(done) {
     ];
 
     this.prompt(prompts).then((props) => {
-        this.field.newColumnName = props.dbh_columnName;
+        this.field.columnNameInput = props.dbh_columnName;
 
         // push just processed item
         this.columnsInput.push(this.field);
