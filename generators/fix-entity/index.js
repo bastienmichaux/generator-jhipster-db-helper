@@ -99,8 +99,10 @@ module.exports = generator.extend({
             } else {
                 jhipsterFunc.replaceContent(files.config, `"${key}": "${oldValue}`, `"${key}": "${newValue}`);
             }
-            jhipsterFunc.replaceContent(files.ORM, `@Table(name = "${this.entityTableName}`, `@Table(name = "${newValue}`);
-            jhipsterFunc.replaceContent(files.liquibase, `<createTable tableName="${this.entityTableName}`, `<createTable tableName="${newValue}`);
+
+            // We search either for our value or jhipster value, so it works even if user didn't accept JHipster overwrite after a regeneration
+            jhipsterFunc.replaceContent(files.ORM, `@Table\\(name = "(${this.entityTableName}|${oldValue})`, `@Table(name = "${newValue}`, true);
+            jhipsterFunc.replaceContent(files.liquibase, `\\<createTable tableName="(${this.entityTableName}|${oldValue})`, `<createTable tableName="${newValue}`);
         }
 
         // Add/Change/Keep columnNameDBH for each field
@@ -117,9 +119,9 @@ module.exports = generator.extend({
                 jhipsterFunc.replaceContent(files.config, `"${key}": "${oldValue}`, `"${key}": "${newValue}`);
             }
 
-            // TODO entity generator uses fieldNameAsDatabaseColumn and not fieldNameUnderscored anymore, we don't dispose of the former thou.
-            jhipsterFunc.replaceContent(files.ORM, `@Column(name = "${columnItem.fieldNameUnderscored}`, `@Column(name = "${newValue}`);
-            jhipsterFunc.replaceContent(files.liquibase, `<column name="${columnItem.fieldNameUnderscored}`, `<column name="${newValue}`);
+            // We search either for our value or jhipster value, so it works even if user didn't accept JHipster overwrite after a regeneration
+            jhipsterFunc.replaceContent(files.ORM, `@Column\\(name = "(${columnItem.fieldNameAsDatabaseColumn}|${oldValue})`, `@Column(name = "${newValue}`, true);
+            jhipsterFunc.replaceContent(files.liquibase, `\\<column name="(${columnItem.fieldNameAsDatabaseColumn}|${oldValue})`, `<column name="${newValue}`, true);
         });
     },
 

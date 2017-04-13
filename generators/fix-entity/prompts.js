@@ -73,7 +73,8 @@ function askForColumnName(done) {
         messageAddendum = `(currently : ${this.field.columnNameDBH})`;
         defaultValue = this.field.columnNameDBH;
     } else {
-        defaultValue = this.field.fieldName;
+        // Value used by JHipster
+        defaultValue = this.field.fieldNameAsDatabaseColumn;
     }
 
 	// TODO check if the column field has already been added to this.fields
