@@ -71,7 +71,7 @@ module.exports = generator.extend({
     writing() {
         const log = this.log;
         // DEBUG : log where we are
-        this.log('writing');
+        this.log(chalk.bold.yellow('writing'));
 
         const files = {
             config: this.entityConfig.filename,
@@ -129,13 +129,13 @@ module.exports = generator.extend({
     // run installation (npm, bower, etc)
     install() {
         // DEBUG : log where we are
-        this.log('install');
+        this.log(chalk.bold.yellow('install'));
     },
 
 
     // cleanup, say goodbye
     end() {
         // DEBUG : log where we are
-        this.log('End of fix-entity generator');
+        this.log(chalk.bold.yellow('End of fix-entity generator'));
     }
 });
