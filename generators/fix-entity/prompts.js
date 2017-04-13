@@ -67,6 +67,8 @@ function askForColumnName(done) {
     let messageAddendum = '';
     let defaultValue = null;
 
+    const validateColumnName = dbh.validateColumnName;
+
     if (this.field.columnNameDBH !== undefined) {
         messageAddendum = `(currently : ${this.field.columnNameDBH})`;
         defaultValue = this.field.columnNameDBH;
@@ -81,16 +83,7 @@ function askForColumnName(done) {
         {
             type: 'input',
             name: 'columnNameDBH',
-            validate: input => {
-                if (!/^([a-zA-Z0-9_]*)$/.test(input)) {
-                    return 'Your column name cannot contain special characters';
-                } else if (input === '') {
-                    return 'Your column name cannot be empty';
-                } else if (this.prodDatabaseType === 'oracle' && input.length > 30) {
-                    return 'The column name cannot be of more than 30 characters';
-                }
-                return true;
-            },
+            validate: input => validateColumnName(input),
             message: `What column name do you want for the field "${this.field.fieldName}" ? ${messageAddendum}`,
             default: defaultValue
         }
