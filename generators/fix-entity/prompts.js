@@ -17,16 +17,16 @@ function askForTableName() {
     this.prompt([
         {
             type: 'input',
-            name: 'tableNameDBH',
+            name: 'dbhTableName',
             validate: (input => {
                 const prodDatabaseType = this.appConfig.prodDatabaseType;
                 return validateTableName(input, prodDatabaseType);
             }),
             message: 'What is the table name for this entity ?',
-            default: this.tableNameDBH === undefined ? this.entityTableName : this.tableNameDBH
+            default: this.dbhTableName === undefined ? this.entityTableName : this.dbhTableName
         }
     ]).then((props) => {
-        this.tableNameInput = props.tableNameDBH;
+        this.tableNameInput = props.dbhTableName;
         done();
     });
 }
@@ -62,18 +62,18 @@ function askForColumnName(done) {
     const prompts = [
         {
             type: 'input',
-            name: 'columnNameDBH',
+            name: 'dbhColumnName',
             validate: (input => {
                 const prodDatabaseType = this.appConfig.prodDatabaseType;
                 return validateColumnName(input, prodDatabaseType);
             }),
             message: `What column name do you want for the field "${this.field.fieldName}" ?`,
-            default: this.field.columnNameDBH === undefined ? this.field.fieldNameAsDatabaseColumn : this.field.columnNameDBH
+            default: this.field.dbhColumnName === undefined ? this.field.fieldNameAsDatabaseColumn : this.field.dbhColumnName
         }
     ];
 
     this.prompt(prompts).then((props) => {
-        this.field.columnNameInput = props.columnNameDBH;
+        this.field.columnNameInput = props.dbhColumnName;
 
         // push just processed item
         this.columnsInput.push(this.field);

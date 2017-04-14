@@ -18,7 +18,7 @@ module.exports = generator.extend({
         // All information from entity generator
         this.entityConfig = this.options.entityConfig;
         this.entityTableName = this.options.entityConfig.entityTableName;
-        this.tableNameDBH = this.options.entityConfig.data.tableNameDBH;
+        this.dbhTableName = this.options.entityConfig.data.dbhTableName;
         this.fields = this.options.entityConfig.data.fields;
 
         // input from user (prompts.js will fill them)
@@ -76,11 +76,11 @@ module.exports = generator.extend({
             liquibase: `${jhipsterVar.resourceDir}config/liquibase/changelog/${this.entityConfig.data.changelogDate}_added_entity_${this.entityConfig.entityClass}.xml`
         };
 
-        // Add/Change/Keep tableNameDBH
+        // Add/Change/Keep dbhTableName
         const replaceTableName = (paramFiles) => {
             const pattern = `"entityTableName": "${this.entityTableName}"`;
-            const key = 'tableNameDBH';
-            const oldValue = this.tableNameDBH;
+            const key = 'dbhTableName';
+            const oldValue = this.dbhTableName;
             const newValue = this.tableNameInput;
 
             if (oldValue === undefined) {
@@ -108,11 +108,11 @@ module.exports = generator.extend({
 
         replaceTableName(files);
 
-        // Add/Change/Keep columnNameDBH for each field
+        // Add/Change/Keep dbhColumnName for each field
         this.columnsInput.forEach((columnItem) => {
             const pattern = `"fieldName": "${columnItem.fieldName}"`;
-            const key = 'columnNameDBH';
-            const oldValue = columnItem.columnNameDBH;
+            const key = 'dbhColumnName';
+            const oldValue = columnItem.dbhColumnName;
             const newValue = columnItem.columnNameInput;
 
             if (oldValue === undefined) {
