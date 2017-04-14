@@ -35,6 +35,7 @@ module.exports = generator.extend({
             { jhipsterVar, jhipsterFunc },
             this.options.testmode ? { local: require.resolve('generator-jhipster/generators/modules') } : null
         );
+        this.appConfig = jhipsterVar.jhipsterConfig;
 
         /* / TODO remove on prod
         this.prodDatabaseType = jhipsterVar.prodDatabaseType;

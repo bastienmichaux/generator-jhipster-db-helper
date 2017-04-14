@@ -12,13 +12,16 @@ module.exports = {
  */
 function askForTableName() {
     const validateTableName = dbh.validateTableName;
-
     const done = this.async();
+
     this.prompt([
         {
             type: 'input',
             name: 'tableNameDBH',
-            validate: input => validateTableName(input, this.prodDatabaseType),
+            validate: input => {
+                const prodDatabaseType = this.appConfig.prodDatabaseType;
+                return validateTableName(input, prodDatabaseType);
+            },
             message: 'What is the table name for this entity ?',
             default: this.tableNameDBH === undefined ? this.entityTableName : this.tableNameDBH
         }
@@ -55,12 +58,16 @@ function askForColumnsName() {
  **/
 function askForColumnName(done) {
     const validateColumnName = dbh.validateColumnName;
+    const xyz = this.prodDatabaseType;
 
     const prompts = [
         {
             type: 'input',
             name: 'columnNameDBH',
-            validate: input => validateColumnName(input, this.prodDatabaseType),
+            validate: input => {
+                const dbType = this.appConfig.prodDatabaseType;
+                return validateColumnName(input, dbType);
+            },
             message: `What column name do you want for the field "${this.field.fieldName}" ?`,
             default: this.field.columnNameDBH === undefined ? this.field.fieldNameAsDatabaseColumn : this.field.columnNameDBH
         }
@@ -81,4 +88,3 @@ function askForColumnName(done) {
         }
     });
 }
-
