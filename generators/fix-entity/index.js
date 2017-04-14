@@ -29,8 +29,8 @@ module.exports = generator.extend({
 
     // check current project state, get configs, etc
     initializing() {
-        this.log('fix-entity generator');
-        this.log('initializing');
+        this.log(chalk.bold.bgYellow('fix-entity generator'));
+        this.log(chalk.bold.yellow('initializing'));
         this.composeWith('jhipster:modules',
             { jhipsterVar, jhipsterFunc },
             this.options.testmode ? { local: require.resolve('generator-jhipster/generators/modules') } : null

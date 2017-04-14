@@ -33,9 +33,7 @@ module.exports = generator.extend({
      * @todo : write unit test
      * @todo : no hardcoded values for removeGradleFiles and removeMavenFiles
      */
-    _replaceNamingStrategies() {
-        // grab our files from the global space
-        const files = DBH_CONSTANTS.filesWithNamingStrategy;
+    _replaceNamingStrategies(appBuildTool) {
 
         const physicalOld = DBH_CONSTANTS.physicalNamingStrategyOld;
         const physicalNew = DBH_CONSTANTS.physicalNamingStrategyNew;
@@ -43,48 +41,40 @@ module.exports = generator.extend({
         const implicitOld = DBH_CONSTANTS.implicitNamingStrategyOld;
         const implicitNew = DBH_CONSTANTS.implicitNamingStrategyNew;
 
-        // used to filter the files with naming strategy
+        // get the files where we replace the naming strategy
+        // but filter the non-existing file(s) :
+        //   if the app uses Maven, filter the Gradle file(s)
+        //   and if the app uses Gradle, filter the Maven file(s)
+        const filterFiles = (buildTool) => {
+            // utility functions used to filter the files with naming strategy
+            const removeGradleFiles = item => item !== './gradle/liquibase.gradle';
+            const removeMavenFiles = item => item !== './pom.xml';
+            const filesWithNamingStrategy = DBH_CONSTANTS.filesWithNamingStrategy;
 
-        const removeGradleFiles = item => item !== './gradle/liquibase.gradle';
-        const removeMavenFiles = item => item !== './pom.xml';
-        let existingFiles = []; // files minus the not installed files
+            // filter the non-existing file(s)
+            if (buildTool === 'maven') {
+                return filesWithNamingStrategy.filter(removeGradleFiles);
+            } else if (buildTool === 'gradle') {
+                return filesWithNamingStrategy.filter(removeMavenFiles);
+            } else {
+                throw new Error(`build tool ${buildTool} unknown`);
+            }
+        };
 
-        // use a promise to get the current application config
-        dbh.getAppConfig('./').then(
-            // if promise is resolved,
-            // get the build tool of the application config
-            (promiseResponse) => {
-                const buildTool = promiseResponse['generator-jhipster'].buildTool;
+        const files = filterFiles(appBuildTool);
 
-                // filter the non-existing file(s)
-                // ie : if app uses Maven, remove Gradle file(s)
-                if (buildTool === 'maven') {
-                    existingFiles = files.filter(removeGradleFiles);
-                } else if (buildTool === 'gradle') {
-                    existingFiles = files.filter(removeMavenFiles);
-                } else {
-                    throw new Error(`build tool ${buildTool} unknown`);
-                }
-
-                // check that each file exists
-                // TODO: move to another promise
-                existingFiles.forEach((path) => {
-                    if (fs.existsSync(path)) {
-                        // 1) replace Spring physical naming strategy
-                        jhipsterFunc.replaceContent(path, physicalOld, physicalNew);
-                        // 2) replace Spring implicit naming strategy
-                        jhipsterFunc.replaceContent(path, implicitOld, implicitNew);
-                    } else {
-                        // note : 'throw' should end the function here but doesn't do it
-                        // meanwhile, use a return instead
-                        this.log(`${path} doesn't exist!`);
-                    }
-                });
-            },
-
-            // if promise is rejected
-            promiseError => this.log(promiseError)
-        );
+        // check that each file exists
+        // TODO: move to another promise
+        files.forEach((path) => {
+            if (fs.existsSync(path)) {
+                // 1) replace Spring physical naming strategy
+                jhipsterFunc.replaceContent(path, physicalOld, physicalNew);
+                // 2) replace Spring implicit naming strategy
+                jhipsterFunc.replaceContent(path, implicitOld, implicitNew);
+            } else {
+                throw new Error(`${path} doesn't exist!`);
+            }
+        });
     },
 
     // check current project state, get configs, etc
@@ -136,7 +126,7 @@ module.exports = generator.extend({
 
         // replace files with Spring's naming strategies
         this.log('db-helper replaces your naming strategies.');
-        this._replaceNamingStrategies();
+        this._replaceNamingStrategies(jhipsterVar.jhipsterConfig.buildTool);
 
         // declarations done by jhipster-module
         this.baseName = jhipsterVar.baseName;
