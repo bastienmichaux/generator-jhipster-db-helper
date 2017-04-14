@@ -69,23 +69,6 @@ module.exports = generator.extend({
      * Allows consistent mapping with an existing database table without modifying JHipster's entity subgenerator.
      **/
     writing() {
-        const log = this.log;
-        // DEBUG : log where we are
-        this.log(chalk.bold.yellow('writing'));
-
-        const files = {
-            config: this.entityConfig.filename,
-            ORM: `${jhipsterVar.javaDir}/domain/${this.entityConfig.entityClass}.java`,
-            liquibase: `${jhipsterVar.resourceDir}config/liquibase/changelog/${this.entityConfig.data.changelogDate}_added_entity_${this.entityConfig.entityClass}.xml`
-        };
-
-        for (let file in files) {
-            // hasOwnProperty to avoid inherited properties
-            if (files.hasOwnProperty(file) && !fs.existsSync(files[file])) {
-                throw new Error('JHipster-db-helper : File not found (' + file + ': ' + files[file] + ').');
-            }
-        }
-
         // Add/Change/Keep tableNameDBH
         const replaceTableName = () => {
             const pattern = `"entityTableName": "${this.entityTableName}"`;
@@ -104,6 +87,23 @@ module.exports = generator.extend({
             jhipsterFunc.replaceContent(files.ORM, `@Table\\(name = "(${this.entityTableName}|${oldValue})`, `@Table(name = "${newValue}`, true);
             jhipsterFunc.replaceContent(files.liquibase, `\\<createTable tableName="(${this.entityTableName}|${oldValue})`, `<createTable tableName="${newValue}`);
         };
+
+        const files = {
+            config: this.entityConfig.filename,
+            ORM: `${jhipsterVar.javaDir}/domain/${this.entityConfig.entityClass}.java`,
+            liquibase: `${jhipsterVar.resourceDir}config/liquibase/changelog/${this.entityConfig.data.changelogDate}_added_entity_${this.entityConfig.entityClass}.xml`
+        };
+
+        // DEBUG : log where we are
+        this.log(chalk.bold.yellow('writing'));
+
+        for (let file in files) {
+            // hasOwnProperty to avoid inherited properties
+            if (files.hasOwnProperty(file) && !fs.existsSync(files[file])) {
+                throw new Error('JHipster-db-helper : File not found (' + file + ': ' + files[file] + ').');
+            }
+        }
+
         replaceTableName();
 
         // Add/Change/Keep columnNameDBH for each field
