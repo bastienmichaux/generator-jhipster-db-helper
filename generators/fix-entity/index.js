@@ -70,8 +70,14 @@ module.exports = generator.extend({
      * Allows consistent mapping with an existing database table without modifying JHipster's entity subgenerator.
      **/
     writing() {
+        const files = {
+            config: this.entityConfig.filename,
+            ORM: `${jhipsterVar.javaDir}/domain/${this.entityConfig.entityClass}.java`,
+            liquibase: `${jhipsterVar.resourceDir}config/liquibase/changelog/${this.entityConfig.data.changelogDate}_added_entity_${this.entityConfig.entityClass}.xml`
+        };
+
         // Add/Change/Keep tableNameDBH
-        const replaceTableName = () => {
+        const replaceTableName = (paramFiles) => {
             const pattern = `"entityTableName": "${this.entityTableName}"`;
             const key = 'tableNameDBH';
             const oldValue = this.tableNameDBH;
@@ -79,33 +85,28 @@ module.exports = generator.extend({
 
             if (oldValue === undefined) {
                 // '(\\s*)' is for capturing indentation
-                jhipsterFunc.replaceContent(files.config, `(\\s*)${pattern}`, `$1${pattern},$1"${key}": "${newValue}"`, true);
+                jhipsterFunc.replaceContent(paramFiles.config, `(\\s*)${pattern}`, `$1${pattern},$1"${key}": "${newValue}"`, true);
             } else {
-                jhipsterFunc.replaceContent(files.config, `"${key}": "${oldValue}`, `"${key}": "${newValue}`);
+                jhipsterFunc.replaceContent(paramFiles.config, `"${key}": "${oldValue}`, `"${key}": "${newValue}`);
             }
 
             // We search either for our value or jhipster value, so it works even if user didn't accept JHipster overwrite after a regeneration
-            jhipsterFunc.replaceContent(files.ORM, `@Table\\(name = "(${this.entityTableName}|${oldValue})`, `@Table(name = "${newValue}`, true);
-            jhipsterFunc.replaceContent(files.liquibase, `\\<createTable tableName="(${this.entityTableName}|${oldValue})`, `<createTable tableName="${newValue}`);
-        };
-
-        const files = {
-            config: this.entityConfig.filename,
-            ORM: `${jhipsterVar.javaDir}/domain/${this.entityConfig.entityClass}.java`,
-            liquibase: `${jhipsterVar.resourceDir}config/liquibase/changelog/${this.entityConfig.data.changelogDate}_added_entity_${this.entityConfig.entityClass}.xml`
+            jhipsterFunc.replaceContent(paramFiles.ORM, `@Table\\(name = "(${this.entityTableName}|${oldValue})`, `@Table(name = "${newValue}`, true);
+            jhipsterFunc.replaceContent(paramFiles.liquibase, `\\<createTable tableName="(${this.entityTableName}|${oldValue})`, `<createTable tableName="${newValue}`);
         };
 
         // DEBUG : log where we are
         this.log(chalk.bold.yellow('writing'));
 
-        for (let file in files) {
+        // verify files exist
+        for (const file in files) {
             // hasOwnProperty to avoid inherited properties
             if (files.hasOwnProperty(file) && !fs.existsSync(files[file])) {
-                throw new Error('JHipster-db-helper : File not found (' + file + ': ' + files[file] + ').');
+                throw new Error(`JHipster-db-helper : File not found (${file}: ${files[file]}).`);
             }
         }
 
-        replaceTableName();
+        replaceTableName(files);
 
         // Add/Change/Keep columnNameDBH for each field
         this.columnsInput.forEach((columnItem) => {
