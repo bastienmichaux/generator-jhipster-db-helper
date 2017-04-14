@@ -93,6 +93,7 @@ module.exports = generator.extend({
             // DEBUG : log where we are
             this.log(chalk.bold.yellow('initializing: compose'));
 
+            // note : before this line we can't use jhipsterVar or jhipsterFunc
             this.composeWith('jhipster:modules',
                 { jhipsterVar, jhipsterFunc },
                 this.options.testmode ? { local: require.resolve('generator-jhipster/generators/modules') } : null
