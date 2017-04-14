@@ -65,8 +65,8 @@ function askForColumnName(done) {
             type: 'input',
             name: 'columnNameDBH',
             validate: input => {
-                const dbType = this.appConfig.prodDatabaseType;
-                return validateColumnName(input, dbType);
+                const prodDatabaseType = this.appConfig.prodDatabaseType;
+                return validateColumnName(input, prodDatabaseType);
             },
             message: `What column name do you want for the field "${this.field.fieldName}" ?`,
             default: this.field.columnNameDBH === undefined ? this.field.fieldNameAsDatabaseColumn : this.field.columnNameDBH
