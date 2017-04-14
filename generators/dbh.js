@@ -33,14 +33,14 @@ const getAppConfig = directory => new Promise((resolve, reject) => {
 const isTrueString = x => typeof x === 'string' && x !== '';
 
 
-/** validate user input when asking for a SQL column name */
+/** Validate user input when asking for a SQL column name */
 const validateColumnName = (input, dbType) => {
     if (!/^([a-zA-Z0-9_]*)$/.test(input)) {
         return 'Your column name cannot contain special characters';
     } else if (input === '') {
         return 'Your column name cannot be empty';
-    } else if (dbType === 'oracle' && input.length > 30) {
-        return 'The column name cannot be of more than 30 characters';
+    } else if (dbType === 'oracle' && input.length > 26) {
+        return 'Your column name is too long for Oracle, try a shorter name';
     }
     return true;
 };
