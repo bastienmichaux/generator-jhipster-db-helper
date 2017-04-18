@@ -37,7 +37,7 @@ module.exports = generator.extend({
         );
         this.appConfig = jhipsterVar.jhipsterConfig;
 
-        //* / TODO remove on prod
+        /* / TODO remove on prod
         this.prodDatabaseType = jhipsterVar.prodDatabaseType;
         this.log(chalk.blue('<<<<<BEFORE'));
         this.log(chalk.blue('entityConfig'));
@@ -92,7 +92,7 @@ module.exports = generator.extend({
 
             // We search either for our value or jhipster value, so it works even if user didn't accept JHipster overwrite after a regeneration
             jhipsterFunc.replaceContent(paramFiles.ORM, `@Table\\(name = "(${this.entityTableName}|${oldValue})`, `@Table(name = "${newValue}`, true);
-            jhipsterFunc.replaceContent(paramFiles.liquibase, `\\<createTable tableName="(${this.entityTableName}|${oldValue})`, `<createTable tableName="${newValue}`);
+            jhipsterFunc.replaceContent(paramFiles.liquibase, `\\<createTable tableName="(${this.entityTableName}|${oldValue})`, `<createTable tableName="${newValue}`, true);
         };
 
         // DEBUG : log where we are
