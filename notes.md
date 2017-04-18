@@ -128,6 +128,7 @@ Regenerating the app will :
 
 These researchs and tests may have some interest for you.
 
+* [What features are currently support](./integration.md)
 * [Describe briefly the module, how to install and use it](./README.md)
 * [How jhipster handles @Table inside the code](./entityTableName.md)
 * [Our research and tests about the validation done on user input for a field](./forbiddenCapital.md)
