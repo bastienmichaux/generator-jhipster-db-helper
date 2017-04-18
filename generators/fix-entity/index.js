@@ -37,7 +37,7 @@ module.exports = generator.extend({
         );
         this.appConfig = jhipsterVar.jhipsterConfig;
 
-        /* / TODO remove on prod
+        //* / TODO remove on prod
         this.prodDatabaseType = jhipsterVar.prodDatabaseType;
         this.log(chalk.blue('<<<<<BEFORE'));
         this.log(chalk.blue('entityConfig'));
@@ -72,7 +72,7 @@ module.exports = generator.extend({
     writing() {
         const files = {
             config: this.entityConfig.filename,
-            ORM: `${jhipsterVar.javaDir}/domain/${this.entityConfig.entityClass}.java`,
+            ORM: `${jhipsterVar.javaDir}domain/${this.entityConfig.entityClass}.java`,
             liquibase: `${jhipsterVar.resourceDir}config/liquibase/changelog/${this.entityConfig.data.changelogDate}_added_entity_${this.entityConfig.entityClass}.xml`
         };
 
