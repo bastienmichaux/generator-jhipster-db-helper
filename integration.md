@@ -171,9 +171,10 @@ A working application shouldn't print any exception in the logs, nor there shoul
 	* [ ] Modify Book's tableName
 	* [ ] Modify Author's tableName
 * Application with full configuration and module
-	* [ ] Keep all values defaults
+	* [x] Keep all values defaults
 	> Caused by: org.hibernate.tool.schema.spi.SchemaManagementException: Schema-validation: missing column [theAuthor_id] in table [book]
-	[19/04/17 10:00]I don't understand why this fails, I should get the same result that without our module...
+	[19/04/17 10:00] I don't understand why this fails, I should get the same result that without our module...
+	Partly fixed, see issue #3
 	* [ ] Modify Author birthDate's column
 	* [ ] Modify Book any field's column (except the relation)
 	* [ ] Modify Author name's column
