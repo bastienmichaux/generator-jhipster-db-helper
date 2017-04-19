@@ -160,7 +160,20 @@ A working application shouldn't print any exception in the logs, nor there shoul
 	* [x] Modify dbhTableName for both entities
 	* [x] Modify dbhColumnName for all fields
 * Application with full configuration
+	* [ ] Add and call our module
+	> Caused by: org.hibernate.tool.schema.spi.SchemaManagementException: Schema-validation: missing column [theAuthor_id] in table [book]
+	[19/04/17 11:33] Ok, I think I get this, it uses the entity tableName value and transforms it to generate on one side and our value, transformed to conform the naming convention, on the other side.
+	It doesn't work because we changed the naming convention, thus the values differ.
+	* [ ] Regenerate entities and keep all default
+	* [ ] Modify Author birthDate's column
+	* [ ] Modify Book any field's column (except the relation)
+	* [ ] Modify Author name's column
+	* [ ] Modify Book's tableName
+	* [ ] Modify Author's tableName
+* Application with full configuration and module
 	* [ ] Keep all values defaults
+	> Caused by: org.hibernate.tool.schema.spi.SchemaManagementException: Schema-validation: missing column [theAuthor_id] in table [book]
+	[19/04/17 10:00]I don't understand why this fails, I should get the same result that without our module...
 	* [ ] Modify Author birthDate's column
 	* [ ] Modify Book any field's column (except the relation)
 	* [ ] Modify Author name's column
