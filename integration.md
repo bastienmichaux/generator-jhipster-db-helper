@@ -131,7 +131,7 @@ A working application shouldn't print any exception in the logs, nor there shoul
 	* [x] Regenerate the entity and change dbhTableName - fff0e80
 	* [x] Regenerate the entity and change dbhColumnName - fff0e80
 * Already generated applications with two existing entities without any relation
-	* [ ] Adding our module
-	* [ ] regenerating the app with our module
-	* [ ] modifying dbhTableName
-	* [ ] modifying dbhColumnName
+	* [x] Add and call our module
+	* [x] Regenerate the app and entities **you must do both, regenerating only the app will make it invalid**
+	* [x] Modify dbhTableName for both entities
+	* [x] Modify dbhColumnName for all fields
