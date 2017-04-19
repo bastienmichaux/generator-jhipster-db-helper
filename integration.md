@@ -55,16 +55,23 @@ The entity Author
 ```json
 {
     "fluentMethods": true,
-    "relationships": [],
+    "relationships": [
+        {
+            "relationshipName": "hisBook",
+            "otherEntityName": "book",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "theAuthor"
+        }
+    ],
     "fields": [
         {
             "fieldName": "name",
-            "dbhColumnName": "Namae",
+            "dbhColumnName": "name",
             "fieldType": "String"
         },
         {
             "fieldName": "birthDate",
-            "dbhColumnName": "BD",
+            "dbhColumnName": "birth_date",
             "fieldType": "LocalDate"
         }
     ],
@@ -72,7 +79,7 @@ The entity Author
     "dto": "no",
     "service": "no",
     "entityTableName": "author",
-    "dbhTableName": "Scribe",
+    "dbhTableName": "author",
     "pagination": "no"
 }
 ```
@@ -81,24 +88,41 @@ The entity Book
 ```json
 {
     "fluentMethods": true,
-    "relationships": [],
+    "relationships": [
+        {
+            "relationshipName": "theAuthor",
+            "otherEntityName": "author",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "name"
+        }
+    ],
     "fields": [
         {
-            "fieldName": "name",
-            "dbhColumnName": "Namae",
+            "fieldName": "title",
+            "dbhColumnName": "title",
             "fieldType": "String"
         },
         {
-            "fieldName": "birthDate",
-            "dbhColumnName": "BD",
+            "fieldName": "description",
+            "dbhColumnName": "description",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "publicationDate",
+            "dbhColumnName": "publication_date",
             "fieldType": "LocalDate"
+        },
+        {
+            "fieldName": "price",
+            "dbhColumnName": "price",
+            "fieldType": "BigDecimal"
         }
     ],
-    "changelogDate": "20170418140037",
+    "changelogDate": "20170418145015",
     "dto": "no",
     "service": "no",
-    "entityTableName": "author",
-    "dbhTableName": "Scribe",
+    "entityTableName": "book",
+    "dbhTableName": "book",
     "pagination": "no"
 }
 ```
@@ -135,3 +159,10 @@ A working application shouldn't print any exception in the logs, nor there shoul
 	* [x] Regenerate the app and entities **you must do both, regenerating only the app will make it invalid**
 	* [x] Modify dbhTableName for both entities
 	* [x] Modify dbhColumnName for all fields
+* Application with full configuration
+	* [ ] Keep all values defaults
+	* [ ] Modify Author birthDate's column
+	* [ ] Modify Book any field's column (except the relation)
+	* [ ] Modify Author name's column
+	* [ ] Modify Book's tableName
+	* [ ] Modify Author's tableName
