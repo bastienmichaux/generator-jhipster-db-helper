@@ -1,7 +1,7 @@
 const DBH_CONSTANTS = require('./dbh-constants');
 const fs = require('fs');
 const jhipsterCore = require('jhipster-core');
-
+const pluralize = require('pluralize');
 
 /** a promise returning the current JHipster app config as a JSON object */
 const getAppConfig = directory => new Promise((resolve, reject) => {
@@ -66,10 +66,57 @@ const validateTableName = (input, dbType) => {
     return true;
 };
 
+/**
+ * get hibernate SnakeCase in JHipster preferred style.
+ *
+ * @param {string} value - table column name or table name string
+ * @see org.springframework.boot.orm.jpa.hibernate.SpringNamingStrategy
+ */
+const hibernateSnakeCase = (value) => {
+    let res = '';
+    if (value) {
+        value = value.replace('.', '_');
+        res = value[0];
+        for (let i = 1, len = value.length - 1; i < len; i++) {
+            if (value[i - 1] !== value[i - 1].toUpperCase() &&
+                value[i] !== value[i].toLowerCase() &&
+                value[i + 1] !== value[i + 1].toUpperCase()
+            ) {
+                res += `_${value[i]}`;
+            } else {
+                res += value[i];
+            }
+        }
+        res += value[value.length - 1];
+        res = res.toLowerCase();
+    }
+    return res;
+};
+
+const getColumnIdName = (name) => hibernateSnakeCase(name) + '_id';
+
+const getPluralColumnIdName = (name) => getColumnIdName(pluralize(name));
+
+const hasConstraints = (relationships) => {
+    for(let idx = 0; idx < relationships.length; idx++) {
+        if(relationships[idx].relationshipType === 'many-to-one' || (relationships[idx].relationshipType === 'one-to-one' && relationships[idx].ownerSide)) {
+            return true;
+        }
+        if(relationships[idx].relationshipType === 'many-to-many' && relationships[idx].ownerSide) {
+            return true;
+        }
+    }
+
+    return false;
+};
+
 
 module.exports = {
     getAppConfig,
     isTrueString,
     validateColumnName,
-    validateTableName
+    validateTableName,
+    getColumnIdName,
+    getPluralColumnIdName,
+    hasConstraints
 };
