@@ -39,7 +39,7 @@ module.exports = generator.extend({
         );
         this.appConfig = jhipsterVar.jhipsterConfig;
 
-        //* / TODO remove on prod
+        /* / TODO remove on prod
         this.prodDatabaseType = jhipsterVar.prodDatabaseType;
         this.log(chalk.blue('<<<<<BEFORE'));
         this.log(chalk.blue('entityConfig'));
@@ -74,14 +74,21 @@ module.exports = generator.extend({
      * Allows consistent mapping with an existing database table without modifying JHipster's entity subgenerator.
      **/
     writing() {
+        /**
+         * Return path to the liquibase file corresponding to this entity and type of file.
+         *
+         * @param type is either 'entity' or 'entity_constraints'
+         */
+        const getLiquibaseFile = (type) => `${jhipsterVar.resourceDir}config/liquibase/changelog/${this.entityConfig.data.changelogDate}_added_${type}_${this.entityConfig.entityClass}.xml`;
+
         const files = {
             config: this.entityConfig.filename,
             ORM: `${jhipsterVar.javaDir}domain/${this.entityConfig.entityClass}.java`,
-            liquibaseEntity: `${jhipsterVar.resourceDir}config/liquibase/changelog/${this.entityConfig.data.changelogDate}_added_entity_${this.entityConfig.entityClass}.xml`
+            liquibaseEntity: getLiquibaseFile('entity')
         };
 
         if(dbh.hasConstraints(this.relationships)) {
-            files.liquibaseConstraints = `${jhipsterVar.resourceDir}config/liquibase/changelog/${this.entityConfig.data.changelogDate}_added_entity_constraints_${this.entityConfig.entityClass}.xml`;
+            files.liquibaseConstraints = getLiquibaseFile('entity_constraints');
         }
 
         // Add/Change/Keep dbhTableName
@@ -137,23 +144,36 @@ module.exports = generator.extend({
             jhipsterFunc.replaceContent(files.liquibaseEntity, `\\<column name="(${columnItem.fieldNameAsDatabaseColumn}|${oldValue})`, `<column name="${newValue}`, true);
         });
 
+        // Add/Change/Keep dbhRelationshipId
         this.relationships.forEach((relationshipItem) => {
-            const oldValue = relationshipItem.dbhRelationName; // todo add it to conf and retrieve it here
+            const pattern = `"relationshipName": "${relationshipItem.relationshipName}"`;
+            const key = 'dbhRelationshipId';
+            const oldValue = relationshipItem.dbhRelationshipId;
+
             let columnName = null;
             let newValue = null;
 
             if(relationshipItem.relationshipType === 'many-to-one' || (relationshipItem.relationshipType === 'one-to-one' && relationshipItem.ownerSide)) {
-                columnName = dbh.getRelationColumn(relationshipItem.relationshipName);
+                columnName = dbh.getColumnIdName(relationshipItem.relationshipName);
                 newValue = relationshipItem.relationshipName + '_id';
             } else if (relationshipItem.relationshipType === 'many-to-many' && relationshipItem.ownerSide) {
-                columnName = dbh.getPluralRelationColumn(relationshipItem.relationshipName);
-                newValue = dbh.pluralize(relationshipItem.relationshipName) + '_id';
-                // todo There are two columns in a many-to-many, need to see what to do with the second one. I think the second one as to do with intermediary table, most probably not my problem
+                columnName = dbh.getPluralColumnIdName(relationshipItem.relationshipName);
+                newValue = relationshipItem.relationshipNamePlural + '_id';
             } else {
+                // If an entity has several relationships but some don't add constraints, they will end up here
                 return;
             }
 
+            if (oldValue === undefined) {
+                // '(\\s*)' is for capturing indentation
+                jhipsterFunc.replaceContent(files.config, `(\\s*)${pattern}`, `$1${pattern},$1"${key}": "${newValue}"`, true);
+            } else {
+                jhipsterFunc.replaceContent(files.config, `"${key}": "${oldValue}`, `"${key}": "${newValue}`);
+            }
+
+            jhipsterFunc.replaceContent(files.ORM, `inverseJoinColumns = @JoinColumn\\(name="(${columnName}|${oldValue})`, `inverseJoinColumns = @JoinColumn(name="${newValue}`, true);
             jhipsterFunc.replaceContent(files.liquibaseEntity, `\\<column name="(${columnName}|${oldValue})`, `<column name="${newValue}`, true);
+            jhipsterFunc.replaceContent(files.liquibaseEntity, `\\<addPrimaryKey columnNames="${dbh.getPluralColumnIdName(this.entityTableName)}, (${columnName}|${oldValue})`, `<addPrimaryKey columnNames="${dbh.getPluralColumnIdName(this.entityTableName)}, ${newValue}`, true);
             jhipsterFunc.replaceContent(files.liquibaseConstraints, `\\<addForeignKeyConstraint baseColumnNames="(${columnName}|${oldValue})`, `<addForeignKeyConstraint baseColumnNames="${newValue}`, true);
         });
     },

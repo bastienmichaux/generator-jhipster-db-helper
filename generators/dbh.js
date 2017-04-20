@@ -93,9 +93,9 @@ const hibernateSnakeCase = (value) => {
     return res;
 };
 
-const getRelationColumn = (name) => hibernateSnakeCase(name) + '_id';
+const getColumnIdName = (name) => hibernateSnakeCase(name) + '_id';
 
-const getPluralRelationColumn = (name) => getRelationColumn(pluralize(name));
+const getPluralColumnIdName = (name) => getColumnIdName(pluralize(name));
 
 const hasConstraints = (relationships) => {
     for(let idx = 0; idx < relationships.length; idx++) {
@@ -116,8 +116,7 @@ module.exports = {
     isTrueString,
     validateColumnName,
     validateTableName,
-    getRelationColumn,
-    getPluralRelationColumn,
-    pluralize,
+    getColumnIdName,
+    getPluralColumnIdName,
     hasConstraints
 };
