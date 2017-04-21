@@ -97,6 +97,13 @@ const getColumnIdName = (name) => hibernateSnakeCase(name) + '_id';
 
 const getPluralColumnIdName = (name) => getColumnIdName(pluralize(name));
 
+/**
+ * Check if these relationships add constraints.
+ * Typically, an one-to-many relationship doesn't add a constraint to the entity on the one side.
+ *
+ * @param relationships an array of relationship to check
+ * @returns {boolean}
+ */
 const hasConstraints = (relationships) => {
     for(let idx = 0; idx < relationships.length; idx++) {
         if(relationships[idx].relationshipType === 'many-to-one' || (relationships[idx].relationshipType === 'one-to-one' && relationships[idx].ownerSide)) {
