@@ -94,7 +94,7 @@ module.exports = generator.extend({
         // todo it would be nice to move this procedure to dbh.js but it will loose access to jhipsterFunc
         /**
          * Update the value associated with the key. If the key doesn't exist yet, creates it.
-         * To do so it checks the oldValue, undefined will be understood as the key doesn't exist.
+         * To do so it checks the oldValue, undefined will be understood as if the key doesn't exist.
          *
          * @param landmark the value beneath which it will add the key if not existent
          * @param key the one it operates on
@@ -160,16 +160,17 @@ module.exports = generator.extend({
             } else if (relationshipItem.relationshipType === 'many-to-many' && relationshipItem.ownerSide) {
                 columnName = dbh.getPluralColumnIdName(relationshipItem.relationshipName);
                 newValue = relationshipItem.relationshipNamePlural + '_id';
+
+                jhipsterFunc.replaceContent(files.liquibaseEntity, `\\<addPrimaryKey columnNames="${dbh.getPluralColumnIdName(this.entityTableName)}, (${columnName}|${oldValue})`, `<addPrimaryKey columnNames="${dbh.getPluralColumnIdName(this.entityTableName)}, ${newValue}`, true);
+                jhipsterFunc.replaceContent(files.ORM, `inverseJoinColumns = @JoinColumn\\(name="(${columnName}|${oldValue})`, `inverseJoinColumns = @JoinColumn(name="${newValue}`, true);
             } else {
-                // If an entity has several relationships but some don't add constraints, they will end up here
+                // We don't need to do anything about relationship which don't add any constraint.
                 return;
             }
 
             updateKey(`"relationshipName": "${relationshipItem.relationshipName}"`, 'dbhRelationshipId', oldValue, newValue);
 
-            jhipsterFunc.replaceContent(files.ORM, `inverseJoinColumns = @JoinColumn\\(name="(${columnName}|${oldValue})`, `inverseJoinColumns = @JoinColumn(name="${newValue}`, true);
             jhipsterFunc.replaceContent(files.liquibaseEntity, `\\<column name="(${columnName}|${oldValue})`, `<column name="${newValue}`, true);
-            jhipsterFunc.replaceContent(files.liquibaseEntity, `\\<addPrimaryKey columnNames="${dbh.getPluralColumnIdName(this.entityTableName)}, (${columnName}|${oldValue})`, `<addPrimaryKey columnNames="${dbh.getPluralColumnIdName(this.entityTableName)}, ${newValue}`, true);
             jhipsterFunc.replaceContent(files.liquibaseConstraints, `\\<addForeignKeyConstraint baseColumnNames="(${columnName}|${oldValue})`, `<addForeignKeyConstraint baseColumnNames="${newValue}`, true);
         });
     },
