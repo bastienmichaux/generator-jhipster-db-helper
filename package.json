@@ -25,6 +25,7 @@
     "generator-jhipster": ">=4.1.0",
     "jhipster-core": "^1.2.9",
     "mkdirp": "0.5.1",
+    "pluralize": "^4.0.0",
     "replace": "0.3.0",
     "yeoman-generator": "1.1.1"
   },
