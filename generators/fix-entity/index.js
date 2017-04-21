@@ -91,19 +91,31 @@ module.exports = generator.extend({
             files.liquibaseConstraints = getLiquibaseFile('entity_constraints');
         }
 
+        // todo it would be nice to move this procedure to dbh.js but it will loose access to jhipsterFunc
+        /**
+         * Update the value associated with the key. If the key doesn't exist yet, creates it.
+         * To do so it checks the oldValue, undefined will be understood as the key doesn't exist.
+         *
+         * @param landmark the value beneath which it will add the key if not existent
+         * @param key the one it operates on
+         * @param oldValue the value associated to the key before the execution of this procedure (can be undefined)
+         * @param newValue the value to associate to the key, replace oldValue if any
+         */
+        const updateKey = (landmark, key, oldValue, newValue) => {
+            if (oldValue === undefined) {
+                // '(\\s*)' is for capturing indentation
+                jhipsterFunc.replaceContent(files.config, `(\\s*)${landmark}`, `$1${landmark},$1"${key}": "${newValue}"`, true);
+            } else {
+                jhipsterFunc.replaceContent(files.config, `"${key}": "${oldValue}`, `"${key}": "${newValue}`);
+            }
+        };
+
         // Add/Change/Keep dbhTableName
         const replaceTableName = (paramFiles) => {
-            const pattern = `"entityTableName": "${this.entityTableName}"`;
-            const key = 'dbhTableName';
             const oldValue = this.dbhTableName;
             const newValue = this.tableNameInput;
 
-            if (oldValue === undefined) {
-                // '(\\s*)' is for capturing indentation
-                jhipsterFunc.replaceContent(paramFiles.config, `(\\s*)${pattern}`, `$1${pattern},$1"${key}": "${newValue}"`, true);
-            } else {
-                jhipsterFunc.replaceContent(paramFiles.config, `"${key}": "${oldValue}`, `"${key}": "${newValue}`);
-            }
+            updateKey(`"entityTableName": "${this.entityTableName}"`, 'dbhTableName', oldValue, newValue);
 
             // We search either for our value or jhipster value, so it works even if user didn't accept JHipster overwrite after a regeneration
             jhipsterFunc.replaceContent(paramFiles.ORM, `@Table\\(name = "(${this.entityTableName}|${oldValue})`, `@Table(name = "${newValue}`, true);
@@ -121,33 +133,22 @@ module.exports = generator.extend({
             }
         }
 
-        this.log(files); // todo remove
-
         replaceTableName(files);
 
         // Add/Change/Keep dbhColumnName for each field
         this.columnsInput.forEach((columnItem) => {
-            const pattern = `"fieldName": "${columnItem.fieldName}"`;
-            const key = 'dbhColumnName';
             const oldValue = columnItem.dbhColumnName;
             const newValue = columnItem.columnNameInput;
 
-            if (oldValue === undefined) {
-                // '(\\s*)' is for capturing indentation
-                jhipsterFunc.replaceContent(files.config, `(\\s*)${pattern}`, `$1${pattern},$1"${key}": "${newValue}"`, true);
-            } else {
-                jhipsterFunc.replaceContent(files.config, `"${key}": "${oldValue}`, `"${key}": "${newValue}`);
-            }
+            updateKey(`"fieldName": "${columnItem.fieldName}"`, 'dbhColumnName', oldValue, newValue);
 
-            // We search either for our value or jhipster value, so it works even if user didn't accept JHipster overwrite after a regeneration
+            // We search either for our value or JHipster value, so it works even if user didn't accept JHipster overwrite while regenerating
             jhipsterFunc.replaceContent(files.ORM, `@Column\\(name = "(${columnItem.fieldNameAsDatabaseColumn}|${oldValue})`, `@Column(name = "${newValue}`, true);
             jhipsterFunc.replaceContent(files.liquibaseEntity, `\\<column name="(${columnItem.fieldNameAsDatabaseColumn}|${oldValue})`, `<column name="${newValue}`, true);
         });
 
         // Add/Change/Keep dbhRelationshipId
         this.relationships.forEach((relationshipItem) => {
-            const pattern = `"relationshipName": "${relationshipItem.relationshipName}"`;
-            const key = 'dbhRelationshipId';
             const oldValue = relationshipItem.dbhRelationshipId;
 
             let columnName = null;
@@ -164,12 +165,7 @@ module.exports = generator.extend({
                 return;
             }
 
-            if (oldValue === undefined) {
-                // '(\\s*)' is for capturing indentation
-                jhipsterFunc.replaceContent(files.config, `(\\s*)${pattern}`, `$1${pattern},$1"${key}": "${newValue}"`, true);
-            } else {
-                jhipsterFunc.replaceContent(files.config, `"${key}": "${oldValue}`, `"${key}": "${newValue}`);
-            }
+            updateKey(`"relationshipName": "${relationshipItem.relationshipName}"`, 'dbhRelationshipId', oldValue, newValue);
 
             jhipsterFunc.replaceContent(files.ORM, `inverseJoinColumns = @JoinColumn\\(name="(${columnName}|${oldValue})`, `inverseJoinColumns = @JoinColumn(name="${newValue}`, true);
             jhipsterFunc.replaceContent(files.liquibaseEntity, `\\<column name="(${columnName}|${oldValue})`, `<column name="${newValue}`, true);
