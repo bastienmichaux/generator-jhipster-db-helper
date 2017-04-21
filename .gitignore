@@ -8,4 +8,5 @@ atlassian-ide-plugin.xml
 /.project
 test/temp/
 *debug.log*
+*.log
 .vscode
