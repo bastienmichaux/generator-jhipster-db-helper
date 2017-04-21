@@ -14,7 +14,7 @@ When creating an entity, Spring Boot converts `camelCase` names to `underscore_c
 
 This module :
 
-1. Replaces `org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy` with `hibernate.‌boot.model.naming.Ph‌ysicalNamingStrategy‌StandardImpl`
+1. Replaces `org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy` with `hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl`
 1. Replaces `org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy` with `org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl`
 
 ### 2 : Modify the generated entities
@@ -32,8 +32,6 @@ In the tests we made, `CamelCase` names becomes `underscore_case`. If your reque
 1. edit your Column names :
     * editing the field names in `.jhipster/FooBar.json` won't do any change to your entity files
     * find `FooBar.java` and edit the value of `@Column` for each field that isn't correctly mapped
-
-*(We will cover relationships soon)*
 
 You need to do this for every entity with `lowerCamelCase` or `UpperCamelCase` names.
 
@@ -89,14 +87,12 @@ Liquibase is a great tool : it gives you version control over your database sche
 
 JHipster generates Liquibase files for your empty DB. But if you read this, you have an existing DB and you need an initial changelog file that captures it, so you can rollback if something goes wrong.
 
-*Liquibase is new to us, so please tell us if we're doing it wrong.*
-
 **Use Liquibase with an existing DB :**
 
 With an already existing DB, Liquibase has 2 different recommendations :
 
 1. More reliable but harder : register your DB state in an initial changelog file with the [`liquibase generateChangeLog` command](http://www.liquibase.org/documentation/generating_changelogs.html). This process can become more complex depending on your DB state(s), preconditions, whether you already have ran changesets or not.
-2. Easier but less reliable : begin using Liquibase without an initial changelog file. It should be ok as long as you have a backup tool to create your starting seed DB. Otherwise you won't be able to package and share your app.
+1. Easier but less reliable : begin using Liquibase without an initial changelog file. It should be ok as long as you have a backup tool to create your starting seed DB. Otherwise you won't be able to package and share your app.
 
 When you begin using Liquibase, you should continue to use it every time you modify your DB schema.
 
