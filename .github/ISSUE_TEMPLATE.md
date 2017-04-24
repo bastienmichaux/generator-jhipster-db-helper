@@ -51,4 +51,5 @@ If you are using JDL, please share that configuration as well.
 
 <!-- What OS are you on? is this a problem with all browsers or only IE8? -->
 
+---
 - [ ] Checking this box is mandatory (this is just to show you read everything)
