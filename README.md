@@ -2,6 +2,7 @@
 [![NPM version][npm-image]][npm-url] <!-- [![Build Status][travis-image]][travis-url] --> [![Dependency Status][daviddm-image]][daviddm-url]
 
 This JHipster module makes mapping on an existing database easier.
+If you're not aware of the difficulties of using an existing database with JHipster, you can read [this](whatAndWhy.md)
 
 **This module is at an early stage, feedback is highly appreciated ;)**
 
