@@ -34,7 +34,6 @@ module.exports = generator.extend({
      * @todo : no hardcoded values for removeGradleFiles and removeMavenFiles
      */
     _replaceNamingStrategies(appBuildTool) {
-
         const physicalOld = DBH_CONSTANTS.physicalNamingStrategyOld;
         const physicalNew = DBH_CONSTANTS.physicalNamingStrategyNew;
 
@@ -45,7 +44,7 @@ module.exports = generator.extend({
         // but filter the non-existing file(s) :
         //   if the app uses Maven, filter the Gradle file(s)
         //   and if the app uses Gradle, filter the Maven file(s)
-        const filterFiles = (buildTool) => {
+        const filterFiles = buildTool => {
             // utility functions used to filter the files with naming strategy
             const removeGradleFiles = item => item !== './gradle/liquibase.gradle';
             const removeMavenFiles = item => item !== './pom.xml';
@@ -56,9 +55,10 @@ module.exports = generator.extend({
                 return filesWithNamingStrategy.filter(removeGradleFiles);
             } else if (buildTool === 'gradle') {
                 return filesWithNamingStrategy.filter(removeMavenFiles);
-            } else {
-                throw new Error(`build tool ${buildTool} unknown`);
             }
+
+            // if we're still in the function, it means there was a problem with the build tool
+            throw new Error(`build tool ${buildTool} unknown`);
         };
 
         const files = filterFiles(appBuildTool);
