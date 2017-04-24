@@ -31,34 +31,5 @@ const expectedAppConfig = {
 };
 
 describe('Dbh', function () {
-    describe('getApplicationConfig', function () {
-        it('gets the expected object from a JSON file', function () {
-            return (
-                dbh.getAppConfig(__dirname + '/templates/default/').then(
-                    function (onResolve) {
-                        const appConfig = onResolve;
-                        return assert.deepStrictEqual(appConfig, expectedAppConfig);
-                    },
-                    function (onReject) {
-                        console.error(onReject);
-                    }
-                )
-                .catch(function (err) {
-                    console.error(err.message);
-                })
-            );
-        });
-
-        it('throws an error when .yo-rc.json isnt found', function () {
-            assert.throws(function () {
-                dbh.getAppConfig('xyz').done();
-            }, Error);
-        });
-
-        it('throws an error with a wrong parameter type', function () {
-            assert.throws(function () {
-                dbh.getAppConfig(123).done();
-            }, Error);
-        });
-    });
+    it('pending tests');
 });
