@@ -60,6 +60,8 @@ We plan to make the module able to import a database and create all entities its
 
 ## Contributing <a id="contributing"></a>
 
+The detailed information is available [here](CONTRIBUTING.md)
+
 Create your local working copy :
 
 * Fork this module and create your local branch
@@ -73,7 +75,7 @@ You can edit your local repository and test the changes in the app. No need to r
 
 When submitting, please do so from a new branch, not master.
 
-Check our [todo list](todo.md) and our [notes](notes.md).
+Check our [notes](notes.md).
 
 ## Contact
 
