@@ -48,7 +48,7 @@ const validateTableName = (input, dbType) => {
  * @param {string} value - table column name or table name string
  * @see org.springframework.boot.orm.jpa.hibernate.SpringNamingStrategy
  */
-const hibernateSnakeCase = (value) => {
+const hibernateSnakeCase = value => {
     let res = '';
     if (value) {
         value = value.replace('.', '_');
@@ -83,7 +83,7 @@ const getPluralColumnIdName = name => getColumnIdName(pluralize(name));
  * @param relationships an array of relationship to check
  * @returns {boolean}
  */
-const hasConstraints = (relationships) => {
+const hasConstraints = relationships => {
     for (let idx = 0; idx < relationships.length; idx++) {
         if (relationships[idx].relationshipType === 'many-to-one' || (relationships[idx].relationshipType === 'one-to-one' && relationships[idx].ownerSide)) {
             return true;
