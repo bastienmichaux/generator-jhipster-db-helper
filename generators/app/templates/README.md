@@ -1,3 +1,0 @@
-- hello db-helper!
-- hello dawg, whatcha do ?
-- just checkin in alright
