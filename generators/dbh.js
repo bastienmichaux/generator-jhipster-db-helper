@@ -4,7 +4,9 @@ const jhipsterCore = require('jhipster-core');
 const pluralize = require('pluralize');
 
 
-/** assert parameter is a non-empty string */
+/** assert parameter is a non-empty string
+ * @todo Now unused, consider removal
+ **/
 const isTrueString = x => typeof x === 'string' && x !== '';
 
 

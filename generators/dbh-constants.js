@@ -18,7 +18,7 @@ const constants = {
     /**
      * The application file for the current JHipster app.
      * @constant
-     * @todo Delete this constant and replace its references once we know how to grab it from the calling application.
+     * @todo Now unused, consider removal
      * @type {string}
      */
     appConfigFile: '.yo-rc.json',
