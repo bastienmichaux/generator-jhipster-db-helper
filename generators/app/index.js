@@ -164,7 +164,7 @@ module.exports = generator.extend({
 
         const injectDependenciesAndConstants = (err) => {
             if (err) {
-                this.warning('Install of dependencies failed!');
+                this.log('Install of dependencies failed!');
                 this.log(logMsg);
             } else if (this.clientFramework === 'angular1') {
                 this.spawnCommand('gulp', ['install']);
