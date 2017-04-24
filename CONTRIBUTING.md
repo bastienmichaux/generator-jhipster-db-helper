@@ -1,4 +1,5 @@
-<!-- These contributing guidelines are shamelessly inspired/copied from https://github.com/jhipster/generator-jhipster  -->
+These contributing guidelines are shamelessly inspired/copied from https://github.com/jhipster/generator-jhipster.
+Thus if you've already read them from JHipster, and you've read our [README](README.md), you're ready to go.
 
 # Contributing to JHipster-db-helper
 
@@ -184,22 +185,6 @@ yo jhipster-db-helper
 
 You should see your changes reflected in the generated project.
 
-<!-- ## Local Travis Build -->
-
-<!-- You can run the travis builds locally by following below commands -->
-
-<!-- CD into the travis folder `cd travis` from the generator source code root folder -->
-
-<!-- Run `./build-samples.sh [command_name] [sample_name:optional]` -->
-
-<!-- Sample name is optional and can be any of the folder name in the `travis/samples` folder. If not specified the it will mean all samples -->
-
-<!-- Command name can be as below -->
-
-    <!-- `generate`: Generate the sample if specified else generate all samples -->
-    <!-- `build` : Generate and test the sample if specified else generate and test all samples -->
-    <!-- `clean` : Clean the generated code for the sample if specified else clean all samples -->
-
 ## <a name="rules"></a> Coding Rules
 To ensure consistency throughout the source code, keep these rules in mind as you are working:
 
@@ -207,24 +192,8 @@ To ensure consistency throughout the source code, keep these rules in mind as yo
 * All files must follow the [.editorconfig file](http://editorconfig.org/) located at the root of the JHipster generator project. Please note that generated projects use the same `.editorconfig` file, so that both the generator and the generated projects share the same configuration.
 * Java files **must be** formatted using [Intellij IDEA's code style](http://confluence.jetbrains.com/display/IntelliJIDEA/Code+Style+and+Formatting). Please note that JHipster committers have a free Intellij IDEA Ultimate Edition for developing the project.
 * Generators JavaScript files **must follow** the eslint configuration defined at the project root, which is based on [Airbnb JavaScript Style Guide](https://github.com/airbnb/javascript).
-<!-- * Web apps JavaScript files **must follow** [Google's JavaScript Style Guide](https://google-styleguide.googlecode.com/svn/trunk/javascriptguide.xml). -->
-<!-- * AngularJS files **must follow** [John Papa's Angular 1 style guide] (https://github.com/johnpapa/angular-styleguide/blob/master/a1/README.md). -->
-<!-- * Angular 2+ Typescript files **must follow** [Official Angular style guide] (https://angular.io/styleguide). -->
 
 Please ensure to run `npm run lint` and `npm test` on the project root before submitting a pull request. You can also run `npm run lint-fix` to fix some of the lint issues automatically.
-
-<!-- ## <a name="templates"></a> Template Guidelines -->
-
-<!-- The template engine used by yeoman is [EJS](http://ejs.co/), its syntax is fairly simple. -->
-<!-- For simple code (few lines), logic can be embedded in the main file but if logic becomes more complex it's better to externalise the JS fragment to a sub template included by the first one and located in same folder. -->
-
-<!-- Sub templates should be named with the `ejs` extension because it's the default one, it enables editors to apply correct syntax highlighting and it enables us to use a very concise syntax: -->
-
-    <!-- <%- include('field_validators'); -%> -->
-
-<!-- This statement means that [_Entity.java](generators/entity/templates/src/main/java/package/domain/_Entity.java) template includes [field_validators.ejs](generators/entity/templates/src/main/java/package/domain/field_validators.ejs) sub template. -->
-
-<!-- Sub templates can be unit tested. -->
 
 ## <a name="commit"></a> Git Commit Guidelines
 
