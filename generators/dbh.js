@@ -17,6 +17,30 @@ const getPluralColumnIdName = name => getColumnIdName(pluralize(name));
 
 
 /**
+ * from the JHipster files where the original Spring naming strategies can be found,
+ * remove the files that don't exist, depending on the current application build tool (Maven or Gradle)
+ * if the app uses Maven, remove the Gradle file(s)
+ * if the app uses Gradle, remove the Maven file(s)
+ * the returned array holds only the existing files
+ */
+const getFilesWithNamingStrategy = (buildTool) => {
+    // fail when application build tool is unknown
+    if (buildTool !== 'maven' && buildTool !== 'gradle') {
+        throw new Error(`build tool '${buildTool}' unknown`);
+    }
+
+    // utilities used to filter the files with naming strategy
+    // TODO: no hardcoded values
+    const removeGradleFiles = (item) => item !== './gradle/liquibase.gradle';
+    const removeMavenFiles = (item) => item !== './pom.xml';
+
+    const files = DBH_CONSTANTS.filesWithNamingStrategy.filter(buildTool === 'maven' ? removeGradleFiles : removeMavenFiles);
+
+    return files;
+};
+
+
+/**
  * get hibernate SnakeCase in JHipster preferred style.
  *
  * @param {string} value - table column name or table name string
@@ -101,6 +125,7 @@ const validateTableName = (input, dbType) => {
 
 module.exports = {
     getColumnIdName,
+    getFilesWithNamingStrategy,
     getPluralColumnIdName,
     hasConstraints,
     isTrueString,
