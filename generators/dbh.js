@@ -3,6 +3,7 @@ const fs = require('fs');
 const jhipsterCore = require('jhipster-core');
 const pluralize = require('pluralize');
 
+
 /** a promise returning the current JHipster app config as a JSON object */
 const getAppConfig = directory => new Promise((resolve, reject) => {
     // path to '.yo-rc.json'
@@ -66,6 +67,7 @@ const validateTableName = (input, dbType) => {
     return true;
 };
 
+
 /**
  * get hibernate SnakeCase in JHipster preferred style.
  *
@@ -93,9 +95,12 @@ const hibernateSnakeCase = (value) => {
     return res;
 };
 
-const getColumnIdName = (name) => hibernateSnakeCase(name) + '_id';
 
-const getPluralColumnIdName = (name) => getColumnIdName(pluralize(name));
+const getColumnIdName = name => `${hibernateSnakeCase(name)}_id`;
+
+
+const getPluralColumnIdName = name => getColumnIdName(pluralize(name));
+
 
 /**
  * Check if these relationships add constraints.
@@ -105,11 +110,11 @@ const getPluralColumnIdName = (name) => getColumnIdName(pluralize(name));
  * @returns {boolean}
  */
 const hasConstraints = (relationships) => {
-    for(let idx = 0; idx < relationships.length; idx++) {
-        if(relationships[idx].relationshipType === 'many-to-one' || (relationships[idx].relationshipType === 'one-to-one' && relationships[idx].ownerSide)) {
+    for (let idx = 0; idx < relationships.length; idx++) {
+        if (relationships[idx].relationshipType === 'many-to-one' || (relationships[idx].relationshipType === 'one-to-one' && relationships[idx].ownerSide)) {
             return true;
         }
-        if(relationships[idx].relationshipType === 'many-to-many' && relationships[idx].ownerSide) {
+        if (relationships[idx].relationshipType === 'many-to-many' && relationships[idx].ownerSide) {
             return true;
         }
     }
