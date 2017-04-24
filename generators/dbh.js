@@ -1,47 +1,19 @@
 const DBH_CONSTANTS = require('./dbh-constants');
-const fs = require('fs');
 const jhipsterCore = require('jhipster-core');
 const pluralize = require('pluralize');
 
 
-/** assert parameter is a non-empty string
+/**
+ * assert parameter is a non-empty string
  * @todo Now unused, consider removal
- **/
+ */
 const isTrueString = x => typeof x === 'string' && x !== '';
 
 
-/** Validate user input when asking for a SQL column name */
-const validateColumnName = (input, dbType) => {
-    if (!/^([a-zA-Z0-9_]*)$/.test(input)) {
-        return 'Your column name cannot contain special characters';
-    } else if (input === '') {
-        return 'Your column name cannot be empty';
-    } else if (dbType === 'oracle' && input.length > 26) {
-        return 'Your column name is too long for Oracle, try a shorter name';
-    }
-    return true;
-};
+const getColumnIdName = name => `${hibernateSnakeCase(name)}_id`;
 
 
-/**
- * Validate user input when asking for a SQL table name
- * This function closely follows JHipster's own validateTableName function
- * (in generator-jhipster/generators/entity/index.js)
- **/
-const validateTableName = (input, dbType) => {
-    if (!/^([a-zA-Z0-9_]*)$/.test(input)) {
-        return 'The table name cannot contain special characters';
-    } else if (input === '') {
-        return 'The table name cannot be empty';
-    } else if (dbType === 'oracle' && input.length > 26) {
-        return 'The table name is too long for Oracle, try a shorter name';
-    } else if (dbType === 'oracle' && input.length > 14) {
-        return 'The table name is long for Oracle, long table names can cause issues when used to create constraint names and join table names';
-    } else if (jhipsterCore.isReservedTableName(input, dbType)) {
-        return `'${input}' is a ${dbType} reserved keyword.`;
-    }
-    return true;
-};
+const getPluralColumnIdName = name => getColumnIdName(pluralize(name));
 
 
 /**
@@ -72,12 +44,6 @@ const hibernateSnakeCase = value => {
 };
 
 
-const getColumnIdName = name => `${hibernateSnakeCase(name)}_id`;
-
-
-const getPluralColumnIdName = name => getColumnIdName(pluralize(name));
-
-
 /**
  * Check if these relationships add constraints.
  * Typically, an one-to-many relationship doesn't add a constraint to the entity on the one side.
@@ -99,11 +65,45 @@ const hasConstraints = relationships => {
 };
 
 
+/** Validate user input when asking for a SQL column name */
+const validateColumnName = (input, dbType) => {
+    if (!/^([a-zA-Z0-9_]*)$/.test(input)) {
+        return 'Your column name cannot contain special characters';
+    } else if (input === '') {
+        return 'Your column name cannot be empty';
+    } else if (dbType === 'oracle' && input.length > 26) {
+        return 'Your column name is too long for Oracle, try a shorter name';
+    }
+    return true;
+};
+
+
+/**
+ * Validate user input when asking for a SQL table name
+ * This function closely follows JHipster's own validateTableName function
+ * (in generator-jhipster/generators/entity/index.js)
+ */
+const validateTableName = (input, dbType) => {
+    if (!/^([a-zA-Z0-9_]*)$/.test(input)) {
+        return 'The table name cannot contain special characters';
+    } else if (input === '') {
+        return 'The table name cannot be empty';
+    } else if (dbType === 'oracle' && input.length > 26) {
+        return 'The table name is too long for Oracle, try a shorter name';
+    } else if (dbType === 'oracle' && input.length > 14) {
+        return 'The table name is long for Oracle, long table names can cause issues when used to create constraint names and join table names';
+    } else if (jhipsterCore.isReservedTableName(input, dbType)) {
+        return `'${input}' is a ${dbType} reserved keyword.`;
+    }
+    return true;
+};
+
+
 module.exports = {
-    isTrueString,
-    validateColumnName,
-    validateTableName,
     getColumnIdName,
     getPluralColumnIdName,
-    hasConstraints
+    hasConstraints,
+    isTrueString,
+    validateColumnName,
+    validateTableName
 };
