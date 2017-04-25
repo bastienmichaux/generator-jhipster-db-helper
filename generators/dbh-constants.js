@@ -9,16 +9,16 @@ const constants = {
      * @type {string[]}
      */
     filesWithNamingStrategy: [
+        './gradle/liquibase.gradle',
         './pom.xml',
         './src/main/resources/config/application.yml',
-        './src/test/resources/config/application.yml',
-        './gradle/liquibase.gradle',
+        './src/test/resources/config/application.yml'
     ],
 
     /**
      * The application file for the current JHipster app.
      * @constant
-     * @todo Now unused, consider removal
+     * @warn Currently unused
      * @type {string}
      */
     appConfigFile: '.yo-rc.json',
@@ -41,7 +41,8 @@ const constants = {
 
 
     /**
-     * A more neutral implicit naming strategy used by jhipster-db-helper. [Doc]{https://github.com/hibernate/hibernate-orm/blob/master/hibernate-core/src/main/java/org/hibernate/boot/model/naming/ImplicitNamingStrategyJpaCompliantImpl.java}
+     * A more neutral implicit naming strategy used by jhipster-db-helper.
+     * [Doc]{https://github.com/hibernate/hibernate-orm/blob/master/hibernate-core/src/main/java/org/hibernate/boot/model/naming/ImplicitNamingStrategyJpaCompliantImpl.java}
      * @const
      * @type {string}
      */
@@ -49,7 +50,8 @@ const constants = {
 
 
     /**
-     * A more neutral physical naming strategy used by jhipster-db-helper. [Doc]{https://github.com/hibernate/hibernate-orm/blob/master/hibernate-core/src/main/java/org/hibernate/boot/model/naming/PhysicalNamingStrategyStandardImpl.java}
+     * A more neutral physical naming strategy used by jhipster-db-helper.
+     * [Doc]{https://github.com/hibernate/hibernate-orm/blob/master/hibernate-core/src/main/java/org/hibernate/boot/model/naming/PhysicalNamingStrategyStandardImpl.java}
      * @const
      * @type {string}
      */
