@@ -103,7 +103,7 @@ module.exports = generator.extend({
         this.log(chalk.bold.yellow('writing'));
 
         // replace files with Spring's naming strategies
-        this.log('db-helper replaces your naming strategies.');
+        this.log(chalk.bold.yellow('db-helper replaces your naming strategies.'));
         this._replaceNamingStrategies(jhipsterVar.jhipsterConfig.buildTool);
 
         // declarations done by jhipster-module
