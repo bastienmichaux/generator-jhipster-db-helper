@@ -8,26 +8,26 @@ const dbh = require('../generators/dbh.js');
 const DBH_CONSTANTS = require('../generators/dbh-constants');
 
 const expectedAppConfig = {
-    "generator-jhipster": {
-        "baseName": "sampleMysql",
-        "packageName": "com.mycompany.myapp",
-        "packageFolder": "com/mycompany/myapp",
-        "authenticationType": "session",
-        "hibernateCache": "ehcache",
-        "clusteredHttpSession": "no",
-        "websocket": "no",
-        "databaseType": "sql",
-        "devDatabaseType": "h2Disk",
-        "prodDatabaseType": "mysql",
-        "searchEngine": "no",
-        "useSass": false,
-        "buildTool": "maven",
-        "frontendBuilder": "grunt",
-        "enableTranslation": true,
-        "enableSocialSignIn": false,
-        "rememberMeKey": "2bb60a80889aa6e6767e9ccd8714982681152aa5",
-        "testFrameworks": [
-            "gatling"
+    'generator-jhipster': {
+        baseName: 'sampleMysql',
+        packageName: 'com.mycompany.myapp',
+        packageFolder: 'com/mycompany/myapp',
+        authenticationType: 'session',
+        hibernateCache: 'ehcache',
+        clusteredHttpSession: 'no',
+        websocket: 'no',
+        databaseType: 'sql',
+        devDatabaseType: 'h2Disk',
+        prodDatabaseType: 'mysql',
+        searchEngine: 'no',
+        useSass: false,
+        buildTool: 'maven',
+        frontendBuilder: 'grunt',
+        enableTranslation: true,
+        enableSocialSignIn: false,
+        rememberMeKey: '2bb60a80889aa6e6767e9ccd8714982681152aa5',
+        testFrameworks: [
+            'gatling'
         ]
     }
 };
@@ -47,7 +47,7 @@ describe('Dbh', function () {
         });
     });
     describe('getFilesWithNamingStrategy', function () {
-        it(`excludes the Gradle file(s) when given 'maven' as parameter`, function () {
+        it('excludes the Gradle file(s) when given \'maven\' as parameter', function () {
             // compare sorted arrays (index is irrelevant)
             const files = dbh.getFilesWithNamingStrategy('maven').sort();
             const expectedArray = [
@@ -57,7 +57,7 @@ describe('Dbh', function () {
             ].sort();
             assert(_.isEqual(files, expectedArray));
         });
-        it(`excludes the Maven file(s) when given 'gradle' as parameter`, function () {
+        it('excludes the Maven file(s) when given \'gradle\' as parameter', function () {
             // compare sorted arrays (index is irrelevant)
             const files = dbh.getFilesWithNamingStrategy('gradle').sort();
             const expectedArray = [
@@ -67,9 +67,9 @@ describe('Dbh', function () {
             ].sort();
             assert(_.isEqual(files, expectedArray));
         });
-        it(`throws when given an unknown build tool`, function () {
+        it('throws when given an unknown build tool', function () {
             assert.throws(() => {
-                let foo = dbh.getFilesWithNamingStrategy('foo');
+                let foo = dbh.getFilesWithNamingStrategy('foo'); l;
             }, Error);
         });
     });
@@ -77,7 +77,150 @@ describe('Dbh', function () {
         it('');
     });
     describe('hasConstraints', function () {
-        it('');
+        const relationshipsSamples = {
+            oneToOneOwner: [
+                {
+                    relationshipType: 'one-to-one',
+                    relationshipName: 'region',
+                    otherEntityName: 'region',
+                    otherEntityField: 'id',
+                    ownerSide: true,
+                    otherEntityRelationshipName: 'country'
+                }
+            ],
+            mixedWithOneConstraint: [
+                {
+                    relationshipType: 'one-to-one',
+                    relationshipName: 'location',
+                    otherEntityName: 'location',
+                    otherEntityField: 'id',
+                    ownerSide: true,
+                    otherEntityRelationshipName: 'department'
+                },
+                {
+                    relationshipType: 'one-to-many',
+                    javadoc: 'A relationship',
+                    relationshipName: 'employee',
+                    otherEntityName: 'employee',
+                    otherEntityRelationshipName: 'department'
+                }
+            ],
+            mixedWithTwoConstraints: [
+                {
+                    relationshipName: 'department',
+                    otherEntityName: 'department',
+                    relationshipType: 'many-to-one',
+                    otherEntityField: 'id'
+                },
+                {
+                    relationshipType: 'one-to-many',
+                    relationshipName: 'job',
+                    otherEntityName: 'job',
+                    otherEntityRelationshipName: 'employee'
+                },
+                {
+                    relationshipType: 'many-to-one',
+                    relationshipName: 'manager',
+                    otherEntityName: 'employee',
+                    otherEntityField: 'id'
+                }
+            ],
+            tripleOneToOneOwner: [
+                {
+                    relationshipType: 'one-to-one',
+                    relationshipName: 'job',
+                    otherEntityName: 'job',
+                    otherEntityField: 'id',
+                    ownerSide: true,
+                    otherEntityRelationshipName: 'jobHistory'
+                },
+                {
+                    relationshipType: 'one-to-one',
+                    relationshipName: 'department',
+                    otherEntityName: 'department',
+                    otherEntityField: 'id',
+                    ownerSide: true,
+                    otherEntityRelationshipName: 'jobHistory'
+                },
+                {
+                    relationshipType: 'one-to-one',
+                    relationshipName: 'employee',
+                    otherEntityName: 'employee',
+                    otherEntityField: 'id',
+                    ownerSide: true,
+                    otherEntityRelationshipName: 'jobHistory'
+                }
+            ],
+            mixedConstraints: [
+                {
+                    relationshipName: 'employee',
+                    otherEntityName: 'employee',
+                    relationshipType: 'many-to-one',
+                    otherEntityField: 'id'
+                },
+                {
+                    relationshipType: 'many-to-many',
+                    otherEntityRelationshipName: 'job',
+                    relationshipName: 'task',
+                    otherEntityName: 'task',
+                    otherEntityField: 'title',
+                    ownerSide: true
+                }
+            ],
+            Empty: [],
+            manyToManyNotOwner: [
+                {
+                    relationshipType: 'many-to-many',
+                    relationshipName: 'job',
+                    otherEntityName: 'job',
+                    ownerSide: false,
+                    otherEntityRelationshipName: 'task'
+                }
+            ],
+            oneToOneNotOwner: [
+                {
+                    relationshipType: 'one-to-one',
+                    relationshipName: 'job',
+                    otherEntityName: 'job',
+                    ownerSide: false,
+                    otherEntityRelationshipName: 'task'
+                }
+            ],
+            mixedNotOwner: [
+                {
+                    relationshipType: 'one-to-one',
+                    relationshipName: 'job',
+                    otherEntityName: 'job',
+                    ownerSide: false,
+                    otherEntityRelationshipName: 'task'
+                },
+                {
+                    relationshipType: 'many-to-many',
+                    relationshipName: 'job',
+                    otherEntityName: 'job',
+                    ownerSide: false,
+                    otherEntityRelationshipName: 'task'
+                }
+            ]
+        };
+
+        it('returns false with empty relation', function () {
+            assert(dbh.hasConstraints(relationshipsSamples.Empty) === false);
+        });
+        it('returns false if not owner of the relationship', function () {
+            assert(dbh.hasConstraints(relationshipsSamples.manyToManyNotOwner) === false);
+            assert(dbh.hasConstraints(relationshipsSamples.oneToOneNotOwner) === false);
+            assert(dbh.hasConstraints(relationshipsSamples.mixedNotOwner) === false);
+        });
+        it('returns true if owner of the relationship', function () {
+            assert(dbh.hasConstraints(relationshipsSamples.oneToOneOwner) === true);
+            assert(dbh.hasConstraints(relationshipsSamples.tripleOneToOneOwner) === true);
+        });
+        it('returns true if it is owner in at least one relation', function () {
+            assert(dbh.hasConstraints(relationshipsSamples.mixedConstraints) === true);
+            assert(dbh.hasConstraints(relationshipsSamples.mixedWithOneConstraint) === true);
+            assert(dbh.hasConstraints(relationshipsSamples.mixedWithTwoConstraints) === true);
+        });
     });
     describe('isTrueString', function () {
         it('works with true strings', function () {
@@ -87,7 +230,7 @@ describe('Dbh', function () {
         });
         it('fails with wrong input', function () {
             assert(dbh.isTrueString('') === false);
-            assert(dbh.isTrueString({'foo':'bar'}) === false);
+            assert(dbh.isTrueString({foo: 'bar'}) === false);
             assert(dbh.isTrueString(['foo']) === false);
         });
     });
