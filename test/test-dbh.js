@@ -262,7 +262,7 @@ describe('Dbh', function () {
         const failMsgWhenEmpty = 'Your column name cannot be empty';
         const failMsgWhenTooLongForOracle = 'Your column name is too long for Oracle, try a shorter name';
 
-        it('works as expected', function () {
+        it('valid column names return true', function () {
             assert(dbh.validateColumnName('Book', 'mysql') === true);
             assert(dbh.validateColumnName('FOO', 'mysql') === true);
             assert(dbh.validateColumnName('bar', 'mysql') === true);
@@ -295,8 +295,8 @@ describe('Dbh', function () {
         const failMsgWhenTooLongForOracle = 'The table name is too long for Oracle, try a shorter name';
         const failMsgWhenLongForOracle = 'The table name is long for Oracle, long table names can cause issues when used to create constraint names and join table names';
 
-        it('works as expected', function () {
-            assert(dbh.validateTableName('Book', 'mysql') === true);
+        it('valid table names return true', function () {
+            assert(dbh.validateTableName('Book', 'mysql'));
             assert(dbh.validateTableName('FOO', 'mysql') === true);
             assert(dbh.validateTableName('bar', 'mysql') === true);
             assert(dbh.validateTableName('_foo2', 'mysql') === true);
@@ -305,6 +305,9 @@ describe('Dbh', function () {
             assert(dbh.validateTableName('_', 'mysql') === true);
             assert(dbh.validateTableName('quiteLongTableName', 'mysql') === true);
             assert(dbh.validateTableName('definitelyVeryLongTableName', 'mysql') === true);
+        });
+        it('returns the correct error message with a name containing a reserved keyword', function () {
+            assert.textEqual(dbh.validateTableName('ASENSITIVE', 'mysql').toString(), '\'ASENSITIVE\' is a mysql reserved keyword.');
         });
         it('fails with missing parameter', function () {
             assert.throws(() => dbh.validateTableName('Book'), Error);
