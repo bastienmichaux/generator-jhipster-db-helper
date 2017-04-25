@@ -10,12 +10,11 @@ const constants = {
      * @todo Add relevant links (StackOverflow) to this doc
      * @type {string[]}
      */
-    filesWithNamingStrategy: [
-        './gradle/liquibase.gradle',
-        './pom.xml',
-        './src/main/resources/config/application.yml',
-        './src/test/resources/config/application.yml'
-    ],
+    filesWithNamingStrategy: {
+        base: ['./src/main/resources/config/application.yml', './src/test/resources/config/application.yml'],
+        gradle: ['./gradle/liquibase.gradle'],
+        maven: ['./pom.xml'],
+    },
 
     /**
      * The application file for the current JHipster app.
@@ -33,6 +32,9 @@ const constants = {
 
     /** supported types for sql databases */
     sqlTypes: jhicore.JHipsterFieldTypes.SQL_TYPES,
+
+    /** supported build tools */
+    buildTools: ['maven', 'gradle'],
 
     /**
      * Original physical naming strategy used by JHipster. Used for search and replace.

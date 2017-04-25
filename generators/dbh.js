@@ -10,9 +10,15 @@ const pluralize = require('pluralize');
 const isNotEmptyString = x => typeof x === 'string' && x !== '';
 
 
+/** Check that the build tool isn't unknown */
+const isValidBuildTool = (buildTool) => DBH_CONSTANTS.buildTools.includes(buildTool);
+
+
+/** */
 const getColumnIdName = name => `${hibernateSnakeCase(name)}_id`;
 
 
+/** */
 const getPluralColumnIdName = name => getColumnIdName(pluralize(name));
 
 
@@ -25,18 +31,12 @@ const getPluralColumnIdName = name => getColumnIdName(pluralize(name));
  */
 const getFilesWithNamingStrategy = (buildTool) => {
     // fail when application build tool is unknown
-    if (buildTool !== 'maven' && buildTool !== 'gradle') {
-        throw new Error(`build tool '${buildTool}' unknown`);
+    if (!isValidBuildTool(buildTool)) {
+        throw new Error(`buildTool '${buildTool}' is unknown`);
     }
 
-    // utilities used to filter the files with naming strategy
-    // TODO: no hardcoded values
-    const removeGradleFiles = (item) => item !== './gradle/liquibase.gradle';
-    const removeMavenFiles = (item) => item !== './pom.xml';
-
-    const files = DBH_CONSTANTS.filesWithNamingStrategy.filter(buildTool === 'maven' ? removeGradleFiles : removeMavenFiles);
-
-    return files;
+    const baseFiles = DBH_CONSTANTS.filesWithNamingStrategy.base;
+    return baseFiles.concat(DBH_CONSTANTS.filesWithNamingStrategy[buildTool]);
 };
 
 
@@ -48,6 +48,7 @@ const getFilesWithNamingStrategy = (buildTool) => {
  */
 const hibernateSnakeCase = value => {
     let res = '';
+
     if (value) {
         value = value.replace('.', '_');
         res = value[0];
@@ -64,6 +65,7 @@ const hibernateSnakeCase = value => {
         res += value[value.length - 1];
         res = res.toLowerCase();
     }
+
     return res;
 };
 
@@ -98,6 +100,7 @@ const validateColumnName = (input, dbType) => {
     } else if (dbType === 'oracle' && input.length > 26) {
         return 'Your column name is too long for Oracle, try a shorter name';
     }
+
     return true;
 };
 
@@ -119,6 +122,7 @@ const validateTableName = (input, dbType) => {
     } else if (jhipsterCore.isReservedTableName(input, dbType)) {
         return `'${input}' is a ${dbType} reserved keyword.`;
     }
+
     return true;
 };
 
@@ -129,6 +133,7 @@ module.exports = {
     getPluralColumnIdName,
     hasConstraints,
     isNotEmptyString,
+    isValidBuildTool,
     validateColumnName,
     validateTableName
 };

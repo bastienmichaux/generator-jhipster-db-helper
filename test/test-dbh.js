@@ -102,6 +102,16 @@ describe('Dbh', function () {
             assert(dbh.isNotEmptyString(() => 'foo') === false);
         });
     });
+    describe('isValidBuildTool', function () {
+        it('works as expected', function () {
+            assert(dbh.isValidBuildTool('maven') === true);
+            assert(dbh.isValidBuildTool('gradle') === true);
+            assert(dbh.isValidBuildTool('Maven') === false);
+            assert(dbh.isValidBuildTool('Gradle') === false);
+            assert(dbh.isValidBuildTool('foo') === false);
+            assert(dbh.isValidBuildTool() === false);
+        });
+    });
     describe('validateColumnName', function () {
         // messages output by validateColumnName
         // TODO: 0% maintainability, find something smarter
