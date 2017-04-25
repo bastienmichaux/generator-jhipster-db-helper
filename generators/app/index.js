@@ -58,7 +58,6 @@ module.exports = generator.extend({
     // check current project state, get configs, etc
     initializing: {
         compose() {
-            // DEBUG : log where we are
             this.log(chalk.bold.yellow('initializing: compose'));
 
             // note : before this line we can't use jhipsterVar or jhipsterFunc
@@ -75,7 +74,6 @@ module.exports = generator.extend({
 
     // prompt the user for options
     prompting() {
-        // DEBUG : log where we are
         this.log(chalk.bold.yellow('prompting'));
 
         const done = this.async();
@@ -99,7 +97,6 @@ module.exports = generator.extend({
 
     // write the generator-specific files
     writing() {
-        // DEBUG : log where we are
         this.log(chalk.bold.yellow('writing'));
 
         // replace files with Spring's naming strategies
@@ -131,7 +128,6 @@ module.exports = generator.extend({
 
     // run installation (npm, bower, etc)
     install() {
-        // DEBUG : log where we are
         this.log(chalk.bold.yellow('install'));
 
         let logMsg = `To install your dependencies manually, run: ${chalk.yellow.bold(`${this.clientPackageManager} install`)}`;
@@ -161,7 +157,6 @@ module.exports = generator.extend({
 
     // cleanup, say goodbye
     end() {
-        // DEBUG : log where we are
         this.log(chalk.bold.yellow('End of db-helper generator'));
     }
 });

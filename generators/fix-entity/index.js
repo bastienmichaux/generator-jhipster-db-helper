@@ -33,6 +33,7 @@ module.exports = generator.extend({
     initializing() {
         this.log(chalk.bold.bgYellow('fix-entity generator'));
         this.log(chalk.bold.yellow('initializing'));
+
         this.composeWith('jhipster:modules',
             { jhipsterVar, jhipsterFunc },
             this.options.testmode ? { local: require.resolve('generator-jhipster/generators/modules') } : null
@@ -180,14 +181,12 @@ module.exports = generator.extend({
 
     // run installation (npm, bower, etc)
     install() {
-        // DEBUG : log where we are
         this.log(chalk.bold.yellow('install'));
     },
 
 
     // cleanup, say goodbye
     end() {
-        // DEBUG : log where we are
         this.log(chalk.bold.yellow('End of fix-entity generator'));
     }
 });
