@@ -40,31 +40,9 @@ module.exports = generator.extend({
         const implicitOld = DBH_CONSTANTS.implicitNamingStrategyOld;
         const implicitNew = DBH_CONSTANTS.implicitNamingStrategyNew;
 
-        // get the files where we replace the naming strategy
-        // but filter the non-existing file(s) :
-        //   if the app uses Maven, filter the Gradle file(s)
-        //   and if the app uses Gradle, filter the Maven file(s)
-        const filterFiles = buildTool => {
-            // utility functions used to filter the files with naming strategy
-            const removeGradleFiles = item => item !== './gradle/liquibase.gradle';
-            const removeMavenFiles = item => item !== './pom.xml';
-            const filesWithNamingStrategy = DBH_CONSTANTS.filesWithNamingStrategy;
-
-            // filter the non-existing file(s)
-            if (buildTool === 'maven') {
-                return filesWithNamingStrategy.filter(removeGradleFiles);
-            } else if (buildTool === 'gradle') {
-                return filesWithNamingStrategy.filter(removeMavenFiles);
-            }
-
-            // if we're still in the function, it means there was a problem with the build tool
-            throw new Error(`build tool ${buildTool} unknown`);
-        };
-
-        const files = filterFiles(appBuildTool);
+        const files = dbh.getFilesWithNamingStrategy(appBuildTool);
 
         // check that each file exists
-        // TODO: move to another promise
         files.forEach((path) => {
             if (fs.existsSync(path)) {
                 // 1) replace Spring physical naming strategy
