@@ -22,7 +22,7 @@ gulp.task('nsp', (cb) => {
     nsp({ package: path.resolve('package.json') }, cb);
 });
 
-gulp.task('pre-test', () => gulp.src('generators/app/index.js')
+gulp.task('pre-test', () => gulp.src('generators/**/*.js')
     .pipe(istanbul({
         includeUntested: true
     }))
