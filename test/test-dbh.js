@@ -74,7 +74,19 @@ describe('Dbh', function () {
         });
     });
     describe('getPluralColumnIdName', function () {
-        it('');
+        it('tests THINGS', function () {
+            assert(dbh.getPluralColumnIdName('author') === 'authors_id');
+            assert(dbh.getPluralColumnIdName('the_Authors_table') === 'the_authors_tables_id');
+            assert(dbh.getPluralColumnIdName('01234') === '01234s_id');
+            assert(dbh.getPluralColumnIdName('AUTHORSTABLE') === 'authorstables_id');
+            assert(dbh.getPluralColumnIdName('AUTHORS_TABLE') === 'authors_tables_id');
+            assert(dbh.getPluralColumnIdName('_') === '_s_id');
+            assert(dbh.getPluralColumnIdName('') === '_id');
+            assert(dbh.getPluralColumnIdName('\rAuthor') === '\rauthors_id');
+            assert(dbh.getPluralColumnIdName('\tAuthor') === '\tauthors_id');
+            assert(dbh.getPluralColumnIdName('XMLHTTPAPIService') === 'xmlhttpapiservices_id');
+            assert(dbh.getPluralColumnIdName('XmlHttpApiService') === 'xml_http_api_services_id');
+        });
     });
     describe('hasConstraints', function () {
         it('');
@@ -87,8 +99,7 @@ describe('Dbh', function () {
         });
         it('fails with wrong input', function () {
             assert(dbh.isTrueString('') === false);
-            assert(dbh.isTrueString({'foo':'bar'}) === false);
-            assert(dbh.isTrueString(['foo']) === false);
+            assert(dbh.isTrueString(() => 'foo') === false);
         });
     });
     describe('validateColumnName', function () {
@@ -111,6 +122,8 @@ describe('Dbh', function () {
         });
         it(`returns '${failMsgWhenSpecialChar}'`, function () {
             assert(dbh.validateColumnName(' ', 'mysql') === failMsgWhenSpecialChar);
+            assert(dbh.validateColumnName('\r', 'mysql') === failMsgWhenSpecialChar);
+            assert(dbh.validateColumnName('\t', 'mysql') === failMsgWhenSpecialChar);
             assert(dbh.validateColumnName('Böök', 'mysql') === failMsgWhenSpecialChar);
             assert(dbh.validateColumnName('book-table', 'mysql') === failMsgWhenSpecialChar);
         });
