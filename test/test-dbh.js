@@ -47,25 +47,30 @@ describe('Dbh', function () {
         });
     });
     describe('getFilesWithNamingStrategy', function () {
-        it(`excludes the Gradle file(s) with 'maven' as parameter`, function () {
-            const files = dbh.getFilesWithNamingStrategy('maven');
-            assert(_.isEqual(files, [
+        it(`excludes the Gradle file(s) when given 'maven' as parameter`, function () {
+            // compare sorted arrays (index is irrelevant)
+            const files = dbh.getFilesWithNamingStrategy('maven').sort();
+            const expectedArray = [
                 './pom.xml',
                 './src/main/resources/config/application.yml',
                 './src/test/resources/config/application.yml'
-            ]));
+            ].sort();
+            assert(_.isEqual(files, expectedArray));
         });
-        it(`excludes the Maven file(s) with 'gradle' as parameter`, function () {
-            const files = dbh.getFilesWithNamingStrategy('gradle');
-            assert(_.isEqual(files, [
+        it(`excludes the Maven file(s) when given 'gradle' as parameter`, function () {
+            // compare sorted arrays (index is irrelevant)
+            const files = dbh.getFilesWithNamingStrategy('gradle').sort();
+            const expectedArray = [
                 './src/main/resources/config/application.yml',
                 './src/test/resources/config/application.yml',
                 './gradle/liquibase.gradle',
-            ]));
+            ].sort();
+            assert(_.isEqual(files, expectedArray));
         });
-        it(`fails with an unknown parameter`, function () {
-            let foo;
-            //assert.throws(() => foo = dbh.getFilesWithNamingStrategy('foo'), Error);
+        it(`throws when given an unknown build tool`, function () {
+            assert.throws(() => {
+                let foo = dbh.getFilesWithNamingStrategy('foo');
+            }, Error);
         });
     });
     describe('getPluralColumnIdName', function () {
@@ -75,7 +80,16 @@ describe('Dbh', function () {
         it('');
     });
     describe('isTrueString', function () {
-        it('');
+        it('works with true strings', function () {
+            assert(dbh.isTrueString('x') === true);
+            assert(dbh.isTrueString(' ') === true);
+            assert(dbh.isTrueString('\r') === true);
+        });
+        it('fails with wrong input', function () {
+            assert(dbh.isTrueString('') === false);
+            assert(dbh.isTrueString({'foo':'bar'}) === false);
+            assert(dbh.isTrueString(['foo']) === false);
+        });
     });
     describe('validateColumnName', function () {
         // messages output by validateColumnName
