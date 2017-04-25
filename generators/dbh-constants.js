@@ -1,3 +1,5 @@
+const jhicore = require('jhipster-core');
+
 /** jhipster-db-helper constants */
 const constants = {
     /**
@@ -23,6 +25,14 @@ const constants = {
      */
     appConfigFile: '.yo-rc.json',
 
+    /** database types supported by JHipster */
+    dbTypes: jhicore.JHipsterDatabaseTypes.Types,
+
+    /** relationship types */
+    relationshipTypes: jhicore.JHipsterRelationshipTypes.RELATIONSHIP_TYPES,
+
+    /** supported types for sql databases */
+    sqlTypes: jhicore.JHipsterFieldTypes.SQL_TYPES,
 
     /**
      * Original physical naming strategy used by JHipster. Used for search and replace.
@@ -31,14 +41,12 @@ const constants = {
      */
     physicalNamingStrategyOld: 'org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy',
 
-
     /**
      * Original implicit naming strategy used by JHipster. Used for search and replace.
      * @const
      * @type {string}
      */
     implicitNamingStrategyOld: 'org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy',
-
 
     /**
      * A more neutral implicit naming strategy used by jhipster-db-helper.
@@ -47,7 +55,6 @@ const constants = {
      * @type {string}
      */
     implicitNamingStrategyNew: 'org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl',
-
 
     /**
      * A more neutral physical naming strategy used by jhipster-db-helper.
