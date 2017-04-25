@@ -72,21 +72,20 @@ const getFilesWithNamingStrategy = (buildTool) => {
 
 /**
  * Check if these relationships add constraints.
- * Typically, an one-to-many relationship doesn't add a constraint to the entity on the one side.
+ * Typically, an one-to-many relationship doesn't add a constraint to the entity on the one side
+ * but it does on the many side.
  *
  * @param relationships an array of relationship to check
- * @returns {boolean}
+ * @returns true if and only if it contains at least one relationship with a constraint, false otherwise
  */
 const hasConstraints = (relationships) => {
-    for (let idx = 0; idx < relationships.length; idx++) {
-        if (relationships[idx].relationshipType === 'many-to-one' || (relationships[idx].relationshipType === 'one-to-one' && relationships[idx].ownerSide)) {
-            return true;
-        }
-        if (relationships[idx].relationshipType === 'many-to-many' && relationships[idx].ownerSide) {
+    for(let relationship of relationships) {
+        if (relationship.relationshipType === 'many-to-one' ||
+            (relationship.relationshipType === 'one-to-one' && relationship.ownerSide) ||
+            (relationship.relationshipType === 'many-to-many' && relationship.ownerSide)) {
             return true;
         }
     }
-
     return false;
 };
 
