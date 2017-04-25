@@ -123,7 +123,6 @@ module.exports = generator.extend({
             jhipsterFunc.replaceContent(paramFiles.liquibaseEntity, `\\<createTable tableName="(${this.entityTableName}|${oldValue})`, `<createTable tableName="${newValue}`, true);
         };
 
-        // DEBUG : log where we are
         this.log(chalk.bold.yellow('writing'));
 
         // verify files exist
