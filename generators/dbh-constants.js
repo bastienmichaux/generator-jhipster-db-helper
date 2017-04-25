@@ -24,6 +24,14 @@ const constants = {
      */
     appConfigFile: '.yo-rc.json',
 
+    /** supported build tools */
+    buildTools: ['maven', 'gradle'],
+
+    oracleLimitations: {
+        tableNameHardMaxLength: 26,
+        tableNameSoftMaxLength: 14
+    },
+
     /** database types supported by JHipster */
     dbTypes: jhicore.JHipsterDatabaseTypes.Types,
 
@@ -32,9 +40,6 @@ const constants = {
 
     /** supported types for sql databases */
     sqlTypes: jhicore.JHipsterFieldTypes.SQL_TYPES,
-
-    /** supported build tools */
-    buildTools: ['maven', 'gradle'],
 
     /**
      * Original physical naming strategy used by JHipster. Used for search and replace.
