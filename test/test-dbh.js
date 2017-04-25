@@ -91,15 +91,15 @@ describe('Dbh', function () {
     describe('hasConstraints', function () {
         it('');
     });
-    describe('isTrueString', function () {
+    describe('isNotEmptyString', function () {
         it('works with true strings', function () {
-            assert(dbh.isTrueString('x') === true);
-            assert(dbh.isTrueString(' ') === true);
-            assert(dbh.isTrueString('\r') === true);
+            assert(dbh.isNotEmptyString('x') === true);
+            assert(dbh.isNotEmptyString(' ') === true);
+            assert(dbh.isNotEmptyString('\r') === true);
         });
         it('fails with wrong input', function () {
-            assert(dbh.isTrueString('') === false);
-            assert(dbh.isTrueString(() => 'foo') === false);
+            assert(dbh.isNotEmptyString('') === false);
+            assert(dbh.isNotEmptyString(() => 'foo') === false);
         });
     });
     describe('validateColumnName', function () {

@@ -7,7 +7,7 @@ const pluralize = require('pluralize');
  * assert parameter is a non-empty string
  * @todo Now unused, consider removal
  */
-const isTrueString = x => typeof x === 'string' && x !== '';
+const isNotEmptyString = x => typeof x === 'string' && x !== '';
 
 
 const getColumnIdName = name => `${hibernateSnakeCase(name)}_id`;
@@ -128,7 +128,7 @@ module.exports = {
     getFilesWithNamingStrategy,
     getPluralColumnIdName,
     hasConstraints,
-    isTrueString,
+    isNotEmptyString,
     validateColumnName,
     validateTableName
 };
