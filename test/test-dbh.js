@@ -7,47 +7,23 @@ const _ = require('lodash');
 const dbh = require('../generators/dbh.js');
 const DBH_CONSTANTS = require('../generators/dbh-constants');
 
-const expectedAppConfig = {
-    'generator-jhipster': {
-        baseName: 'sampleMysql',
-        packageName: 'com.mycompany.myapp',
-        packageFolder: 'com/mycompany/myapp',
-        authenticationType: 'session',
-        hibernateCache: 'ehcache',
-        clusteredHttpSession: 'no',
-        websocket: 'no',
-        databaseType: 'sql',
-        devDatabaseType: 'h2Disk',
-        prodDatabaseType: 'mysql',
-        searchEngine: 'no',
-        useSass: false,
-        buildTool: 'maven',
-        frontendBuilder: 'grunt',
-        enableTranslation: true,
-        enableSocialSignIn: false,
-        rememberMeKey: '2bb60a80889aa6e6767e9ccd8714982681152aa5',
-        testFrameworks: [
-            'gatling'
-        ]
-    }
-};
 
 // Dbh unit test
 describe('Dbh', function () {
     describe('getColumnIdName', function () {
         it('works as expected with treacherous input', function () {
-            assert(dbh.getColumnIdName('Authors') === 'authors_id');
-            assert(dbh.getColumnIdName('AUTHORS') === 'authors_id');
-            assert(dbh.getColumnIdName('IT_IS_OVER_9000') === 'it_is_over_9000_id');
-            assert(dbh.getColumnIdName('AuthorTable') === 'author_table_id');
-            assert(dbh.getColumnIdName('TheAuthor_table') === 'the_author_table_id');
-            assert(dbh.getColumnIdName('XMLHTTPPosts') === 'xmlhttpposts_id');
-            assert(dbh.getColumnIdName('CssClassesService') === 'css_classes_service_id');
-            assert(dbh.getColumnIdName('CSSClassesService') === 'cssclasses_service_id');
+            assert.textEqual(dbh.getColumnIdName('Authors'), 'authors_id');
+            assert.textEqual(dbh.getColumnIdName('AUTHORS'), 'authors_id');
+            assert.textEqual(dbh.getColumnIdName('IT_IS_OVER_9000'), 'it_is_over_9000_id');
+            assert.textEqual(dbh.getColumnIdName('AuthorTable'), 'author_table_id');
+            assert.textEqual(dbh.getColumnIdName('TheAuthor_table'), 'the_author_table_id');
+            assert.textEqual(dbh.getColumnIdName('XMLHTTPPosts'), 'xmlhttpposts_id');
+            assert.textEqual(dbh.getColumnIdName('CssClassesService'), 'css_classes_service_id');
+            assert.textEqual(dbh.getColumnIdName('CSSClassesService'), 'cssclasses_service_id');
         });
     });
     describe('getFilesWithNamingStrategy', function () {
-        it('excludes the Gradle file(s) when given \'maven\' as parameter', function () {
+        it(`excludes the Gradle file(s) when given 'maven' as parameter`, function () {
             // compare sorted arrays (index is irrelevant)
             const files = dbh.getFilesWithNamingStrategy('maven').sort();
             const expectedArray = [
@@ -57,7 +33,7 @@ describe('Dbh', function () {
             ].sort();
             assert(_.isEqual(files, expectedArray));
         });
-        it('excludes the Maven file(s) when given \'gradle\' as parameter', function () {
+        it(`excludes the Maven file(s) when given 'gradle' as parameter`, function () {
             // compare sorted arrays (index is irrelevant)
             const files = dbh.getFilesWithNamingStrategy('gradle').sort();
             const expectedArray = [
@@ -69,23 +45,26 @@ describe('Dbh', function () {
         });
         it('throws when given an unknown build tool', function () {
             assert.throws(() => {
-                let foo = dbh.getFilesWithNamingStrategy('foo'); l;
+                let foo = dbh.getFilesWithNamingStrategy('foo');
             }, Error);
         });
     });
     describe('getPluralColumnIdName', function () {
-        it('tests THINGS', function () {
-            assert(dbh.getPluralColumnIdName('author') === 'authors_id');
-            assert(dbh.getPluralColumnIdName('the_Authors_table') === 'the_authors_tables_id');
-            assert(dbh.getPluralColumnIdName('01234') === '01234s_id');
-            assert(dbh.getPluralColumnIdName('AUTHORSTABLE') === 'authorstables_id');
-            assert(dbh.getPluralColumnIdName('AUTHORS_TABLE') === 'authors_tables_id');
-            assert(dbh.getPluralColumnIdName('_') === '_s_id');
-            assert(dbh.getPluralColumnIdName('') === '_id');
-            assert(dbh.getPluralColumnIdName('\rAuthor') === '\rauthors_id');
-            assert(dbh.getPluralColumnIdName('\tAuthor') === '\tauthors_id');
-            assert(dbh.getPluralColumnIdName('XMLHTTPAPIService') === 'xmlhttpapiservices_id');
-            assert(dbh.getPluralColumnIdName('XmlHttpApiService') === 'xml_http_api_services_id');
+        it('works as expected', function () {
+            // some of these assertions would never appear in a real application
+            // because of validation rules,
+            // however contrived column names are a useful reference for further development
+            assert.textEqual(dbh.getPluralColumnIdName('author'), 'authors_id');
+            assert.textEqual(dbh.getPluralColumnIdName('the_Authors_table'), 'the_authors_tables_id');
+            assert.textEqual(dbh.getPluralColumnIdName('01234'), '01234s_id');
+            assert.textEqual(dbh.getPluralColumnIdName('AUTHORSTABLE'), 'authorstables_id');
+            assert.textEqual(dbh.getPluralColumnIdName('AUTHORS_TABLE'), 'authors_tables_id');
+            assert.textEqual(dbh.getPluralColumnIdName('_'), '_s_id');
+            assert.textEqual(dbh.getPluralColumnIdName(''), '_id');
+            assert.textEqual(dbh.getPluralColumnIdName('\r'), '\rs_id');
+            assert.textEqual(dbh.getPluralColumnIdName('\rAuthor'), '\rauthors_id');
+            assert.textEqual(dbh.getPluralColumnIdName('XMLHTTPAPIService'), 'xmlhttpapiservices_id');
+            assert.textEqual(dbh.getPluralColumnIdName('XmlHttpApiService'), 'xml_http_api_services_id');
         });
     });
     describe('hasConstraints', function () {
@@ -274,17 +253,17 @@ describe('Dbh', function () {
             assert(dbh.validateColumnName('definitelyVeryLongTableName', 'mysql') === true);
         });
         it(`returns '${failMsgWhenSpecialChar}'`, function () {
-            assert(dbh.validateColumnName(' ', 'mysql') === failMsgWhenSpecialChar);
-            assert(dbh.validateColumnName('\r', 'mysql') === failMsgWhenSpecialChar);
-            assert(dbh.validateColumnName('\t', 'mysql') === failMsgWhenSpecialChar);
-            assert(dbh.validateColumnName('Böök', 'mysql') === failMsgWhenSpecialChar);
-            assert(dbh.validateColumnName('book-table', 'mysql') === failMsgWhenSpecialChar);
+            assert.textEqual(dbh.validateColumnName(' ', 'mysql'), failMsgWhenSpecialChar);
+            assert.textEqual(dbh.validateColumnName('\r', 'mysql'), failMsgWhenSpecialChar);
+            assert.textEqual(dbh.validateColumnName('\t', 'mysql'), failMsgWhenSpecialChar);
+            assert.textEqual(dbh.validateColumnName('Böök', 'mysql'), failMsgWhenSpecialChar);
+            assert.textEqual(dbh.validateColumnName('book-table', 'mysql'), failMsgWhenSpecialChar);
         });
         it(`returns '${failMsgWhenEmpty}'`, function () {
-            assert(dbh.validateColumnName('', 'mysql') === failMsgWhenEmpty);
+            assert.textEqual(dbh.validateColumnName('', 'mysql'), failMsgWhenEmpty);
         });
         it(`returns '${failMsgWhenTooLongForOracle}'`, function () {
-            assert(dbh.validateColumnName('definitelyVeryLongTableName', 'oracle') === failMsgWhenTooLongForOracle);
+            assert.textEqual(dbh.validateColumnName('definitelyVeryLongTableName', 'oracle'), failMsgWhenTooLongForOracle);
         });
     });
     describe('validateTableName', function () {
@@ -313,17 +292,17 @@ describe('Dbh', function () {
             assert.throws(() => dbh.validateTableName('Book'), Error);
         });
         it(`returns '${failMsgWhenSpecialChar}'`, function () {
-            assert(dbh.validateTableName('Böök', 'mysql') === failMsgWhenSpecialChar);
-            assert(dbh.validateTableName('book-table', 'mysql') === failMsgWhenSpecialChar);
+            assert.textEqual(dbh.validateTableName('Böök', 'mysql'), failMsgWhenSpecialChar);
+            assert.textEqual(dbh.validateTableName('book-table', 'mysql'), failMsgWhenSpecialChar);
         });
         it(`returns '${failMsgWhenEmpty}'`, function () {
-            assert(dbh.validateTableName('', 'mysql') === failMsgWhenEmpty);
+            assert.textEqual(dbh.validateTableName('', 'mysql'), failMsgWhenEmpty);
         });
         it(`returns '${failMsgWhenTooLongForOracle}'`, function () {
-            assert(dbh.validateTableName('definitelyVeryLongTableName', 'oracle') === failMsgWhenTooLongForOracle);
+            assert.textEqual(dbh.validateTableName('definitelyVeryLongTableName', 'oracle'), failMsgWhenTooLongForOracle);
         });
         it(`returns '${failMsgWhenLongForOracle}'`, function () {
-            assert(dbh.validateTableName('quiteLongTableName', 'oracle') === failMsgWhenLongForOracle);
+            assert.textEqual(dbh.validateTableName('quiteLongTableName', 'oracle'), failMsgWhenLongForOracle);
         });
     });
     /*
