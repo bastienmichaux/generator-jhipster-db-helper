@@ -1,4 +1,6 @@
 # generator-jhipster-db-helper
+
+[![Join the chat at https://gitter.im/generator-jhipster-db-helper/Lobby](https://badges.gitter.im/generator-jhipster-db-helper/Lobby.svg)](https://gitter.im/generator-jhipster-db-helper/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![NPM version][npm-image]][npm-url] <!-- [![Build Status][travis-image]][travis-url] --> [![Dependency Status][daviddm-image]][daviddm-url]
 
 This JHipster module makes mapping on an existing database easier.
