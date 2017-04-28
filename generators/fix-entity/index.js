@@ -116,7 +116,7 @@ module.exports = generator.extend({
             const oldValue = this.dbhTableName;
             const newValue = this.tableNameInput;
 
-            updateKey(`"entityTableName": "${this.entityTableName}"`, 'dbhTableName', oldValue, newValue);
+            jhipsterFunc.updateEntityConfig(paramFiles.config, 'entityTableName', newValue);
 
             // We search either for our value or jhipster value, so it works even if user didn't accept JHipster overwrite after a regeneration
             jhipsterFunc.replaceContent(paramFiles.ORM, `@Table\\(name = "(${this.entityTableName}|${oldValue})`, `@Table(name = "${newValue}`, true);
