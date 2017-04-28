@@ -19,7 +19,6 @@ module.exports = generator.extend({
         // All information from entity generator
         this.entityConfig = this.options.entityConfig;
         this.entityTableName = this.options.entityConfig.entityTableName;
-        this.dbhTableName = this.options.entityConfig.data.dbhTableName;
         this.fields = this.options.entityConfig.data.fields;
         this.relationships = this.options.entityConfig.data.relationships;
 
@@ -111,16 +110,14 @@ module.exports = generator.extend({
             }
         };
 
-        // Add/Change/Keep dbhTableName
         const replaceTableName = (paramFiles) => {
-            const oldValue = this.dbhTableName;
             const newValue = this.tableNameInput;
 
             jhipsterFunc.updateEntityConfig(paramFiles.config, 'entityTableName', newValue);
 
             // We search either for our value or jhipster value, so it works even if user didn't accept JHipster overwrite after a regeneration
-            jhipsterFunc.replaceContent(paramFiles.ORM, `@Table\\(name = "(${this.entityTableName}|${oldValue})`, `@Table(name = "${newValue}`, true);
-            jhipsterFunc.replaceContent(paramFiles.liquibaseEntity, `\\<createTable tableName="(${this.entityTableName}|${oldValue})`, `<createTable tableName="${newValue}`, true);
+            jhipsterFunc.replaceContent(paramFiles.ORM, `@Table(name = "${this.entityTableName}`, `@Table(name = "${newValue}`);
+            jhipsterFunc.replaceContent(paramFiles.liquibaseEntity, `<createTable tableName="${this.entityTableName}`, `<createTable tableName="${newValue}`);
         };
 
         this.log(chalk.bold.yellow('writing'));
@@ -157,6 +154,8 @@ module.exports = generator.extend({
             if (relationshipItem.relationshipType === 'many-to-one' || (relationshipItem.relationshipType === 'one-to-one' && relationshipItem.ownerSide)) {
                 columnName = dbh.getColumnIdName(relationshipItem.relationshipName);
                 newValue = `${relationshipItem.relationshipName}_id`;
+
+                jhipsterFunc.replaceContent(files.liquibaseConstraints, `baseTableName="${this.entityTableName}`, `baseTableName="${this.tableNameInput}`);
             } else if (relationshipItem.relationshipType === 'many-to-many' && relationshipItem.ownerSide) {
                 columnName = dbh.getPluralColumnIdName(relationshipItem.relationshipName);
                 newValue = `${relationshipItem.relationshipNamePlural}_id`;
