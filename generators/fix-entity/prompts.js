@@ -55,7 +55,7 @@ function askForColumnsName() {
  * This function use ${this.fieldsPile}, at each call it will pop an item from it and ask its question about it.
  * Then it will associate the answer with this item and push it to ${this.columnsInput}.
  * So at the end of the recursion, ${this.fieldsPile} will be empty and this.columnsInput full with what was in the former.
- **/
+ */
 function askForColumnName(done) {
     const validateColumnName = dbh.validateColumnName;
 

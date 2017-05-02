@@ -5,7 +5,6 @@ const fse = require('fs-extra');
 const assert = require('yeoman-assert');
 const helpers = require('yeoman-test');
 
-// @todo : find a smarter alternative to this goddamn ugly path
 const dbhConstants = require('../generators/dbh-constants');
 
 const deps = [
