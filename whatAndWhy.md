@@ -4,15 +4,15 @@ JHipster is an amazing tool for new apps with empty databases.
 However it's harder to work with existing ones, as it isn't what JHipster was designed for.
 
 JHipster forces the SpringNamingStrategy everywhere.
-It is nice to get a clean and tidy database but what if it already exists which doesn't respect it (at all) ?
+It is nice to get a clean and tidy database but what if it already exists and doesn't respect it (at all) ?
 
 Well, it won't work, as simple as that.
 
-So, how do you make JHipster work in this scenario? You need to do several changes. This module automates most of them.
+So, how do you make JHipster work in this scenario? You need to do several changes. This module automates them.
 
 ### Validation
 
-Some values that could be legal for a database aren't for JHipster as it would use its in a wider range.
+Some values that could be legal for a database aren't for JHipster as it would use them in a wider range.
 Our module accepts such values as it only interacts with the database files.
 
 ### Change the Spring naming strategies 
