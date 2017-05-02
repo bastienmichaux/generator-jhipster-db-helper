@@ -12,6 +12,7 @@ const deps = [
     [helpers.createDummyGenerator(), 'jhipster:modules']
 ];
 
+
 describe('JHipster generator db-helper', function () {
     describe('post entity hook', function () {
         beforeEach(function (done) {
@@ -33,7 +34,45 @@ describe('JHipster generator db-helper', function () {
         it('finds the spring naming strategies before the post app hook');
 
         it('finds the spring naming strategies replaced after the post hook');
+    });
+});
 
-        it('_replaceNamingStrategies(): throws an error when the app uses an invalid buildTool name');
+describe('JHipster-db-helper post app module', () => {
+    describe('using Maven', () => {
+        beforeEach((done) => {
+            helpers.run(require.resolve('../generators/app/index.js'))
+            .inTmpDir((dir) => {
+                fse.copySync(path.join(__dirname, '../test/templates/app'), dir);
+            })/*
+            .withArguments([]) // dunnno lol
+            .withPrompts({
+                // x : y // dunno too ;_;
+            })*/
+            .on('end', done);
+        });
+
+        it('replace the naming strategies when the app uses Maven)', () => {
+            //assert.noFile(); // gradle file shouldnt be found
+            //assert.content(); // no reference to the ancient naming strategies, find new strategies instead
+        });
+    });
+
+    describe('using Gradle', () => {
+        beforeEach((done) => {
+            helpers.run(require.resolve('../generators/app')) // will probably fail
+            .inTmpDir((dir) => {
+                fse.copySync(path.join(__dirname, '../test/templates/app'), dir); // which folder ?
+            })/*
+            .withArguments([]) // dunnno lol
+            .withPrompts({
+                // x : y // dunno too ;_;
+            })*/
+            .on('end', done);
+        });
+
+        it('replace the naming strategies when the app uses Gradle', () => {
+            //assert.noFile(); // maven file shouldnt be found
+            //assert.content(); // no reference to the ancient naming strategies, find new strategies instead
+        });
     });
 });
