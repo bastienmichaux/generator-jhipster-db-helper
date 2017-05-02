@@ -5,9 +5,13 @@
 This JHipster module makes mapping on an existing database easier.
 If you're not aware of the difficulties of using an existing database with JHipster, you can read [this](whatAndWhy.md)
 
-**This module is at an early stage, feedback is highly appreciated ;)**
+1. Answer questions after creating or regenerating an entity :
+![the questions this module will ask for a given entity 'Book'][demo-picture]
+1. And let our module do all the necessary modifications (here are the differences for the JPA file) :
+![the modifications this module will do in the JPA file for a given entity][demo-jpa-picture]
 
-Check our [notes](notes.md) for details.
+Check [this application][demo-app] to see all the modifications our module do or check our [notes](notes.md) for details.
+
 To contribute to this project, please read [the contributing section first](#contributing).
 
 ## Introduction
@@ -95,3 +99,7 @@ Adrien Horgnies & Bastien Michaux
 [travis-url]: https://travis-ci.org/bastienmichaux/generator-jhipster-db-helper
 [daviddm-image]: https://david-dm.org/bastienmichaux/generator-jhipster-db-helper.svg?theme=shields.io
 [daviddm-url]: https://david-dm.org/bastienmichaux/generator-jhipster-module
+
+[demo-picture]:https://cloud.githubusercontent.com/assets/7291317/25616627/40ffe10a-2f3e-11e7-832e-b04ec645a48c.png
+[demo-JPA-picture]:https://cloud.githubusercontent.com/assets/7291317/25616642/53d92f7a-2f3e-11e7-9794-a4d7131ad8a9.png
+[demo-app]:https://github.com/AdrienHorgnies/MTM_DBH
