@@ -17,7 +17,7 @@ To contribute to this project, please read [the contributing section first](#con
 ## Introduction
 
 This is a [JHipster](http://jhipster.github.io/) module, meant to be used in a JHipster application.
-It enables the user to input values corresponding to its existing database and inject them at the right places in the pertinents files automatically.
+It enables the user to input values corresponding to its existing database and inject them at the right places in the pertinent files automatically.
 Without this module, you would have to modify each value by hand.
 Count all your tables and your fields, sum everything, multiply by 2 or more (depending on the relations) and this is the number of modifications this module will save you from.
 
@@ -102,4 +102,4 @@ Adrien Horgnies & Bastien Michaux
 
 [demo-picture]:https://cloud.githubusercontent.com/assets/7291317/25616627/40ffe10a-2f3e-11e7-832e-b04ec645a48c.png
 [demo-JPA-picture]:https://cloud.githubusercontent.com/assets/7291317/25616642/53d92f7a-2f3e-11e7-9794-a4d7131ad8a9.png
-[demo-app]:https://github.com/AdrienHorgnies/MTM_DBH
+[demo-app]:https://github.com/AdrienHorgnies/MTM_DBH/compare/e840b36...0811391
