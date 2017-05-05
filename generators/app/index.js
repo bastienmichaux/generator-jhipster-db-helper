@@ -33,7 +33,7 @@ module.exports = generator.extend({
      * @todo : write unit test
      * @todo : no hardcoded values for removeGradleFiles and removeMavenFiles
      */
-    _replaceNamingStrategies(appBuildTool) {
+    _replaceNamingStrategies: (appBuildTool) => {
         const physicalOld = DBH_CONSTANTS.physicalNamingStrategyOld;
         const physicalNew = DBH_CONSTANTS.physicalNamingStrategyNew;
 
@@ -42,7 +42,7 @@ module.exports = generator.extend({
 
         const files = dbh.getFilesWithNamingStrategy(appBuildTool);
 
-        // check that each file exists
+        // check that each file exists, then replace the naming strategies
         files.forEach((path) => {
             if (fs.existsSync(path)) {
                 // 1) replace Spring physical naming strategy
@@ -58,6 +58,7 @@ module.exports = generator.extend({
     // check current project state, get configs, etc
     initializing: {
         compose() {
+            this.log(chalk.bold.magenta('On branch testing'));
             this.log(chalk.bold.yellow('initializing: compose'));
 
             // note : before this line we can't use jhipsterVar or jhipsterFunc
