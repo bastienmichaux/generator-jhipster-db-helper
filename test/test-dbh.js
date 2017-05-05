@@ -51,8 +51,8 @@ describe('Dbh', function () {
     });
     describe('getPluralColumnIdName', function () {
         it('works as expected', function () {
-            // some of these assertions would never appear in a real application
             // because of validation rules,
+            // some of these assertions would never appear in a real application
             // however contrived column names are a useful reference for further development
             assert.textEqual(dbh.getPluralColumnIdName('author'), 'authors_id');
             assert.textEqual(dbh.getPluralColumnIdName('the_Authors_table'), 'the_authors_tables_id');
@@ -305,10 +305,4 @@ describe('Dbh', function () {
             assert.textEqual(dbh.validateTableName('quiteLongTableName', 'oracle'), failMsgWhenLongForOracle);
         });
     });
-    /*
-    describe('', function () {
-        it('', function () {
-        });
-    });
-    */
 });
