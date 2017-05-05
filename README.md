@@ -3,23 +3,24 @@
 [![NPM version][npm-image]][npm-url] <!-- [![Build Status][travis-image]][travis-url] --> [![Dependency Status][daviddm-image]][daviddm-url] [![Join the chat at https://gitter.im/generator-jhipster-db-helper/Lobby](https://badges.gitter.im/generator-jhipster-db-helper/Lobby.svg)](https://gitter.im/generator-jhipster-db-helper/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 This JHipster module makes mapping on an existing database easier.
-If you're not aware of the difficulties of using an existing database with JHipster, you can read [this](whatAndWhy.md)
+If you're not aware of the difficulties of using an existing database with JHipster, read [this](whatAndWhy.md)
 
 1. Answer questions after creating or regenerating an entity :
 ![the questions this module will ask for a given entity 'Book'][demo-picture]
 1. And let our module do all the necessary modifications (here are the differences for the JPA file) :
 ![the modifications this module will do in the JPA file for a given entity][demo-jpa-picture]
 
-Check [this application][demo-app] to see all the modifications our module do or check our [notes](notes.md) for details.
+Check [this application][demo-app] to see all the modifications our module do or check our [notes](whatAndWhy.md) for details.
 
-To contribute to this project, please read [the contributing section first](#contributing).
+To contribute to this project, please read [the contributing section](#contributing).
 
 ## Introduction
 
 This is a [JHipster](http://jhipster.github.io/) module, meant to be used in a JHipster application.
+
 It enables the user to input values corresponding to its existing database and inject them at the right places in the pertinent files automatically.
 Without this module, you would have to modify each value by hand.
-Count all your tables and your fields, sum everything, multiply by 2 or more (depending on the relations) and this is the number of modifications this module will save you from.
+Count all your tables and your fields, sum everything, multiply by 2 or more (depending on the relations) and this is the number of modifications this module will spare you.
 
 ## Installation
 
@@ -47,8 +48,7 @@ To update this module: `npm update -g generator-jhipster-db-helper`
 
 In a new app, run `yo jhipster-db-helper`.
 
-This changes the naming convention in favor of a more flexible one, register istself as a post app hook and register its sub-generator 'fix-entity' as a post entity hook.
-These changes make mapping on your existing database possible.
+This changes the naming convention to a more flexible one, registers itself as a post app hook and registers a 'fix-entity' sub-generator as a post-entity hook.
 
 After creating or regenerating an entity (`yo jhipster:entity MyEntity`), there will be two more questions :
 
@@ -77,11 +77,11 @@ Create your local working copy :
   * `yarn link generator-jhipster-db-helper`
   * `yo jhipster-db-helper`
 
-You can edit your local repository and test the changes in the app. No need to rebuild or regen anything.
+You can edit your local repository and test the changes in the app. No need to rebuild the app.
 
-When submitting, please do so from a new branch, not master.
+When submitting, please do so from a new branch, not the master one.
 
-Check our [notes](notes.md).
+Check our [notes](whatAndWhy.md)
 
 ## Contact
 
