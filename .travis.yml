@@ -1,14 +1,34 @@
 os:
     - linux
-language: node_js
+language:
+    - node_js
 node_js:
     - "6.10.0"
+jdk:
+    - oraclejdk8
+addons:
+    apt:
+        packages:
+            - oracle-java8-set-default
+cache:
+    yarn : true
+    directories:
+        - node_modules
+env:
+    global:
+    - JHIPSTER_TRAVIS=$TRAVIS_BUILD_DIR/travis
+    - JHIPSTER_INSTALL=$JHIPSTER_TRAVIS/install
+    - JHIPSTER_SAMPLES=$JHIPSTER_TRAVIS/samples
+    - JHIPSTER_SCRIPTS=$JHIPSTER_TRAVIS/scripts
 before_install:
-    - npm install -g npm
-    - npm install -g yarn
+    - export JAVA_HOME=/usr/lib/jvm/java-8-oracle
+    - yarn global add yo bower gulp-cli generator-jhipster
 install:
     - yarn install
+    - yarn test
     - yarn link
 script:
-    - gulp eslint
-    - gulp test
+    - $JHIPSTER_SCRIPTS/01-generate-project.sh
+notifications:
+# We will invert both when we'll have a smooth running build
+    email: false
