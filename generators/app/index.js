@@ -58,7 +58,6 @@ module.exports = generator.extend({
     // check current project state, get configs, etc
     initializing: {
         compose() {
-            this.log(chalk.bold.magenta('On branch testing'));
             this.log(chalk.bold.yellow('initializing: compose'));
 
             // note : before this line we can't use jhipsterVar or jhipsterFunc
