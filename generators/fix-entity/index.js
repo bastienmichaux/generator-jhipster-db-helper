@@ -14,46 +14,6 @@ const jhipsterFunc = {};
 
 
 module.exports = generator.extend({
-    /**
-     * Return path to the liquibase file corresponding to this entity and type of file.
-     *
-     * @param type is either 'entity' or 'entity_constraints'
-     */
-    _getLiquibaseFile: type => `${jhipsterVar.resourceDir}config/liquibase/changelog/${this.entityConfig.data.changelogDate}_added_${type}_${this.entityConfig.entityClass}.xml`,
-
-
-    /**
-     * Update the value associated with the key.
-     * If oldValue is undefined, then the key doesn't exist and we create it.
-     *
-     * @param landmark the value beneath which it will add the key if not existent
-     * @param key the one it operates on
-     * @param oldValue the value associated to the key before the execution of this procedure (can be undefined)
-     * @param newValue the value to associate to the key, replace oldValue if any
-     * @TODO it would be nice to move this procedure to dbh.js but it will loose access to jhipsterFunc
-     */
-    _updateKey: (landmark, key, oldValue, newValue) => {
-        if (oldValue === undefined) {
-            // '(\\s*)' is for capturing indentation
-            jhipsterFunc.replaceContent(files.config, `(\\s*)${landmark}`, `$1${landmark},$1"${key}": "${newValue}"`, true);
-        } else {
-            jhipsterFunc.replaceContent(files.config, `"${key}": "${oldValue}`, `"${key}": "${newValue}`);
-        }
-    },
-
-
-    /** replace the table name */
-    _replaceTableName: (paramFiles) => {
-        const newValue = this.tableNameInput;
-
-        jhipsterFunc.updateEntityConfig(paramFiles.config, 'entityTableName', newValue);
-
-        // We search either for our value or jhipster value, so it works even if user didn't accept JHipster overwrite after a regeneration
-        jhipsterFunc.replaceContent(paramFiles.ORM, `@Table(name = "${this.entityTableName}`, `@Table(name = "${newValue}`);
-        jhipsterFunc.replaceContent(paramFiles.liquibaseEntity, `<createTable tableName="${this.entityTableName}`, `<createTable tableName="${newValue}`);
-    },
-
-
     constructor: function (...args) { // eslint-disable-line object-shorthand
         generator.apply(this, args);
         // All information from entity generator
@@ -80,17 +40,17 @@ module.exports = generator.extend({
         this.appConfig = jhipsterVar.jhipsterConfig;
 
         /* / TODO remove on prod
-        this.prodDatabaseType = jhipsterVar.prodDatabaseType;
-        this.log(chalk.blue('<<<<<BEFORE'));
-        this.log(chalk.blue('entityConfig'));
-        this.log(this.entityConfig);
-        this.log(chalk.blue('fields'));
-        this.log(this.fields);
-        this.log(chalk.blue('relations'));
-        this.log(this.options.entityConfig.data.relationships);
-        this.log(chalk.blue('jhipsterVar'));
-        this.log(jhipsterVar);
-        //*/
+         this.prodDatabaseType = jhipsterVar.prodDatabaseType;
+         this.log(chalk.blue('<<<<<BEFORE'));
+         this.log(chalk.blue('entityConfig'));
+         this.log(this.entityConfig);
+         this.log(chalk.blue('fields'));
+         this.log(this.fields);
+         this.log(chalk.blue('relations'));
+         this.log(this.options.entityConfig.data.relationships);
+         this.log(chalk.blue('jhipsterVar'));
+         this.log(jhipsterVar);
+         //*/
     },
 
 
@@ -114,15 +74,51 @@ module.exports = generator.extend({
      * Allows consistent mapping with an existing database table without modifying JHipster's entity subgenerator.
      **/
     writing() {
+        /**
+         * Return path to the liquibase file corresponding to this entity and type of file.
+         *
+         * @param type is either 'entity' or 'entity_constraints'
+         */
+        const getLiquibaseFile = type => `${jhipsterVar.resourceDir}config/liquibase/changelog/${this.entityConfig.data.changelogDate}_added_${type}_${this.entityConfig.entityClass}.xml`;
+
         const files = {
             config: this.entityConfig.filename,
             ORM: `${jhipsterVar.javaDir}domain/${this.entityConfig.entityClass}.java`,
-            liquibaseEntity: this._getLiquibaseFile('entity')
+            liquibaseEntity: getLiquibaseFile('entity')
         };
 
         if (dbh.hasConstraints(this.relationships)) {
-            files.liquibaseConstraints = this._getLiquibaseFile('entity_constraints');
+            files.liquibaseConstraints = getLiquibaseFile('entity_constraints');
         }
+
+        // todo it would be nice to move this procedure to dbh.js but it will loose access to jhipsterFunc
+        /**
+         * Update the value associated with the key. If the key doesn't exist yet, creates it.
+         * To do so it checks the oldValue, undefined will be understood as if the key doesn't exist.
+         *
+         * @param landmark the value beneath which it will add the key if not existent
+         * @param key the one it operates on
+         * @param oldValue the value associated to the key before the execution of this procedure (can be undefined)
+         * @param newValue the value to associate to the key, replace oldValue if any
+         */
+        const updateKey = (landmark, key, oldValue, newValue) => {
+            if (oldValue === undefined) {
+                // '(\\s*)' is for capturing indentation
+                jhipsterFunc.replaceContent(files.config, `(\\s*)${landmark}`, `$1${landmark},$1"${key}": "${newValue}"`, true);
+            } else {
+                jhipsterFunc.replaceContent(files.config, `"${key}": "${oldValue}`, `"${key}": "${newValue}`);
+            }
+        };
+
+        const replaceTableName = (paramFiles) => {
+            const newValue = this.tableNameInput;
+
+            jhipsterFunc.updateEntityConfig(paramFiles.config, 'entityTableName', newValue);
+
+            // We search either for our value or jhipster value, so it works even if user didn't accept JHipster overwrite after a regeneration
+            jhipsterFunc.replaceContent(paramFiles.ORM, `@Table(name = "${this.entityTableName}`, `@Table(name = "${newValue}`);
+            jhipsterFunc.replaceContent(paramFiles.liquibaseEntity, `<createTable tableName="${this.entityTableName}`, `<createTable tableName="${newValue}`);
+        };
 
         this.log(chalk.bold.yellow('writing'));
 
@@ -134,14 +130,14 @@ module.exports = generator.extend({
             }
         }
 
-        this._replaceTableName(files);
+        replaceTableName(files);
 
         // Add/Change/Keep dbhColumnName for each field
         this.columnsInput.forEach((columnItem) => {
             const oldValue = columnItem.dbhColumnName;
             const newValue = columnItem.columnNameInput;
 
-            this._updateKey(`"fieldName": "${columnItem.fieldName}"`, 'dbhColumnName', oldValue, newValue);
+            updateKey(`"fieldName": "${columnItem.fieldName}"`, 'dbhColumnName', oldValue, newValue);
 
             // We search either for our value or JHipster value, so it works even if user didn't accept JHipster overwrite while regenerating
             jhipsterFunc.replaceContent(files.ORM, `@Column\\(name = "(${columnItem.fieldNameAsDatabaseColumn}|${oldValue})`, `@Column(name = "${newValue}`, true);
@@ -172,7 +168,7 @@ module.exports = generator.extend({
                 return;
             }
 
-            _updateKey(`"relationshipName": "${relationshipItem.relationshipName}"`, 'dbhRelationshipId', oldValue, newValue);
+            updateKey(`"relationshipName": "${relationshipItem.relationshipName}"`, 'dbhRelationshipId', oldValue, newValue);
 
             jhipsterFunc.replaceContent(files.liquibaseEntity, `\\<column name="(${columnName}|${oldValue})`, `<column name="${newValue}`, true);
             jhipsterFunc.replaceContent(files.liquibaseConstraints, `\\<addForeignKeyConstraint baseColumnNames="(${columnName}|${oldValue})`, `<addForeignKeyConstraint baseColumnNames="${newValue}`, true);
