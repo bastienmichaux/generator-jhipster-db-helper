@@ -8,9 +8,6 @@ const packagejs = require('../../package.json'); // gives access to the package.
 const fs = require('fs');
 const DBH_CONSTANTS = require('../dbh-constants');
 const dbh = require('../dbh.js');
-const dbhFunc = require('../dbh-func.js');
-
-const jhiBase = require('../../node_modules/generator-jhipster/generators/generator-base.js');
 
 // Stores JHipster variables
 const jhipsterVar = {
@@ -25,7 +22,7 @@ module.exports = generator.extend({
     _sayFoo: () => 'foo',
 
     _jhipsterInfo: () => {
-        return {
+        const res = {
             "jhipsterVar.baseName": jhipsterVar.baseName,
             "jhipsterVar.packageName": jhipsterVar.packageName,
             "jhipsterVar.angularAppName": jhipsterVar.angularAppName,
@@ -34,7 +31,8 @@ module.exports = generator.extend({
             "jhipsterFunc.replaceContent": typeof jhipsterFunc.replaceContent,
             "jhispterFunc.registerModule": typeof jhipsterFunc.registerModule,
             "jhipsterFunc.updateEntityConfig": typeof jhipsterFunc.updateEntityConfig
-        }
+        };
+        return res;
     },
 
     _polyfillInfo: () => {
@@ -59,13 +57,11 @@ module.exports = generator.extend({
         res.applicationBuildTool = () => {
             if (jhipsterVar.jhipsterConfig === undefined) {
                 return 'bug';
-            } else {
-                if (jhipsterVar.jhipsterConfig.buildTool === undefined) {
-                    return 'bug';
-                } else {
-                    return jhipsterVar.jhipsterConfig.buildTool;
-                }
             }
+            if (jhipsterVar.jhipsterConfig.buildTool === undefined) {
+                return 'bug';
+            }
+            return jhipsterVar.jhipsterConfig.buildTool;
         };
 
         // jhipsterFunc polyfill
