@@ -3,6 +3,7 @@ const chalk = require('chalk');
 const prompts = require('./prompts.js');
 const fs = require('fs');
 const dbh = require('../dbh.js');
+const dbhFunc = require('../dbh-func.js');
 
 
 const jhipsterVar = {
@@ -14,6 +15,30 @@ const jhipsterFunc = {};
 
 
 module.exports = generator.extend({
+    /**
+     * Get a polyfill object to replace missing jhipster properties,
+     * like jhipsterVar and jhipsterFunc
+     * we have to do this because of a yeoman-test bug when using composeWith,
+     * cf issue #19
+     *
+     * @returns {{}}
+     * @private
+     */
+    _getPolyfill: () => {
+        const polyfill = {};
+
+        // jhipsterVar
+        polyfill.jhipsterConfig = null;
+        polyfill.resourceDir = null;
+        polyfill.javaDir = null;
+
+        // jhipsterFunc
+        polyfill.replaceContent = null;
+        polyfill.updateEntityConfig = null;
+
+        return polyfill;
+    },
+
     constructor: function (...args) { // eslint-disable-line object-shorthand
         generator.apply(this, args);
         // All information from entity generator
@@ -26,7 +51,6 @@ module.exports = generator.extend({
         this.tableNameInput = null;
         this.columnsInput = [];
     },
-
 
     // check current project state, get configs, etc
     initializing() {

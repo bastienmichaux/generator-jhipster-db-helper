@@ -8,19 +8,77 @@ const packagejs = require('../../package.json'); // gives access to the package.
 const fs = require('fs');
 const DBH_CONSTANTS = require('../dbh-constants');
 const dbh = require('../dbh.js');
+const dbhFunc = require('../dbh-func.js');
 
+const jhiBase = require('../../node_modules/generator-jhipster/generators/generator-base.js');
 
 // Stores JHipster variables
 const jhipsterVar = {
     moduleName: 'db-helper'
 };
 
-
 // Stores JHipster functions
 const jhipsterFunc = {};
 
-
 module.exports = generator.extend({
+    // dummy test
+    _sayFoo: () => 'foo',
+
+    _jhipsterInfo: () => {
+        return {
+            "jhipsterVar.baseName": jhipsterVar.baseName,
+            "jhipsterVar.packageName": jhipsterVar.packageName,
+            "jhipsterVar.angularAppName": jhipsterVar.angularAppName,
+            "jhipsterVar.clientFramework": jhipsterVar.clientFramework,
+            "jhipsterVar.clientPackageManager": jhipsterVar.clientPackageManager,
+            "jhipsterFunc.replaceContent": typeof jhipsterFunc.replaceContent,
+            "jhispterFunc.registerModule": typeof jhipsterFunc.registerModule,
+            "jhipsterFunc.updateEntityConfig": typeof jhipsterFunc.updateEntityConfig
+        }
+    },
+
+    _polyfillInfo: () => {
+        const res = {};
+        const replaceUndefinedWith = dbh.replaceUndefinedWith;
+        const sayFoo = () => 'foo';
+        const foo = undefined;
+        const bar = 'bar';
+
+        // dummy test
+        res.foo = replaceUndefinedWith(foo, sayFoo());
+        res.bar = replaceUndefinedWith(bar, sayFoo());
+
+        // jhipsterVar polyfill
+        res.baseName = replaceUndefinedWith(jhipsterVar.baseName, 'bug');
+        res.packageName = replaceUndefinedWith(jhipsterVar.packageName, 'bug');
+        res.angularAppName = replaceUndefinedWith(jhipsterVar.angularAppName, 'bug');
+        res.clientFramework = replaceUndefinedWith(jhipsterVar.clientFramework, 'bug');
+        res.clientPackageManager = replaceUndefinedWith(jhipsterVar.clientPackageManager, 'bug');
+        res.jhipsterConfig = replaceUndefinedWith(jhipsterVar.jhipsterConfig, 'bug');
+
+        res.applicationBuildTool = () => {
+            if (jhipsterVar.jhipsterConfig === undefined) {
+                return 'bug';
+            } else {
+                if (jhipsterVar.jhipsterConfig.buildTool === undefined) {
+                    return 'bug';
+                } else {
+                    return jhipsterVar.jhipsterConfig.buildTool;
+                }
+            }
+        };
+
+        // jhipsterFunc polyfill
+        // res.replaceContent = replaceUndefinedWith(jhipsterFunc.replaceContent, );
+        res.registerModule = replaceUndefinedWith(jhipsterFunc.registerModule, 'bug');
+        res.updateEntityConfig = replaceUndefinedWith(jhipsterFunc.updateEntityConfig, 'bug');
+
+        // other polyfill
+        res.testMode = this.options ? this.options.testMode : 'no options';
+
+        return res;
+    },
+
     /**
      * replace Spring naming strategies with more neutral ones
      * return true if all occurrences are replaced
@@ -65,6 +123,9 @@ module.exports = generator.extend({
                 { jhipsterVar, jhipsterFunc },
                 this.options.testmode ? { local: require.resolve('generator-jhipster/generators/modules') } : null
             );
+
+            // replace missing properties for testing
+            // for the reason why we have to do this, cf db-helper issue #19
         },
         displayLogo() {
             // Have Yeoman greet the user.
@@ -110,6 +171,10 @@ module.exports = generator.extend({
         this.clientFramework = jhipsterVar.clientFramework;
         this.clientPackageManager = jhipsterVar.clientPackageManager;
         this.message = this.props.message;
+
+        // dummy test
+        console.log(chalk.green('Polyfill info :'));
+        console.log(this._polyfillInfo());
 
         try {
             jhipsterFunc.registerModule('generator-jhipster-db-helper', 'app', 'post', 'app', 'A JHipster module for already existing databases');

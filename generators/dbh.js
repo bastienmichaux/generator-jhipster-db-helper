@@ -90,6 +90,9 @@ const hasConstraints = (relationships) => {
 };
 
 
+/** used for subgenerators polyfill */
+const replaceUndefinedWith = (x, y) => x === undefined ? y : x;
+
 /** Validate user input when asking for a SQL column name */
 const validateColumnName = (input, dbType) => {
     if (input === '') {
@@ -133,6 +136,7 @@ module.exports = {
     hasConstraints,
     isNotEmptyString,
     isValidBuildTool,
+    replaceUndefinedWith,
     validateColumnName,
     validateTableName
 };
