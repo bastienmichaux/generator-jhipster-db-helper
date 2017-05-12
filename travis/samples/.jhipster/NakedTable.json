@@ -1,0 +1,10 @@
+{
+    "fluentMethods": true,
+    "relationships": [],
+    "fields": [],
+    "changelogDate": "20170512143606",
+    "dto": "no",
+    "service": "no",
+    "entityTableName": "ELLA_nakedTable",
+    "pagination": "no"
+}
