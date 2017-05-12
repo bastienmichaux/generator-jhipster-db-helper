@@ -170,7 +170,7 @@ module.exports = generator.extend({
                 jhipsterFunc.replaceContent(files.liquibaseConstraints, `referencedTableName="${this.entityTableName}`, `referencedTableName="${this.tableNameInput}`);
                 jhipsterFunc.replaceContent(files.ORM, `inverseJoinColumns = @JoinColumn\\(name="(${columnName}|${oldValue})`, `inverseJoinColumns = @JoinColumn(name="${newValue}`, true);
             } else {
-                // We don't need to do anything about relationship which don't add any constraint.
+                // We don't need to do anything about relationships which don't add any constraint.
                 return;
             }
 
