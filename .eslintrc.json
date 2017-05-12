@@ -15,6 +15,7 @@
         "no-unused-vars": [2, {"vars": "local", "args": "none"}],
         "no-multi-str": 2,
         "no-irregular-whitespace": 2,
+        "no-console": "off",
         "comma-dangle": "off",
         "max-len": "off",
         "func-names": "off",
