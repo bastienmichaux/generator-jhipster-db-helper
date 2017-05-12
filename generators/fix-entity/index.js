@@ -138,6 +138,9 @@ module.exports = generator.extend({
         }
         this.columnsInput.forEach((columnItem) => {
             const oldValue = columnItem.dbhColumnName;
+            if(!oldValue && this.force) {
+                throw new Error('You used option --force with bad configuration file, it needs dbhColumnName for each field');
+            }
             const newValue = columnItem.columnNameInput || columnItem.dbhColumnName;
 
             updateKey(`"fieldName": "${columnItem.fieldName}"`, 'dbhColumnName', oldValue, newValue);
