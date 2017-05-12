@@ -11,6 +11,10 @@ module.exports = {
  * Ask the table name for an entity
  */
 function askForTableName() {
+    if(this.force) {
+        return;
+    }
+
     const validateTableName = dbh.validateTableName;
     const done = this.async();
 
@@ -34,7 +38,8 @@ function askForTableName() {
 /** For each field of an entity, ask the actual column name */
 function askForColumnsName() {
     // Don't ask columns name if there aren't any field
-    if (this.fields === undefined || this.fields.length === 0) {
+    // Or option --force
+    if (this.fields === undefined || this.fields.length === 0 || this.force) {
         return;
     }
 
