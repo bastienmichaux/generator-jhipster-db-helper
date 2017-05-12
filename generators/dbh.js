@@ -44,11 +44,18 @@ const hibernateSnakeCase = (value) => {
 };
 
 
-/** */
+// We need the two following functions to be able to find JHipster generated values and match them in a search and replace.
+/**
+ *
+ * @param create a column id name from the relationship name
+ */
 const getColumnIdName = name => `${hibernateSnakeCase(name)}_id`;
 
 
-/** */
+/**
+ *
+ * @param create a column id name from the relationship name for a to-many relationship (either one-to-many or many-to-many)
+ */
 const getPluralColumnIdName = name => getColumnIdName(pluralize(name));
 
 
