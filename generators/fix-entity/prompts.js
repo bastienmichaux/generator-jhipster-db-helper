@@ -27,7 +27,7 @@ function askForTableName() {
                 return validateTableName(input, prodDatabaseType);
             }),
             message: 'What is the table name for this entity ?',
-            default: this.dbhTableName === undefined ? this.entityTableName : this.dbhTableName
+            default: this.entityTableName
         }
     ]).then((props) => {
         this.tableNameInput = props.dbhTableName;
