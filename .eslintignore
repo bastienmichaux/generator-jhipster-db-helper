@@ -1,4 +1,4 @@
 coverage
-generators/**/templates
 node_modules
 travis
+generators/dbh-test-constants.js
