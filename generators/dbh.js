@@ -1,18 +1,32 @@
 const DBH_CONSTANTS = require('./dbh-constants');
 const jhipsterCore = require('jhipster-core');
 const pluralize = require('pluralize');
-
+const fs = require('fs');
 
 /**
- * assert parameter is a non-empty string
- * @todo Now unused, consider removal
+ * return the missing property jhipsterVar.jhipsterConfig for unit tests
+ * @param path : path to .yo-rc.json
  */
-const isNotEmptyString = x => typeof x === 'string' && x !== '';
+const getAppConfig = configFilePath => new Promise((resolve, reject) => {
+    // if file exists, return it as a JSON object
+    if (fs.existsSync(configFilePath)) {
+        fs.readFile(configFilePath, 'utf8', (err, data) => {
+            if (err) {
+                reject(new Error(err));
+            }
+            const appConfigToJson = JSON.parse(data);
 
-
-/** Check that the build tool isn't unknown */
-const isValidBuildTool = buildTool => DBH_CONSTANTS.buildTools.includes(buildTool);
-
+            // handle undefined object
+            if (appConfigToJson) {
+                resolve(appConfigToJson);
+            } else {
+                reject(new Error(`getAppConfig: output error.\nOutput type: ${typeof appConfigToJson}, value:\n${appConfigToJson}`));
+            }
+        });
+    } else {
+        reject(new Error(`getAppConfig: file ${configFilePath} not found`));
+    }
+});
 
 /**
  * get hibernate SnakeCase in JHipster preferred style.
@@ -43,21 +57,27 @@ const hibernateSnakeCase = (value) => {
     return res;
 };
 
+/** Check that the build tool isn't unknown */
+const isValidBuildTool = buildTool => DBH_CONSTANTS.buildTools.includes(buildTool);
+
+/**
+ * from a .yo-rc.json file, return the build tool
+ * @todo : disable eslint error for dot-notation
+ */
+const getAppBuildTool = configFilePath => getAppConfig(configFilePath)
+    .then(resolvedJsonObject => resolvedJsonObject['generator-jhipster']['buildTool'], onError => onError);
+
 
 /** */
 const getColumnIdName = name => `${hibernateSnakeCase(name)}_id`;
 
-
-/** */
-const getPluralColumnIdName = name => getColumnIdName(pluralize(name));
-
-
 /**
- * from the JHipster files where the original Spring naming strategies can be found,
+ * From the JHipster files where the original Spring naming strategies can be found,
  * remove the files that don't exist, depending on the current application build tool (Maven or Gradle)
- * if the app uses Maven, remove the Gradle file(s)
- * if the app uses Gradle, remove the Maven file(s)
- * the returned array holds only the existing files
+ * - if the app uses Maven, remove the Gradle file(s)
+ * - if the app uses Gradle, remove the Maven file(s)
+ *
+ * @returns The returned array holds the configuration files where references to the naming strategies can be found
  */
 const getFilesWithNamingStrategy = (buildTool) => {
     // fail when application build tool is unknown
@@ -65,33 +85,54 @@ const getFilesWithNamingStrategy = (buildTool) => {
         throw new Error(`buildTool '${buildTool}' is unknown`);
     }
 
+    // if build tool is valid, return the files with naming strategy,
+    // including those specific to the application build tool
     const baseFiles = DBH_CONSTANTS.filesWithNamingStrategy.base;
-    return baseFiles.concat(DBH_CONSTANTS.filesWithNamingStrategy[buildTool]);
+    const result = baseFiles.concat(DBH_CONSTANTS.filesWithNamingStrategy[buildTool]);
+    return result;
 };
 
+/** */
+const getPluralColumnIdName = name => getColumnIdName(pluralize(name));
 
 /**
  * Check if these relationships add constraints.
  * Typically, an one-to-many relationship doesn't add a constraint to the entity on the one side
  * but it does on the many side.
  *
- * @param relationships an array of relationship to check
+ * @param relationships - an array of relationship to check
  * @returns true if and only if it contains at least one relationship with a constraint, false otherwise
+ * @todo type checking on parameter, replace 'for of' with an array method, complex condition could be rewritten as a function
  */
 const hasConstraints = (relationships) => {
-    for(let relationship of relationships) {
-        if (relationship.relationshipType === 'many-to-one' ||
-            (relationship.relationshipType === 'one-to-one' && relationship.ownerSide) ||
-            (relationship.relationshipType === 'many-to-many' && relationship.ownerSide)) {
-            return true;
-        }
+    if (!Array.isArray((relationships))) {
+        throw new TypeError(`hasConstraints: 'relationships' parameter must be an array, was ${typeof relationships}`);
     }
-    return false;
+
+    let res = false;
+
+    relationships.forEach((relationship) => {
+        if (
+            (relationship.relationshipType === 'many-to-one') ||
+            (relationship.relationshipType === 'one-to-one' && relationship.ownerSide) ||
+            (relationship.relationshipType === 'many-to-many' && relationship.ownerSide)
+        ) {
+            res = true;
+        }
+    });
+
+    return res;
 };
 
+/**
+ * Assert parameter is a non-empty string
+ *
+ * Note : Currently unused, remove if no uses in the future
+ */
+const isNotEmptyString = x => typeof x === 'string' && x !== '';
 
 /** used for subgenerators polyfill */
-const replaceUndefinedWith = (x, y) => x === undefined ? y : x;
+const replaceUndefinedWith = (x, y) => (x === undefined ? y : x);
 
 /** Validate user input when asking for a SQL column name */
 const validateColumnName = (input, dbType) => {
@@ -102,10 +143,8 @@ const validateColumnName = (input, dbType) => {
     } else if (dbType === 'oracle' && input.length > DBH_CONSTANTS.oracleLimitations.tableNameHardMaxLength) {
         return 'Your column name is too long for Oracle, try a shorter name';
     }
-
     return true;
 };
-
 
 /**
  * Validate user input when asking for a SQL table name
@@ -130,6 +169,8 @@ const validateTableName = (input, dbType) => {
 
 
 module.exports = {
+    getAppConfig,
+    getAppBuildTool,
     getColumnIdName,
     getFilesWithNamingStrategy,
     getPluralColumnIdName,
