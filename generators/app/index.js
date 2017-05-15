@@ -21,20 +21,6 @@ module.exports = generator.extend({
     // dummy test
     _sayFoo: () => 'foo',
 
-    _jhipsterInfo: () => {
-        const res = {
-            "jhipsterVar.baseName": jhipsterVar.baseName,
-            "jhipsterVar.packageName": jhipsterVar.packageName,
-            "jhipsterVar.angularAppName": jhipsterVar.angularAppName,
-            "jhipsterVar.clientFramework": jhipsterVar.clientFramework,
-            "jhipsterVar.clientPackageManager": jhipsterVar.clientPackageManager,
-            "jhipsterFunc.replaceContent": typeof jhipsterFunc.replaceContent,
-            "jhispterFunc.registerModule": typeof jhipsterFunc.registerModule,
-            "jhipsterFunc.updateEntityConfig": typeof jhipsterFunc.updateEntityConfig
-        };
-        return res;
-    },
-
     _polyfillInfo: () => {
         const res = {};
         const replaceUndefinedWith = dbh.replaceUndefinedWith;

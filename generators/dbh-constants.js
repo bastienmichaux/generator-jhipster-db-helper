@@ -69,7 +69,10 @@ const constants = {
      * @const
      * @type {string}
      */
-    physicalNamingStrategyNew: 'org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl'
+    physicalNamingStrategyNew: 'org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl',
+
+    /** module name */
+    moduleName: 'db-helper'
 };
 
 module.exports = constants;
