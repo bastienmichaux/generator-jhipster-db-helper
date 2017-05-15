@@ -2,63 +2,69 @@
 const generator = require('yeoman-generator');
 const chalk = require('chalk');
 const packagejs = require('../../package.json'); // gives access to the package.json data
-
+const path = require('path');
 
 // modules use by private db-helper functions
 const fs = require('fs');
 const DBH_CONSTANTS = require('../dbh-constants');
 const dbh = require('../dbh.js');
+const jhipsterModuleSubgenerator = require('../../node_modules/generator-jhipster/generators/modules/index.js');
+
 
 // Stores JHipster variables
 const jhipsterVar = {
-    moduleName: 'db-helper'
+    moduleName: DBH_CONSTANTS.moduleName
 };
 
 // Stores JHipster functions
 const jhipsterFunc = {};
 
+// polyfill for jhipsterVar and jhipsterFunc when testing, see [issue #19](https://github.com/bastienmichaux/generator-jhipster-db-helper/issues/19)
+let polyfill = {};
+
 module.exports = generator.extend({
     // dummy test
     _sayFoo: () => 'foo',
 
-    _polyfillInfo: () => {
-        const res = {};
-        const replaceUndefinedWith = dbh.replaceUndefinedWith;
-        const sayFoo = () => 'foo';
-        const foo = undefined;
-        const bar = 'bar';
+    /**
+     * get a polyfill for the jhipsterVar and jhipsterFunc properties gone missing when testing
+     * because of a [yeoman-test](https://github.com/bastienmichaux/generator-jhipster-db-helper/issues/19) issue
+     *
+     * @param {string} appConfigPath - path to the current .yo-rc.json application file
+     */
+    _getPolyfill: (appConfigPath) => {
+        // stop if file not found
+        if (!fs.existsSync(appConfigPath)) {
+            throw new Error(`_getPolyfill: File ${appConfigPath} not found`);
+        }
 
-        // dummy test
-        res.foo = replaceUndefinedWith(foo, sayFoo());
-        res.bar = replaceUndefinedWith(bar, sayFoo());
+        // else return a promise holding the polyfill
+        return dbh.getAppConfig(appConfigPath)
+            .catch(err => console.error(err))
+            .then((onResolve) => {
+                const conf = onResolve['generator-jhipster'];
+                const poly = {};
 
-        // jhipsterVar polyfill
-        res.baseName = replaceUndefinedWith(jhipsterVar.baseName, 'bug');
-        res.packageName = replaceUndefinedWith(jhipsterVar.packageName, 'bug');
-        res.angularAppName = replaceUndefinedWith(jhipsterVar.angularAppName, 'bug');
-        res.clientFramework = replaceUndefinedWith(jhipsterVar.clientFramework, 'bug');
-        res.clientPackageManager = replaceUndefinedWith(jhipsterVar.clientPackageManager, 'bug');
-        res.jhipsterConfig = replaceUndefinedWith(jhipsterVar.jhipsterConfig, 'bug');
+                // @todo: defensive programming with these properties (hasOwnProperty ? throw ?)
 
-        res.applicationBuildTool = () => {
-            if (jhipsterVar.jhipsterConfig === undefined) {
-                return 'bug';
-            }
-            if (jhipsterVar.jhipsterConfig.buildTool === undefined) {
-                return 'bug';
-            }
-            return jhipsterVar.jhipsterConfig.buildTool;
-        };
+                // jhipsterVar polyfill :
 
-        // jhipsterFunc polyfill
-        // res.replaceContent = replaceUndefinedWith(jhipsterFunc.replaceContent, );
-        res.registerModule = replaceUndefinedWith(jhipsterFunc.registerModule, 'bug');
-        res.updateEntityConfig = replaceUndefinedWith(jhipsterFunc.updateEntityConfig, 'bug');
+                poly.baseName = conf.baseName;
+                poly.packageName = conf.packageName;
+                poly.angularAppName = conf.angularAppName || null; // handle an undefined value
+                poly.clientFramework = conf.clientFramework;
+                poly.clientPackageManager = conf.clientPackageManager;
+                poly.buildTool = conf.buildTool;
 
-        // other polyfill
-        res.testMode = this.options ? this.options.testMode : 'no options';
+                // jhipsterFunc polyfill :
+                poly.replaceContent = () => jhipsterModuleSubgenerator.prototype.replaceContent;
+                poly.registerModule = jhipsterModuleSubgenerator.prototype.registerModule;
+                poly.updateEntityConfig = jhipsterModuleSubgenerator.prototype.updateEntityConfig;
 
-        return res;
+                // @todo : handle this.options.testMode ?
+
+                return poly;
+            }, onError => console.error(onError));
     },
 
     /**
@@ -96,29 +102,38 @@ module.exports = generator.extend({
     },
 
     // check current project state, get configs, etc
-    initializing: {
-        compose() {
-            this.log(chalk.bold.yellow('initializing: compose'));
+    initializing() {
+        // Have Yeoman greet the user.
+        this.log(chalk.bold.green(`JHipster db-helper generator v${packagejs.version}`));
 
-            // note : before this line we can't use jhipsterVar or jhipsterFunc
-            this.composeWith('jhipster:modules',
-                { jhipsterVar, jhipsterFunc },
-                this.options.testmode ? { local: require.resolve('generator-jhipster/generators/modules') } : null
-            );
+        // note : before this line we can't use jhipsterVar or jhipsterFunc
+        this.composeWith('jhipster:modules',
+            { jhipsterVar, jhipsterFunc },
+            this.options.testmode ? { local: require.resolve('generator-jhipster/generators/modules') } : null
+        );
 
-            // replace missing properties for testing
-            // for the reason why we have to do this, cf db-helper issue #19
-        },
-        displayLogo() {
-            // Have Yeoman greet the user.
-            this.log(`${chalk.bold.yellow('JHipster db-helper')} generator ${chalk.yellow(`v${packagejs.version}\n`)}`);
+        // replace missing properties for testing
+        // for the reason why we have to do this, cf db-helper issue #19Q
+        const configFile = path.join(__dirname, '/.yo-rc.json');
+
+        if (!fs.existsSync(configFile)) {
+            throw new Error(`This file doesn't exist: ${configFile}`);
         }
+
+        polyfill = this._getPolyfill(configFile)
+        .then(
+            onFulfilled => {
+                return onFulfilled;
+            },
+            onRejected => {
+                console.error(onRejected);
+            }
+        );
+        Object.freeze(polyfill);
     },
 
     // prompt the user for options
     prompting() {
-        this.log(chalk.bold.yellow('prompting'));
-
         const done = this.async();
 
         // user interaction on module call goes here
@@ -132,18 +147,10 @@ module.exports = generator.extend({
         });
     },
 
-    // other Yeoman run loop steps would go here :
-
-    // configuring() : Saving configurations and configure the project (creating .editorconfig files and other metadata files)
-
-    // default() : If the method name doesn't match a priority, it will be pushed to this group.
-
     // write the generator-specific files
     writing() {
-        this.log(chalk.bold.yellow('writing'));
-
         // replace files with Spring's naming strategies
-        this.log(chalk.bold.yellow('db-helper replaces your naming strategies.'));
+        this.log(chalk.bold.yellow('JHipster-db-helper replaces your naming strategies :'));
         this._replaceNamingStrategies(jhipsterVar.jhipsterConfig.buildTool);
 
         // declarations done by jhipster-module
@@ -153,10 +160,6 @@ module.exports = generator.extend({
         this.clientFramework = jhipsterVar.clientFramework;
         this.clientPackageManager = jhipsterVar.clientPackageManager;
         this.message = this.props.message;
-
-        // dummy test
-        console.log(chalk.green('Polyfill info :'));
-        console.log(this._polyfillInfo());
 
         try {
             jhipsterFunc.registerModule('generator-jhipster-db-helper', 'app', 'post', 'app', 'A JHipster module for already existing databases');
@@ -171,12 +174,8 @@ module.exports = generator.extend({
         }
     },
 
-    // conflict() : Where conflicts are handled (used internally)
-
     // run installation (npm, bower, etc)
     install() {
-        this.log(chalk.bold.yellow('install'));
-
         let logMsg = `To install your dependencies manually, run: ${chalk.yellow.bold(`${this.clientPackageManager} install`)}`;
 
         if (this.clientFramework === 'angular1') {
