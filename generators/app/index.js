@@ -10,7 +10,6 @@ const DBH_CONSTANTS = require('../dbh-constants');
 const dbh = require('../dbh.js');
 const jhipsterModuleSubgenerator = require('../../node_modules/generator-jhipster/generators/modules/index.js');
 
-
 // Stores JHipster variables
 const jhipsterVar = {
     moduleName: DBH_CONSTANTS.moduleName
@@ -40,31 +39,31 @@ module.exports = generator.extend({
 
         // else return a promise holding the polyfill
         return dbh.getAppConfig(appConfigPath)
-            .catch(err => console.error(err))
-            .then((onResolve) => {
-                const conf = onResolve['generator-jhipster'];
-                const poly = {};
+        .catch(err => console.error(err))
+        .then((onResolve) => {
+            const conf = onResolve['generator-jhipster'];
+            const poly = {};
 
-                // @todo: defensive programming with these properties (hasOwnProperty ? throw ?)
+            // @todo: defensive programming with these properties (hasOwnProperty ? throw ?)
 
-                // jhipsterVar polyfill :
+            // jhipsterVar polyfill :
 
-                poly.baseName = conf.baseName;
-                poly.packageName = conf.packageName;
-                poly.angularAppName = conf.angularAppName || null; // handle an undefined value
-                poly.clientFramework = conf.clientFramework;
-                poly.clientPackageManager = conf.clientPackageManager;
-                poly.buildTool = conf.buildTool;
+            poly.baseName = conf.baseName;
+            poly.packageName = conf.packageName;
+            poly.angularAppName = conf.angularAppName || null; // handle an undefined value
+            poly.clientFramework = conf.clientFramework;
+            poly.clientPackageManager = conf.clientPackageManager;
+            poly.buildTool = conf.buildTool;
 
-                // jhipsterFunc polyfill :
-                poly.replaceContent = () => jhipsterModuleSubgenerator.prototype.replaceContent;
-                poly.registerModule = jhipsterModuleSubgenerator.prototype.registerModule;
-                poly.updateEntityConfig = jhipsterModuleSubgenerator.prototype.updateEntityConfig;
+            // jhipsterFunc polyfill :
+            poly.replaceContent = () => jhipsterModuleSubgenerator.prototype.replaceContent;
+            poly.registerModule = jhipsterModuleSubgenerator.prototype.registerModule;
+            poly.updateEntityConfig = jhipsterModuleSubgenerator.prototype.updateEntityConfig;
 
-                // @todo : handle this.options.testMode ?
+            // @todo : handle this.options.testMode ?
 
-                return poly;
-            }, onError => console.error(onError));
+            return poly;
+        }, onError => console.error(onError));
     },
 
     /**

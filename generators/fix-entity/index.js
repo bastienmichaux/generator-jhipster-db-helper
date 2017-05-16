@@ -2,41 +2,60 @@ const generator = require('yeoman-generator');
 const chalk = require('chalk');
 const prompts = require('./prompts.js');
 const fs = require('fs');
+
+const jhipsterConstants = require('../../node_modules/generator-jhipster/generators/generator-constants.js');
+const jhipsterModuleSubgenerator = require('../../node_modules/generator-jhipster/generators/modules/index.js');
 const dbh = require('../dbh.js');
-const dbhFunc = require('../dbh-func.js');
+const DBH_CONSTANTS = require('../dbh-constants.js');
 
-
+// Stores JHipster variables
 const jhipsterVar = {
-    moduleName: 'fix-entity'
+    moduleName: DBH_CONSTANTS.fixEntityModuleName
 };
 
-
+// Stores JHipster functions
 const jhipsterFunc = {};
 
+// polyfill for jhipsterVar and jhipsterFunc when testing, see [issue #19](https://github.com/bastienmichaux/generator-jhipster-db-helper/issues/19)
+let polyfill = {};
 
 module.exports = generator.extend({
+    // dummy test
+    _sayFoo: () => 'foo',
+
     /**
-     * Get a polyfill object to replace missing jhipster properties,
-     * like jhipsterVar and jhipsterFunc
-     * we have to do this because of a yeoman-test bug when using composeWith,
-     * cf issue #19
+     * get a polyfill for the jhipsterVar and jhipsterFunc properties gone missing when testing
+     * because of a [yeoman-test](https://github.com/bastienmichaux/generator-jhipster-db-helper/issues/19) issue
      *
-     * @returns {{}}
-     * @private
+     * @param {string} appConfigPath - path to the current .yo-rc.json application file
      */
-    _getPolyfill: () => {
-        const polyfill = {};
+    _getPolyfill: (appConfigPath) => {
+        // stop if file not found
+        if (!fs.existsSync(appConfigPath)) {
+            throw new Error(`_getPolyfill: File ${appConfigPath} not found`);
+        }
 
-        // jhipsterVar
-        polyfill.jhipsterConfig = null;
-        polyfill.resourceDir = null;
-        polyfill.javaDir = null;
+        // else return a promise holding the polyfill
+        return dbh.getAppConfig(appConfigPath)
+        .catch(err => console.error(err))
+        .then((onResolve) => {
+            const conf = onResolve['generator-jhipster'];
+            const poly = {};
 
-        // jhipsterFunc
-        polyfill.replaceContent = null;
-        polyfill.updateEntityConfig = null;
+            // @todo: defensive programming with these properties (hasOwnProperty ? throw ?)
 
-        return polyfill;
+            // jhipsterVar polyfill :
+
+            poly.jhipsterConfig = conf;
+            poly.javaDir = `${jhipsterConstants.SERVER_MAIN_SRC_DIR + conf.packageFolder}/`;
+            poly.resourceDir = jhipsterConstants.SERVER_MAIN_RES_DIR;
+            poly.replaceContent = jhipsterModuleSubgenerator.prototype.replaceContent;
+            poly.updateEntityConfig = jhipsterModuleSubgenerator.prototype.updateEntityConfig;
+
+            // @todo : handle this.options.testMode ?
+
+            return poly;
+        }, onError => console.error(onError));
     },
 
     constructor: function (...args) { // eslint-disable-line object-shorthand
@@ -85,13 +104,6 @@ module.exports = generator.extend({
     },
 
 
-    // other Yeoman run loop steps would go here :
-
-    // configuring() : Saving configurations and configure the project (creating .editorconfig files and other metadata files)
-
-    // default() : If the method name doesn't match a priority, it will be pushed to this group.
-
-
     /**
      * After creating a new entity, replace the value of the table name.
      *
@@ -115,15 +127,15 @@ module.exports = generator.extend({
             files.liquibaseConstraints = getLiquibaseFile('entity_constraints');
         }
 
-        // todo it would be nice to move this procedure to dbh.js but it will loose access to jhipsterFunc
+        // @todo it would be nice to move this procedure to dbh.js but it will loose access to jhipsterFunc
         /**
          * Update the value associated with the key. If the key doesn't exist yet, creates it.
          * To do so it checks the oldValue, undefined will be understood as if the key doesn't exist.
          *
-         * @param landmark the value beneath which it will add the key if not existent
-         * @param key the one it operates on
-         * @param oldValue the value associated to the key before the execution of this procedure (can be undefined)
-         * @param newValue the value to associate to the key, replace oldValue if any
+         * @param landmark - the value beneath which it will add the key if not existent
+         * @param key - the one it operates on
+         * @param oldValue - the value associated to the key before the execution of this procedure (can be undefined)
+         * @param newValue - the value to associate to the key, replace oldValue if any
          */
         const updateKey = (landmark, key, oldValue, newValue) => {
             if (oldValue === undefined) {
@@ -153,6 +165,16 @@ module.exports = generator.extend({
                 throw new Error(`JHipster-db-helper : File not found (${file}: ${files[file]}).`);
             }
         }
+
+        /* // refactoring for later
+        // verify files exist
+        const filesArr = Object.keys(files);
+        filesArr.forEach((file) => {
+            if (!fs.existsSync(files[file])) {
+                throw new Error(`JHipster-db-helper : File not found (${file}: ${files[file]}).`);
+            }
+        });
+        */
 
         replaceTableName(files);
 
@@ -198,9 +220,6 @@ module.exports = generator.extend({
             jhipsterFunc.replaceContent(files.liquibaseConstraints, `\\<addForeignKeyConstraint baseColumnNames="(${columnName}|${oldValue})`, `<addForeignKeyConstraint baseColumnNames="${newValue}`, true);
         });
     },
-
-
-    // conflict() : Where conflicts are handled (used internally)
 
     // run installation (npm, bower, etc)
     install() {
