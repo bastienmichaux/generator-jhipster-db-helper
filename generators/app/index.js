@@ -112,7 +112,7 @@ module.exports = generator.extend({
         );
 
         // replace missing properties for testing
-        // for the reason why we have to do this, cf db-helper issue #19Q
+        // for the reason why we have to do this, cf [issue #19](https://github.com/bastienmichaux/generator-jhipster-db-helper/issues/19)
         const configFile = path.join(__dirname, '/.yo-rc.json');
 
         if (!fs.existsSync(configFile)) {
@@ -125,7 +125,7 @@ module.exports = generator.extend({
                 return onFulfilled;
             },
             onRejected => {
-                console.error(onRejected);
+                return onRejected;
             }
         );
         Object.freeze(polyfill);
