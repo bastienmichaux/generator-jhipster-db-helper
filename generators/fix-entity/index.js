@@ -65,6 +65,7 @@ module.exports = generator.extend({
         this.entityTableName = this.options.entityConfig.entityTableName;
         this.fields = this.options.entityConfig.data.fields;
         this.relationships = this.options.entityConfig.data.relationships;
+        this.force = this.options.force;
 
         // input from user (prompts.js will fill them)
         this.tableNameInput = null;
@@ -147,7 +148,7 @@ module.exports = generator.extend({
         };
 
         const replaceTableName = (paramFiles) => {
-            const newValue = this.tableNameInput;
+            const newValue = this.tableNameInput || this.entityTableName;
 
             jhipsterFunc.updateEntityConfig(paramFiles.config, 'entityTableName', newValue);
 
@@ -179,9 +180,15 @@ module.exports = generator.extend({
         replaceTableName(files);
 
         // Add/Change/Keep dbhColumnName for each field
+        if(this.force) {
+            this.columnsInput = this.fields;
+        }
         this.columnsInput.forEach((columnItem) => {
             const oldValue = columnItem.dbhColumnName;
-            const newValue = columnItem.columnNameInput;
+            if(!oldValue && this.force) {
+                throw new Error('You used option --force with bad configuration file, it needs dbhColumnName for each field');
+            }
+            const newValue = columnItem.columnNameInput || columnItem.dbhColumnName;
 
             updateKey(`"fieldName": "${columnItem.fieldName}"`, 'dbhColumnName', oldValue, newValue);
 
@@ -210,7 +217,7 @@ module.exports = generator.extend({
                 jhipsterFunc.replaceContent(files.liquibaseConstraints, `referencedTableName="${this.entityTableName}`, `referencedTableName="${this.tableNameInput}`);
                 jhipsterFunc.replaceContent(files.ORM, `inverseJoinColumns = @JoinColumn\\(name="(${columnName}|${oldValue})`, `inverseJoinColumns = @JoinColumn(name="${newValue}`, true);
             } else {
-                // We don't need to do anything about relationship which don't add any constraint.
+                // We don't need to do anything about relationships which don't add any constraint.
                 return;
             }
 

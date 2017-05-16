@@ -3,6 +3,7 @@ const jhipsterCore = require('jhipster-core');
 const pluralize = require('pluralize');
 const fs = require('fs');
 
+
 /**
  * return the missing property jhipsterVar.jhipsterConfig for unit tests
  * @param path : path to .yo-rc.json
@@ -27,6 +28,7 @@ const getAppConfig = configFilePath => new Promise((resolve, reject) => {
         reject(new Error(`getAppConfig: file ${configFilePath} not found`));
     }
 });
+
 
 /**
  * get hibernate SnakeCase in JHipster preferred style.
@@ -57,11 +59,23 @@ const hibernateSnakeCase = (value) => {
     return res;
 };
 
+
 /** Check that the build tool isn't unknown */
 const isValidBuildTool = buildTool => DBH_CONSTANTS.buildTools.includes(buildTool);
 
-/** */
+
+// We need the two following functions to be able to find JHipster generated values and match them in a search and replace.
+/**
+ * @param create a column id name from the relationship name
+ */
 const getColumnIdName = name => `${hibernateSnakeCase(name)}_id`;
+
+
+/**
+ * @param create a column id name from the relationship name for a to-many relationship (either one-to-many or many-to-many)
+ */
+const getPluralColumnIdName = name => getColumnIdName(pluralize(name));
+
 
 /**
  * From the JHipster files where the original Spring naming strategies can be found,
@@ -84,8 +98,6 @@ const getFilesWithNamingStrategy = (buildTool) => {
     return result;
 };
 
-/** */
-const getPluralColumnIdName = name => getColumnIdName(pluralize(name));
 
 /**
  * Check if these relationships add constraints.
@@ -116,6 +128,7 @@ const hasConstraints = (relationships) => {
     return res;
 };
 
+
 /**
  * Assert parameter is a non-empty string
  *
@@ -123,8 +136,6 @@ const hasConstraints = (relationships) => {
  */
 const isNotEmptyString = x => typeof x === 'string' && x !== '';
 
-/** used for subgenerators polyfill */
-const replaceUndefinedWith = (x, y) => (x === undefined ? y : x);
 
 /** Validate user input when asking for a SQL column name */
 const validateColumnName = (input, dbType) => {
@@ -137,6 +148,7 @@ const validateColumnName = (input, dbType) => {
     }
     return true;
 };
+
 
 /**
  * Validate user input when asking for a SQL table name
@@ -168,7 +180,6 @@ module.exports = {
     hasConstraints,
     isNotEmptyString,
     isValidBuildTool,
-    replaceUndefinedWith,
     validateColumnName,
     validateTableName
 };
