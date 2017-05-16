@@ -60,14 +60,6 @@ const hibernateSnakeCase = (value) => {
 /** Check that the build tool isn't unknown */
 const isValidBuildTool = buildTool => DBH_CONSTANTS.buildTools.includes(buildTool);
 
-/**
- * from a .yo-rc.json file, return the build tool
- * @todo : disable eslint error for dot-notation
- */
-const getAppBuildTool = configFilePath => getAppConfig(configFilePath)
-    .then(resolvedJsonObject => resolvedJsonObject['generator-jhipster']['buildTool'], onError => onError);
-
-
 /** */
 const getColumnIdName = name => `${hibernateSnakeCase(name)}_id`;
 
@@ -170,7 +162,6 @@ const validateTableName = (input, dbType) => {
 
 module.exports = {
     getAppConfig,
-    getAppBuildTool,
     getColumnIdName,
     getFilesWithNamingStrategy,
     getPluralColumnIdName,
