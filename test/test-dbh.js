@@ -8,10 +8,18 @@ const _ = require('lodash');
 
 const dbh = require('../generators/dbh.js');
 const DBH_CONSTANTS = require('../generators/dbh-constants');
+const DBH_TEST_CONSTANTS = require('../generators/dbh-test-constants');
 
 
 // Dbh unit test
 describe('Dbh', function () {
+    describe('getAppConfig', function () {
+        it('returns the expected app config with Maven as build tool');
+        it('returns the expected app config with Gradle as build tool');
+        it('throws when a file is not found');
+        it('throws when the config file is not found');
+        it('throws when the output file is no correct json');
+    });
     describe('getColumnIdName', function () {
         it('works as expected with treacherous input', function () {
             assert.textEqual(dbh.getColumnIdName('Authors'), 'authors_id');
@@ -70,132 +78,7 @@ describe('Dbh', function () {
         });
     });
     describe('hasConstraints', function () {
-        const relationshipsSamples = {
-            oneToOneOwner: [
-                {
-                    relationshipType: 'one-to-one',
-                    relationshipName: 'region',
-                    otherEntityName: 'region',
-                    otherEntityField: 'id',
-                    ownerSide: true,
-                    otherEntityRelationshipName: 'country'
-                }
-            ],
-            mixedWithOneConstraint: [
-                {
-                    relationshipType: 'one-to-one',
-                    relationshipName: 'location',
-                    otherEntityName: 'location',
-                    otherEntityField: 'id',
-                    ownerSide: true,
-                    otherEntityRelationshipName: 'department'
-                },
-                {
-                    relationshipType: 'one-to-many',
-                    javadoc: 'A relationship',
-                    relationshipName: 'employee',
-                    otherEntityName: 'employee',
-                    otherEntityRelationshipName: 'department'
-                }
-            ],
-            mixedWithTwoConstraints: [
-                {
-                    relationshipName: 'department',
-                    otherEntityName: 'department',
-                    relationshipType: 'many-to-one',
-                    otherEntityField: 'id'
-                },
-                {
-                    relationshipType: 'one-to-many',
-                    relationshipName: 'job',
-                    otherEntityName: 'job',
-                    otherEntityRelationshipName: 'employee'
-                },
-                {
-                    relationshipType: 'many-to-one',
-                    relationshipName: 'manager',
-                    otherEntityName: 'employee',
-                    otherEntityField: 'id'
-                }
-            ],
-            tripleOneToOneOwner: [
-                {
-                    relationshipType: 'one-to-one',
-                    relationshipName: 'job',
-                    otherEntityName: 'job',
-                    otherEntityField: 'id',
-                    ownerSide: true,
-                    otherEntityRelationshipName: 'jobHistory'
-                },
-                {
-                    relationshipType: 'one-to-one',
-                    relationshipName: 'department',
-                    otherEntityName: 'department',
-                    otherEntityField: 'id',
-                    ownerSide: true,
-                    otherEntityRelationshipName: 'jobHistory'
-                },
-                {
-                    relationshipType: 'one-to-one',
-                    relationshipName: 'employee',
-                    otherEntityName: 'employee',
-                    otherEntityField: 'id',
-                    ownerSide: true,
-                    otherEntityRelationshipName: 'jobHistory'
-                }
-            ],
-            mixedConstraints: [
-                {
-                    relationshipName: 'employee',
-                    otherEntityName: 'employee',
-                    relationshipType: 'many-to-one',
-                    otherEntityField: 'id'
-                },
-                {
-                    relationshipType: 'many-to-many',
-                    otherEntityRelationshipName: 'job',
-                    relationshipName: 'task',
-                    otherEntityName: 'task',
-                    otherEntityField: 'title',
-                    ownerSide: true
-                }
-            ],
-            Empty: [],
-            manyToManyNotOwner: [
-                {
-                    relationshipType: 'many-to-many',
-                    relationshipName: 'job',
-                    otherEntityName: 'job',
-                    ownerSide: false,
-                    otherEntityRelationshipName: 'task'
-                }
-            ],
-            oneToOneNotOwner: [
-                {
-                    relationshipType: 'one-to-one',
-                    relationshipName: 'job',
-                    otherEntityName: 'job',
-                    ownerSide: false,
-                    otherEntityRelationshipName: 'task'
-                }
-            ],
-            mixedNotOwner: [
-                {
-                    relationshipType: 'one-to-one',
-                    relationshipName: 'job',
-                    otherEntityName: 'job',
-                    ownerSide: false,
-                    otherEntityRelationshipName: 'task'
-                },
-                {
-                    relationshipType: 'many-to-many',
-                    relationshipName: 'job',
-                    otherEntityName: 'job',
-                    ownerSide: false,
-                    otherEntityRelationshipName: 'task'
-                }
-            ]
-        };
+        const relationshipsSamples = DBH_TEST_CONSTANTS.relationshipsSamples;
 
         it('returns false with empty relation', function () {
             assert(dbh.hasConstraints(relationshipsSamples.Empty) === false);
@@ -213,6 +96,13 @@ describe('Dbh', function () {
             assert(dbh.hasConstraints(relationshipsSamples.mixedConstraints) === true);
             assert(dbh.hasConstraints(relationshipsSamples.mixedWithOneConstraint) === true);
             assert(dbh.hasConstraints(relationshipsSamples.mixedWithTwoConstraints) === true);
+        });
+        it('throws when given a wrong type parameter', function () {
+            assert.throws(() => dbh.hasConstraints(''), TypeError);
+            assert.throws(() => dbh.hasConstraints(0), TypeError);
+            assert.throws(() => dbh.hasConstraints(null), TypeError);
+            assert.throws(() => dbh.hasConstraints(undefined), TypeError);
+            assert.throws(() => dbh.hasConstraints(false), TypeError);
         });
     });
     describe('isNotEmptyString', function () {

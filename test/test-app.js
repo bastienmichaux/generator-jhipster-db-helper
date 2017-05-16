@@ -47,21 +47,6 @@ describe('Post app hook', function () {
         });
     });
     describe('_replaceNamingStrategies', function () {
-        it('works as expected', function () {
-            assert.file(path.join(__dirname, 'templates/default/usingMaven/.yo-rc.json'));
-            assert.file(path.join(__dirname, 'templates/default/usingMaven/pom.xml'));
-            assert.file(path.join(__dirname, 'templates/default/usingMaven/src/test/resources/config/application.yml'));
-            assert.file(path.join(__dirname, 'templates/default/usingMaven/src/main/resources/config/application.yml'));
-            assert.file(path.join(__dirname, 'templates/default/usingGradle/.yo-rc.json'));
-            assert.file(path.join(__dirname, 'templates/default/usingGradle/src/test/resources/config/application.yml'));
-            assert.file(path.join(__dirname, 'templates/default/usingGradle/src/main/resources/config/application.yml'));
-
-            assert.fileContent(path.join(__dirname, 'templates/default/usingMaven/pom.xml'), DBH_CONSTANTS.physicalNamingStrategyOld);
-            assert.fileContent(path.join(__dirname, 'templates/default/usingMaven/src/test/resources/config/application.yml'), DBH_CONSTANTS.physicalNamingStrategyOld);
-            assert.fileContent(path.join(__dirname, 'templates/default/usingMaven/src/main/resources/config/application.yml'), DBH_CONSTANTS.physicalNamingStrategyOld);
-
-            assert.fileContent(path.join(__dirname, 'templates/default/usingGradle/src/test/resources/config/application.yml'), DBH_CONSTANTS.physicalNamingStrategyOld);
-            assert.fileContent(path.join(__dirname, 'templates/default/usingGradle/src/main/resources/config/application.yml'), DBH_CONSTANTS.physicalNamingStrategyOld);
-        });
+        it('works as expected');
     });
 });
