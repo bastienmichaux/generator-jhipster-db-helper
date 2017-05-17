@@ -93,15 +93,31 @@ module.exports = generator.extend({
         this.log(chalk.blue('jhipsterVar'));
         this.log(jhipsterVar);
         //*/
-    },
+        // replace missing properties for testing
+        // for the reason why we have to do this, cf [issue #19](https://github.com/bastienmichaux/generator-jhipster-db-helper/issues/19)
+        const configFile = path.join(__dirname, '/.yo-rc.json');
 
+        if (!fs.existsSync(configFile)) {
+            throw new Error(`This file doesn't exist: ${configFile}`);
+        }
+
+        polyfill = this._getPolyfill(configFile)
+        .then(
+            onFulfilled => {
+                return onFulfilled;
+            },
+            onRejected => {
+                return onRejected;
+            }
+        );
+        Object.freeze(polyfill);
+    },
 
     // prompt the user for options
     prompting: {
         askForTableName: prompts.askForTableName,
         askForColumnsName: prompts.askForColumnsName
     },
-
 
     /**
      * After creating a new entity, replace the value of the table name.
@@ -116,11 +132,14 @@ module.exports = generator.extend({
          */
         const getLiquibaseFile = type => `${jhipsterVar.resourceDir}config/liquibase/changelog/${this.entityConfig.data.changelogDate}_added_${type}_${this.entityConfig.entityClass}.xml`;
 
+        // TODO: freeze object (safely)
         const files = {
             config: this.entityConfig.filename,
             ORM: `${jhipsterVar.javaDir}domain/${this.entityConfig.entityClass}.java`,
             liquibaseEntity: getLiquibaseFile('entity')
         };
+
+        const filesArr = Object.keys(files);
 
         if (dbh.hasConstraints(this.relationships)) {
             files.liquibaseConstraints = getLiquibaseFile('entity_constraints');
@@ -153,16 +172,14 @@ module.exports = generator.extend({
             jhipsterFunc.replaceContent(paramFiles.liquibaseEntity, `<createTable tableName="${this.entityTableName}`, `<createTable tableName="${newValue}`);
         };
 
-        this.log(chalk.bold.yellow('writing'));
-
         // verify files exist
-        for (const file in files) {
-            // hasOwnProperty to avoid inherited properties
-            if (files.hasOwnProperty(file) && !fs.existsSync(files[file])) {
+        filesArr.forEach((file) => {
+            if (!fs.existsSync(files[file])) {
                 throw new Error(`JHipster-db-helper : File not found (${file}: ${files[file]}).`);
             }
-        }
+        });
 
+        // Add/Change/Keep dbhColumnName for each field
         if (this.force) {
             this.tableNameInput = this.entityTableName;
             this.columnsInput = this.fields;
@@ -217,12 +234,6 @@ module.exports = generator.extend({
             jhipsterFunc.replaceContent(files.liquibaseConstraints, `\\<addForeignKeyConstraint baseColumnNames="(${columnName}|${oldValue})`, `<addForeignKeyConstraint baseColumnNames="${newValue}`, true);
         });
     },
-
-    // run installation (npm, bower, etc)
-    install() {
-        this.log(chalk.bold.yellow('install'));
-    },
-
 
     // cleanup, say goodbye
     end() {
