@@ -22,9 +22,6 @@ const jhipsterFunc = {};
 let polyfill = {};
 
 module.exports = generator.extend({
-    // dummy test
-    _sayFoo: () => 'foo',
-
     /**
      * get a polyfill for the jhipsterVar and jhipsterFunc properties gone missing when testing
      * because of a [yeoman-test](https://github.com/bastienmichaux/generator-jhipster-db-helper/issues/19) issue
