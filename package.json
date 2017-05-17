@@ -1,6 +1,6 @@
 {
   "name": "generator-jhipster-db-helper",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "A JHipster module for already existing databases",
   "keywords": [
     "yeoman-generator",
