@@ -13,7 +13,7 @@ const getAppConfig = configFilePath => new Promise((resolve, reject) => {
     if (fs.existsSync(configFilePath)) {
         fs.readFile(configFilePath, 'utf8', (err, data) => {
             if (err) {
-                reject(new Error(err));
+                reject(new Error(`getAppConfig: readFile threw an error.\n${err}`));
             }
             const appConfigToJson = JSON.parse(data);
 
