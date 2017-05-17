@@ -14,10 +14,44 @@ const DBH_TEST_CONSTANTS = require('../generators/dbh-test-constants');
 // Dbh unit test
 describe('Dbh', function () {
     describe('getAppConfig', function () {
-        it('returns the expected app config with Maven as build tool');
-        it('returns the expected app config with Gradle as build tool');
-        it('throws when a file is not found');
-        it('throws when the config file is not found');
+        it('returns the expected app config with Maven as build tool', function () {
+            const expectedConfig = DBH_TEST_CONSTANTS.templateConfigFile.usingMaven;
+            const f = path.join(__dirname, 'templates/default/usingMaven/.yo-rc.json');
+            
+            assert.file(f);
+            
+            return dbh.getAppConfig(f)
+            .catch(err => console.error(err))
+            .then(onFulfilled => {
+                assert(typeof onFulfilled === 'object');
+                assert.deepStrictEqual(expectedConfig, onFulfilled);
+            }, onRejected => {
+                console.log(onRejected);
+            });
+        });
+        it('returns the expected app config with Gradle as build tool', function () {
+            const expectedConfig = DBH_TEST_CONSTANTS.templateConfigFile.usingGradle;
+            const f = path.join(__dirname, 'templates/default/usingGradle/.yo-rc.json');
+
+            assert.file(f);
+
+            return dbh.getAppConfig(f)
+            .catch(err => console.error(err))
+            .then(onFulfilled => {
+                assert(typeof onFulfilled === 'object');
+                assert.deepStrictEqual(expectedConfig, onFulfilled);
+            }, onRejected => {
+                console.log(onRejected);
+            });
+        });
+        it('throws when a file is not found', function () {
+            return dbh.getAppConfig('foo.bar')
+            .then(onFulfilled => {
+                throw new Error('Promise should have been rejected but was instead fulfilled');
+            }, onRejected => {
+                assert(onRejected instanceof Error);
+            });
+        });
         it('throws when the output file is no correct json');
     });
     describe('getColumnIdName', function () {
