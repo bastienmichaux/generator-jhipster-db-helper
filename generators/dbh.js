@@ -1,12 +1,11 @@
 const DBH_CONSTANTS = require('./dbh-constants');
+const fs = require('fs');
 const jhipsterCore = require('jhipster-core');
 const pluralize = require('pluralize');
-const fs = require('fs');
-
 
 /**
  * return the missing property jhipsterVar.jhipsterConfig for unit tests
- * @param path : path to .yo-rc.json
+ * @param path - path to .yo-rc.json
  */
 const getAppConfig = configFilePath => new Promise((resolve, reject) => {
     // if file exists, return it as a JSON object
@@ -143,7 +142,7 @@ const validateColumnName = (input, dbType) => {
         return 'Your column name cannot be empty';
     } else if (!/^([a-zA-Z0-9_]*)$/.test(input)) {
         return 'Your column name cannot contain special characters';
-    } else if (dbType === 'oracle' && input.length > DBH_CONSTANTS.oracleLimitations.tableNameHardMaxLength) {
+    } else if (dbType === 'oracle' && input.length > DBH_CONSTANTS.oracleTableNameLength.hard) {
         return 'Your column name is too long for Oracle, try a shorter name';
     }
     return true;
@@ -160,9 +159,9 @@ const validateTableName = (input, dbType) => {
         return 'The table name cannot be empty';
     } else if (!/^([a-zA-Z0-9_]*)$/.test(input)) {
         return 'The table name cannot contain special characters';
-    } else if (dbType === 'oracle' && input.length > DBH_CONSTANTS.oracleLimitations.tableNameHardMaxLength) {
+    } else if (dbType === 'oracle' && input.length > DBH_CONSTANTS.oracleTableNameLength.hard) {
         return 'The table name is too long for Oracle, try a shorter name';
-    } else if (dbType === 'oracle' && input.length > DBH_CONSTANTS.oracleLimitations.tableNameSoftMaxLength) {
+    } else if (dbType === 'oracle' && input.length > DBH_CONSTANTS.oracleTableNameLength.soft) {
         return 'The table name is long for Oracle, long table names can cause issues when used to create constraint names and join table names';
     } else if (jhipsterCore.isReservedTableName(input, dbType)) {
         return `'${input}' is a ${dbType} reserved keyword.`;
