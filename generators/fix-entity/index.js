@@ -1,12 +1,13 @@
-const generator = require('yeoman-generator');
 const chalk = require('chalk');
-const prompts = require('./prompts.js');
 const fs = require('fs');
+const generator = require('yeoman-generator');
+const path = require('path');
 
-const jhipsterConstants = require('../../node_modules/generator-jhipster/generators/generator-constants.js');
-const jhipsterModuleSubgenerator = require('../../node_modules/generator-jhipster/generators/modules/index.js');
 const dbh = require('../dbh.js');
 const DBH_CONSTANTS = require('../dbh-constants.js');
+const jhipsterConstants = require('../../node_modules/generator-jhipster/generators/generator-constants.js');
+const jhipsterModuleSubgenerator = require('../../node_modules/generator-jhipster/generators/modules/index.js');
+const prompts = require('./prompts.js');
 
 // Stores JHipster variables
 const jhipsterVar = {
@@ -16,7 +17,7 @@ const jhipsterVar = {
 // Stores JHipster functions
 const jhipsterFunc = {};
 
-// polyfill for jhipsterVar and jhipsterFunc when testing, see [issue #19](https://github.com/bastienmichaux/generator-jhipster-db-helper/issues/19)
+// polyfill for jhipsterVar and jhipsterFunc
 let polyfill = {};
 
 module.exports = generator.extend({
@@ -34,15 +35,14 @@ module.exports = generator.extend({
 
         // else return a promise holding the polyfill
         return dbh.getAppConfig(appConfigPath)
-        .catch(err => console.error(err))
+        .catch(err => new Error(err))
         .then((onResolve) => {
             const conf = onResolve['generator-jhipster'];
             const poly = {};
 
             // @todo: defensive programming with these properties (hasOwnProperty ? throw ?)
 
-            // jhipsterVar polyfill :
-
+            // jhipsterVar and jhipsterFunc polyfill :
             poly.jhipsterConfig = conf;
             poly.javaDir = `${jhipsterConstants.SERVER_MAIN_SRC_DIR + conf.packageFolder}/`;
             poly.resourceDir = jhipsterConstants.SERVER_MAIN_RES_DIR;
@@ -52,7 +52,7 @@ module.exports = generator.extend({
             // @todo : handle this.options.testMode ?
 
             return poly;
-        }, onError => console.error(onError));
+        }, onError => new Error(onError));
     },
 
     constructor: function (...args) { // eslint-disable-line object-shorthand
@@ -64,7 +64,7 @@ module.exports = generator.extend({
         this.relationships = this.options.entityConfig.data.relationships;
         this.force = this.options.force;
 
-        // input from user (prompts.js will fill them)
+        // user input (prompts.js will fill them)
         this.tableNameInput = null;
         this.columnsInput = [];
     },
@@ -74,14 +74,17 @@ module.exports = generator.extend({
         this.log(chalk.bold.bgYellow('fix-entity generator'));
         this.log(chalk.bold.yellow('initializing'));
 
-        this.composeWith('jhipster:modules',
+        this.composeWith(
+            'jhipster:modules',
             { jhipsterVar, jhipsterFunc },
-            this.options.testmode ? { local: require.resolve('generator-jhipster/generators/modules') } : null
+            this.options.testmode
+            ? { local: require.resolve('generator-jhipster/generators/modules') }
+            : null
         );
         this.appConfig = jhipsterVar.jhipsterConfig;
 
         // replace missing properties for testing
-        // for the reason why we have to do this, cf [issue #19](https://github.com/bastienmichaux/generator-jhipster-db-helper/issues/19)
+        // for the reason why we have to do this, see [issue #19](https://github.com/bastienmichaux/generator-jhipster-db-helper/issues/19)
         const configFile = path.join(__dirname, '/.yo-rc.json');
 
         if (!fs.existsSync(configFile)) {
@@ -90,10 +93,10 @@ module.exports = generator.extend({
 
         polyfill = this._getPolyfill(configFile)
         .then(
-            onFulfilled => {
+            (onFulfilled) => {
                 return onFulfilled;
             },
-            onRejected => {
+            (onRejected) => {
                 return onRejected;
             }
         );
@@ -119,18 +122,24 @@ module.exports = generator.extend({
          */
         const getLiquibaseFile = type => `${jhipsterVar.resourceDir}config/liquibase/changelog/${this.entityConfig.data.changelogDate}_added_${type}_${this.entityConfig.entityClass}.xml`;
 
+        /** replace the table names in the JHipster entity json files */
+        const replaceTableName = (paramFiles) => {
+            const newValue = this.tableNameInput || this.entityTableName;
+
+            jhipsterFunc.updateEntityConfig(paramFiles.config, 'entityTableName', newValue);
+
+            // We search either for our value or jhipster value, so it works even if user didn't accept JHipster overwrite after a regeneration
+            jhipsterFunc.replaceContent(paramFiles.ORM, `@Table(name = "${this.entityTableName}`, `@Table(name = "${newValue}`);
+            jhipsterFunc.replaceContent(paramFiles.liquibaseEntity, `<createTable tableName="${this.entityTableName}`, `<createTable tableName="${newValue}`);
+        };
+
         // TODO: freeze object (safely)
         const files = {
             config: this.entityConfig.filename,
             ORM: `${jhipsterVar.javaDir}domain/${this.entityConfig.entityClass}.java`,
-            liquibaseEntity: getLiquibaseFile('entity')
+            liquibaseEntity: getLiquibaseFile('entity'),
+            liquibaseConstraints: ''
         };
-
-        const filesArr = Object.keys(files);
-
-        if (dbh.hasConstraints(this.relationships)) {
-            files.liquibaseConstraints = getLiquibaseFile('entity_constraints');
-        }
 
         // @todo it would be nice to move this procedure to dbh.js but it will loose access to jhipsterFunc
         /**
@@ -151,15 +160,11 @@ module.exports = generator.extend({
             }
         };
 
-        const replaceTableName = (paramFiles) => {
-            const newValue = this.tableNameInput || this.entityTableName;
+        const filesArr = Object.keys(files);
 
-            jhipsterFunc.updateEntityConfig(paramFiles.config, 'entityTableName', newValue);
-
-            // We search either for our value or jhipster value, so it works even if user didn't accept JHipster overwrite after a regeneration
-            jhipsterFunc.replaceContent(paramFiles.ORM, `@Table(name = "${this.entityTableName}`, `@Table(name = "${newValue}`);
-            jhipsterFunc.replaceContent(paramFiles.liquibaseEntity, `<createTable tableName="${this.entityTableName}`, `<createTable tableName="${newValue}`);
-        };
+        if (dbh.hasConstraints(this.relationships)) {
+            files.liquibaseConstraints = getLiquibaseFile('entity_constraints');
+        }
 
         // verify files exist
         filesArr.forEach((file) => {
@@ -171,15 +176,17 @@ module.exports = generator.extend({
         replaceTableName(files);
 
         // Add/Change/Keep dbhColumnName for each field
-        if(this.force) {
+        if (this.force) {
             this.columnsInput = this.fields;
         }
+
         this.columnsInput.forEach((columnItem) => {
             const oldValue = columnItem.dbhColumnName;
-            if(!oldValue && this.force) {
+            const newValue = columnItem.columnNameInput || columnItem.dbhColumnName;
+
+            if (!oldValue && this.force) {
                 throw new Error('You used option --force with bad configuration file, it needs dbhColumnName for each field');
             }
-            const newValue = columnItem.columnNameInput || columnItem.dbhColumnName;
 
             updateKey(`"fieldName": "${columnItem.fieldName}"`, 'dbhColumnName', oldValue, newValue);
 
@@ -208,7 +215,7 @@ module.exports = generator.extend({
                 jhipsterFunc.replaceContent(files.liquibaseConstraints, `referencedTableName="${this.entityTableName}`, `referencedTableName="${this.tableNameInput}`);
                 jhipsterFunc.replaceContent(files.ORM, `inverseJoinColumns = @JoinColumn\\(name="(${columnName}|${oldValue})`, `inverseJoinColumns = @JoinColumn(name="${newValue}`, true);
             } else {
-                // We don't need to do anything about relationships which don't add any constraint.
+                // We don't need to do anything with the relationships if they don't add constraints.
                 return;
             }
 

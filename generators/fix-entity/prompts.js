@@ -11,7 +11,7 @@ module.exports = {
  * Ask the table name for an entity
  */
 function askForTableName() {
-    if(this.force) {
+    if (this.force) {
         return;
     }
 
@@ -22,7 +22,7 @@ function askForTableName() {
         {
             type: 'input',
             name: 'dbhTableName',
-            validate: (input => {
+            validate: ((input) => {
                 const prodDatabaseType = this.appConfig.prodDatabaseType;
                 return validateTableName(input, prodDatabaseType);
             }),
@@ -64,18 +64,16 @@ function askForColumnsName() {
 function askForColumnName(done) {
     const validateColumnName = dbh.validateColumnName;
 
-    const prompts = [
-        {
-            type: 'input',
-            name: 'dbhColumnName',
-            validate: (input => {
-                const prodDatabaseType = this.appConfig.prodDatabaseType;
-                return validateColumnName(input, prodDatabaseType);
-            }),
-            message: `What column name do you want for the field "${this.field.fieldName}" ?`,
-            default: this.field.dbhColumnName === undefined ? this.field.fieldNameAsDatabaseColumn : this.field.dbhColumnName
-        }
-    ];
+    const prompts = [{
+        type: 'input',
+        name: 'dbhColumnName',
+        validate: ((input) => {
+            const prodDatabaseType = this.appConfig.prodDatabaseType;
+            return validateColumnName(input, prodDatabaseType);
+        }),
+        message: `What column name do you want for the field "${this.field.fieldName}" ?`,
+        default: this.field.dbhColumnName === undefined ? this.field.fieldNameAsDatabaseColumn : this.field.dbhColumnName
+    }];
 
     this.prompt(prompts).then((props) => {
         this.field.columnNameInput = props.dbhColumnName;
