@@ -1,6 +1,7 @@
 /** constants used by tests */
 
 module.exports = {
+    /** relationships samples for testing dbh.hasConstraints */
     relationshipsSamples: {
         oneToOneOwner: [
             {
@@ -129,7 +130,9 @@ module.exports = {
     },
 
     /*
-     * these objects must be STRICTLY equal to the files
+     * Mocked-up .yo-rc.json files for testing
+     *
+     * WARN : these objects must be STRICTLY equal to the files
      * 'templates/default/usingGradle/.yo-rc.json'
      * 'templates/default/usingMaven/.yo-rc.json'
      * otherwise tests fail despite a correct implementation
@@ -203,7 +206,7 @@ module.exports = {
         }
     },
 
-    // files for testing generators/app/index.js _replaceNamingStrategies
+    /** files for testing generators/app/index.js .replaceNamingStrategies */
     templateFilesWithNamingStrategy: {
         usingGradle: [
             'templates/default/usingGradle/src/main/resources/config/application.yml',
