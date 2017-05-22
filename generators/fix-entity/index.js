@@ -1,6 +1,7 @@
 const chalk = require('chalk');
 const fs = require('fs');
 const generator = require('yeoman-generator');
+const path = require('path');
 
 const dbh = require('../dbh.js');
 const DBH_CONSTANTS = require('../dbh-constants.js');
@@ -75,9 +76,9 @@ module.exports = generator.extend({
 
         this.composeWith(
             'jhipster:modules',
-            {jhipsterVar, jhipsterFunc},
+            { jhipsterVar, jhipsterFunc },
             this.options.testmode
-            ? {local: require.resolve('generator-jhipster/generators/modules')}
+            ? { local: require.resolve('generator-jhipster/generators/modules') }
             : null
         );
         this.appConfig = jhipsterVar.jhipsterConfig;
@@ -92,10 +93,10 @@ module.exports = generator.extend({
 
         polyfill = this._getPolyfill(configFile)
         .then(
-            onFulfilled => {
+            (onFulfilled) => {
                 return onFulfilled;
             },
-            onRejected => {
+            (onRejected) => {
                 return onRejected;
             }
         );
@@ -132,6 +133,14 @@ module.exports = generator.extend({
             jhipsterFunc.replaceContent(paramFiles.liquibaseEntity, `<createTable tableName="${this.entityTableName}`, `<createTable tableName="${newValue}`);
         };
 
+        // TODO: freeze object (safely)
+        const files = {
+            config: this.entityConfig.filename,
+            ORM: `${jhipsterVar.javaDir}domain/${this.entityConfig.entityClass}.java`,
+            liquibaseEntity: getLiquibaseFile('entity'),
+            liquibaseConstraints: ''
+        };
+
         // @todo it would be nice to move this procedure to dbh.js but it will loose access to jhipsterFunc
         /**
          * Update the value associated with the key. If the key doesn't exist yet, creates it.
@@ -151,14 +160,6 @@ module.exports = generator.extend({
             }
         };
 
-        // TODO: freeze object (safely)
-        const files = {
-            config: this.entityConfig.filename,
-            ORM: `${jhipsterVar.javaDir}domain/${this.entityConfig.entityClass}.java`,
-            liquibaseEntity: getLiquibaseFile('entity'),
-            liquibaseConstraints: ''
-        };
-
         const filesArr = Object.keys(files);
 
         if (dbh.hasConstraints(this.relationships)) {
@@ -175,7 +176,7 @@ module.exports = generator.extend({
         replaceTableName(files);
 
         // Add/Change/Keep dbhColumnName for each field
-        if(this.force) {
+        if (this.force) {
             this.columnsInput = this.fields;
         }
 
@@ -183,7 +184,7 @@ module.exports = generator.extend({
             const oldValue = columnItem.dbhColumnName;
             const newValue = columnItem.columnNameInput || columnItem.dbhColumnName;
 
-            if(!oldValue && this.force) {
+            if (!oldValue && this.force) {
                 throw new Error('You used option --force with bad configuration file, it needs dbhColumnName for each field');
             }
 
@@ -202,21 +203,17 @@ module.exports = generator.extend({
             let newValue = null;
 
             if (relationshipItem.relationshipType === 'many-to-one' || (relationshipItem.relationshipType === 'one-to-one' && relationshipItem.ownerSide)) {
-
                 columnName = dbh.getColumnIdName(relationshipItem.relationshipName);
                 newValue = `${relationshipItem.relationshipName}_id`;
 
                 jhipsterFunc.replaceContent(files.liquibaseConstraints, `baseTableName="${this.entityTableName}`, `baseTableName="${this.tableNameInput}`);
-
             } else if (relationshipItem.relationshipType === 'many-to-many' && relationshipItem.ownerSide) {
-
                 columnName = dbh.getPluralColumnIdName(relationshipItem.relationshipName);
                 newValue = `${relationshipItem.relationshipNamePlural}_id`;
 
                 jhipsterFunc.replaceContent(files.liquibaseEntity, `\\<addPrimaryKey columnNames="${dbh.getPluralColumnIdName(this.entityTableName)}, (${columnName}|${oldValue})`, `<addPrimaryKey columnNames="${dbh.getPluralColumnIdName(this.entityTableName)}, ${newValue}`, true);
                 jhipsterFunc.replaceContent(files.liquibaseConstraints, `referencedTableName="${this.entityTableName}`, `referencedTableName="${this.tableNameInput}`);
                 jhipsterFunc.replaceContent(files.ORM, `inverseJoinColumns = @JoinColumn\\(name="(${columnName}|${oldValue})`, `inverseJoinColumns = @JoinColumn(name="${newValue}`, true);
-
             } else {
                 // We don't need to do anything with the relationships if they don't add constraints.
                 return;
