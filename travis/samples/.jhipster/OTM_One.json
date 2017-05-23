@@ -1,0 +1,28 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipName": "oTM_Many",
+            "otherEntityName": "oTM_Many",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "oTM_One"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "oneFieldName",
+            "dbhColumnName": "One_ELLAFieldName",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "oneSecondFieldName",
+            "dbhColumnName": "ELLA_SEcondFieldName",
+            "fieldType": "Integer"
+        }
+    ],
+    "changelogDate": "20170523094508",
+    "dto": "no",
+    "service": "no",
+    "entityTableName": "OTM_One",
+    "pagination": "no"
+}
