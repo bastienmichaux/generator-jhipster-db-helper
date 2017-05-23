@@ -10,6 +10,8 @@ yo jhipster:entity DressedTable --force
 yo jhipster:entity OTO_Slave --force
 yo jhipster:entity OTO_Owner --force
 
+mvn test
+
 # 2 entities without fields, OTM, jhipster values
 # 2 entities without fields, OTM, stress values
 
