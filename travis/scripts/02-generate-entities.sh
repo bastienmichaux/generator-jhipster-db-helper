@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -ev
 # Generate several sets of entities and launch tests after each cases
 
 # Entity without fields, jhipster value
