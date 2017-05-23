@@ -13,4 +13,5 @@ cp "$JHIPSTER_SAMPLES/minimalist-app/.yo-rc.json" .
 yarn link generator-jhipster-db-helper
 yo jhipster
 yo jhipster-db-helper --force
-mvn test
+
+

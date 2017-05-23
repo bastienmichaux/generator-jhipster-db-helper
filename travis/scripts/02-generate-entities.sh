@@ -2,12 +2,6 @@
 set -ev
 # Generate several sets of entities and launch tests after each cases
 
-# Entity without fields, jhipster value
-# Entity without fields, stress value
-
-# Entity with fields, jhipster values
-# Entity with fields, stress values
-
 # 2 entities without fields, OTO, jhipster values
 # 2 entities without fields, OTO, stress values
 
