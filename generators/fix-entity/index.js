@@ -147,9 +147,7 @@ module.exports = generator.extend({
             }
         };
 
-        const replaceTableName = (paramFiles) => {
-            const newValue = this.tableNameInput || this.entityTableName;
-
+        const replaceTableName = (paramFiles, newValue) => {
             jhipsterFunc.updateEntityConfig(paramFiles.config, 'entityTableName', newValue);
 
             // We search either for our value or jhipster value, so it works even if user didn't accept JHipster overwrite after a regeneration
@@ -176,13 +174,14 @@ module.exports = generator.extend({
             }
         });
         */
-
-        replaceTableName(files);
-
-        // Add/Change/Keep dbhColumnName for each field
         if(this.force) {
+            this.tableNameInput = this.entityTableName;
             this.columnsInput = this.fields;
         }
+
+        replaceTableName(files, this.tableNameInput);
+
+        // Add/Change/Keep dbhColumnName for each field
         this.columnsInput.forEach((columnItem) => {
             const oldValue = columnItem.dbhColumnName;
             if(!oldValue && this.force) {
