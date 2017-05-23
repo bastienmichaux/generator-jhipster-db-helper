@@ -27,9 +27,9 @@ const constants = {
     /** supported build tools */
     buildTools: ['maven', 'gradle'],
 
-    oracleTableNameLength: {
-        hard: 26,
-        soft: 14
+    oracleLimitations: {
+        tableNameHardMaxLength: 26,
+        tableNameSoftMaxLength: 14
     },
 
     /** database types supported by JHipster */

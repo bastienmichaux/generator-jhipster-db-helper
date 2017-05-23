@@ -1,21 +1,20 @@
 const DBH_CONSTANTS = require('./dbh-constants');
-const fs = require('fs');
 const jhipsterCore = require('jhipster-core');
 const pluralize = require('pluralize');
+const fs = require('fs');
+
 
 /**
  * return the missing property jhipsterVar.jhipsterConfig for unit tests
- *
- * @param configFilePath : path to .yo-rc.json
+ * @param path : path to .yo-rc.json
  */
 const getAppConfig = configFilePath => new Promise((resolve, reject) => {
     // if file exists, return it as a JSON object
     if (fs.existsSync(configFilePath)) {
         fs.readFile(configFilePath, 'utf8', (err, data) => {
             if (err) {
-                reject(new Error(`getAppConfig: readFile threw an error.\n${err}`));
+                reject(new Error(err));
             }
-
             const appConfigToJson = JSON.parse(data);
 
             // handle undefined object
@@ -65,19 +64,14 @@ const hibernateSnakeCase = (value) => {
 const isValidBuildTool = buildTool => DBH_CONSTANTS.buildTools.includes(buildTool);
 
 
+// We need the two following functions to be able to find JHipster generated values and match them in a search and replace.
 /**
- * This function and getPluralColumnIdName are needed to
- * find JHipster generated values and match them in a search and replace.
- *
  * @param create a column id name from the relationship name
  */
 const getColumnIdName = name => `${hibernateSnakeCase(name)}_id`;
 
 
 /**
- * This function and getColumnIdName are needed to
- * find JHipster generated values and match them in a search and replace.
- *
  * @param create a column id name from the relationship name for a to-many relationship (either one-to-many or many-to-many)
  */
 const getPluralColumnIdName = name => getColumnIdName(pluralize(name));
@@ -101,7 +95,6 @@ const getFilesWithNamingStrategy = (buildTool) => {
     // including those specific to the application build tool
     const baseFiles = DBH_CONSTANTS.filesWithNamingStrategy.base;
     const result = baseFiles.concat(DBH_CONSTANTS.filesWithNamingStrategy[buildTool]);
-
     return result;
 };
 
@@ -116,7 +109,7 @@ const getFilesWithNamingStrategy = (buildTool) => {
  * @todo type checking on parameter, replace 'for of' with an array method, complex condition could be rewritten as a function
  */
 const hasConstraints = (relationships) => {
-    if (!Array.isArray(relationships)) {
+    if (!Array.isArray((relationships))) {
         throw new TypeError(`hasConstraints: 'relationships' parameter must be an array, was ${typeof relationships}`);
     }
 
@@ -141,7 +134,7 @@ const hasConstraints = (relationships) => {
  *
  * Note : Currently unused, remove if no uses in the future
  */
-const isNotEmptyString = str => (typeof str === 'string') && (str !== '');
+const isNotEmptyString = x => typeof x === 'string' && x !== '';
 
 
 /** Validate user input when asking for a SQL column name */
@@ -150,10 +143,9 @@ const validateColumnName = (input, dbType) => {
         return 'Your column name cannot be empty';
     } else if (!/^([a-zA-Z0-9_]*)$/.test(input)) {
         return 'Your column name cannot contain special characters';
-    } else if (dbType === 'oracle' && input.length > DBH_CONSTANTS.oracleTableNameLength.hard) {
+    } else if (dbType === 'oracle' && input.length > DBH_CONSTANTS.oracleLimitations.tableNameHardMaxLength) {
         return 'Your column name is too long for Oracle, try a shorter name';
     }
-
     return true;
 };
 
@@ -168,9 +160,9 @@ const validateTableName = (input, dbType) => {
         return 'The table name cannot be empty';
     } else if (!/^([a-zA-Z0-9_]*)$/.test(input)) {
         return 'The table name cannot contain special characters';
-    } else if (dbType === 'oracle' && input.length > DBH_CONSTANTS.oracleTableNameLength.hard) {
+    } else if (dbType === 'oracle' && input.length > DBH_CONSTANTS.oracleLimitations.tableNameHardMaxLength) {
         return 'The table name is too long for Oracle, try a shorter name';
-    } else if (dbType === 'oracle' && input.length > DBH_CONSTANTS.oracleTableNameLength.soft) {
+    } else if (dbType === 'oracle' && input.length > DBH_CONSTANTS.oracleLimitations.tableNameSoftMaxLength) {
         return 'The table name is long for Oracle, long table names can cause issues when used to create constraint names and join table names';
     } else if (jhipsterCore.isReservedTableName(input, dbType)) {
         return `'${input}' is a ${dbType} reserved keyword.`;
