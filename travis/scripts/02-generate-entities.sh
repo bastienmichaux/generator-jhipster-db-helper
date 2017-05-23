@@ -2,6 +2,9 @@
 set -ev
 # Generate several sets of entities and launch tests after each cases
 
+cd minimalist-app
+cp -t .jhipster "$JHIPSTER_SAMPLES/.jhipster/NakedTable.json" "$JHIPSTER_SAMPLES/.jhipster/DressedTable.json" "$JHIPSTER_SAMPLES/.jhipster/OTO_Slave.json" "$JHIPSTER_SAMPLES/.jhipster/OTO_Owner.json"
+
 # 2 entities without fields, OTO, jhipster values
 # 2 entities without fields, OTO, stress values
 
