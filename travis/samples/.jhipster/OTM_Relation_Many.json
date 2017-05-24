@@ -1,0 +1,24 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipName": "relOne",
+            "dbhRelationshipId": "relOne_id",
+            "otherEntityName": "oTM_Relation_One",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "name"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "title",
+            "dbhColumnName": "CoverTitle",
+            "fieldType": "String"
+        }
+    ],
+    "changelogDate": "20170524131407",
+    "dto": "no",
+    "service": "no",
+    "entityTableName": "otmRelMany",
+    "pagination": "no"
+}

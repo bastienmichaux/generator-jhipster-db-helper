@@ -3,7 +3,7 @@
     "relationships": [
         {
             "relationshipName": "relOwner",
-            "otherEntityName": "relation_Owner",
+            "otherEntityName": "mTM_Relation_Owner",
             "relationshipType": "many-to-many",
             "ownerSide": false,
             "otherEntityRelationshipName": "relSlave"
@@ -16,9 +16,9 @@
             "fieldType": "String"
         }
     ],
-    "changelogDate": "20170524093501",
+    "changelogDate": "20170524133503",
     "dto": "no",
     "service": "no",
-    "entityTableName": "RelationshipSlave",
+    "entityTableName": "relSlave",
     "pagination": "no"
 }
