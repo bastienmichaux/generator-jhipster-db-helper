@@ -133,7 +133,7 @@ module.exports = generator.extend({
          * Update the value associated with the key. If the key doesn't exist yet, creates it.
          * To do so it checks the oldValue, undefined will be understood as if the key doesn't exist.
          *
-         * @param landmark - the value beneath which it will add the key if not existent
+         * @param landmark - the value beneath which it will add the key is not existent
          * @param key - the one it operates on
          * @param oldValue - the value associated to the key before the execution of this procedure (can be undefined)
          * @param newValue - the value to associate to the key, replace oldValue if any
