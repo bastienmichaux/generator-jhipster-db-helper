@@ -4,7 +4,7 @@
         {
             "relationshipName": "relSlave",
             "dbhRelationshipId": "relSlaves_id",
-            "otherEntityName": "relation_Slave",
+            "otherEntityName": "mTM_Relation_Slave",
             "relationshipType": "many-to-many",
             "otherEntityField": "name",
             "ownerSide": true,
@@ -18,9 +18,9 @@
             "fieldType": "String"
         }
     ],
-    "changelogDate": "20170524093651",
+    "changelogDate": "20170524133610",
     "dto": "no",
     "service": "no",
-    "entityTableName": "RelationshipOwner",
+    "entityTableName": "relOwner",
     "pagination": "no"
 }

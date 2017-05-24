@@ -8,31 +8,26 @@ cp -t .jhipster "$JHIPSTER_SAMPLES/.jhipster/DressedTable.json"
 cp -t .jhipster "$JHIPSTER_SAMPLES/.jhipster/OTO_Slave.json" "$JHIPSTER_SAMPLES/.jhipster/OTO_Owner.json"
 cp -t .jhipster "$JHIPSTER_SAMPLES/.jhipster/OTM_One.json" "$JHIPSTER_SAMPLES/.jhipster/OTM_Many.json"
 cp -t .jhipster "$JHIPSTER_SAMPLES/.jhipster/MTM_Slave.json" "$JHIPSTER_SAMPLES/.jhipster/MTM_Owner.json"
-cp -t .jhipster "$JHIPSTER_SAMPLES/.jhipster/Relation_Slave.json" "$JHIPSTER_SAMPLES/.jhipster/Relation_Owner.json"
+cp -t .jhipster "$JHIPSTER_SAMPLES/.jhipster/MTM_Relation_Slave.json" "$JHIPSTER_SAMPLES/.jhipster/MTM_Relation_Owner.json"
+cp -t .jhipster "$JHIPSTER_SAMPLES/.jhipster/OTM_Relation_One.json" "$JHIPSTER_SAMPLES/.jhipster/OTM_Relation_Many.json"
 
 yo jhipster:entity NakedTable --force
+
 yo jhipster:entity DressedTable --force
+
 yo jhipster:entity OTO_Slave --force
 yo jhipster:entity OTO_Owner --force
+
 yo jhipster:entity MTM_Slave --force
 yo jhipster:entity MTM_Owner --force
+
 yo jhipster:entity OTM_One --force
 yo jhipster:entity OTM_Many --force
-yo jhipster:entity Relation_Slave --force
-yo jhipster:entity Relation_Owner --force
+
+yo jhipster:entity MTM_Relation_Slave --force
+yo jhipster:entity MTM_Relation_Owner --force
+
+yo jhipster:entity OTM_Relation_One --force
+yo jhipster:entity OTM_Relation_Many --force
 
 mvn test
-
-# 2 entities without fields, OTM, jhipster values
-# 2 entities without fields, OTM, stress values
-
-# 2 entities without fields, MTM, jhipster values
-# 2 entities without fields, MTM, stress values
-
-# 2 entities with fields, OTM, jhipster values
-# 2 entities with fields, OTM, stress values
-
-# 2 entities with fields, MTM, jhipster values
-# 2 entities with fields, MTM, stress values
-
-# 1 set with real cases

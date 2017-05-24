@@ -1,0 +1,23 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipName": "relMany",
+            "otherEntityName": "oTM_Relation_Many",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "relOne"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "name",
+            "dbhColumnName": "PenName",
+            "fieldType": "String"
+        }
+    ],
+    "changelogDate": "20170524131214",
+    "dto": "no",
+    "service": "no",
+    "entityTableName": "otmRelOne",
+    "pagination": "no"
+}
