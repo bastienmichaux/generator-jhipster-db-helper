@@ -1,6 +1,6 @@
 # generator-jhipster-db-helper
 
-[![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url] [![Join the chat at https://gitter.im/generator-jhipster-db-helper/Lobby](https://badges.gitter.im/generator-jhipster-db-helper/Lobby.svg)](https://gitter.im/generator-jhipster-db-helper/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url] [![Join the chat at https://gitter.im/generator-jhipster-db-helper/Lobby][gitter-img]][gitter-url]
 
 This JHipster module makes mapping on an existing database easier.
 If you're not aware of the difficulties of using an existing database with JHipster, read [this](whatAndWhy.md)
@@ -85,7 +85,7 @@ Check our [notes](whatAndWhy.md)
 
 ## Contact
 
-[![Join the chat at https://gitter.im/generator-jhipster-db-helper/Lobby](https://badges.gitter.im/generator-jhipster-db-helper/Lobby.svg)](https://gitter.im/generator-jhipster-db-helper/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Join the chat at https://gitter.im/generator-jhipster-db-helper/Lobby][gitter-img]][gitter-url]
 
 ## License
 
@@ -99,6 +99,8 @@ Adrien Horgnies & Bastien Michaux
 [travis-url]: https://travis-ci.org/bastienmichaux/generator-jhipster-db-helper
 [daviddm-image]: https://david-dm.org/bastienmichaux/generator-jhipster-db-helper.svg?theme=shields.io
 [daviddm-url]: https://david-dm.org/bastienmichaux/generator-jhipster-module
+[gitter-url]: https://gitter.im/generator-jhipster-db-helper/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
+[gitter-img]: https://badges.gitter.im/generator-jhipster-db-helper/Lobby.svg
 
 [demo-picture]:https://cloud.githubusercontent.com/assets/7291317/25616627/40ffe10a-2f3e-11e7-832e-b04ec645a48c.png
 [demo-JPA-picture]:https://cloud.githubusercontent.com/assets/7291317/25616642/53d92f7a-2f3e-11e7-9794-a4d7131ad8a9.png
