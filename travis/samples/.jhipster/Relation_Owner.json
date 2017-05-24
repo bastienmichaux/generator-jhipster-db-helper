@@ -1,0 +1,26 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipName": "relSlave",
+            "dbhRelationshipId": "relSlaves_id",
+            "otherEntityName": "relation_Slave",
+            "relationshipType": "many-to-many",
+            "otherEntityField": "name",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "relOwner"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "title",
+            "dbhColumnName": "CoverTitle",
+            "fieldType": "String"
+        }
+    ],
+    "changelogDate": "20170524093651",
+    "dto": "no",
+    "service": "no",
+    "entityTableName": "RelationshipOwner",
+    "pagination": "no"
+}
