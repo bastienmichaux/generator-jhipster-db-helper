@@ -63,6 +63,7 @@ module.exports = generator.extend({
         // All information from entity generator
         this.entityConfig = this.options.entityConfig;
         this.entityTableName = this.options.entityConfig.entityTableName;
+        this.entityClass = this.options.entityConfig.entityClass;
         this.fields = this.options.entityConfig.data.fields;
         this.relationships = this.options.entityConfig.data.relationships;
         this.force = this.options.force;
@@ -84,17 +85,17 @@ module.exports = generator.extend({
         this.appConfig = jhipsterVar.jhipsterConfig;
 
         /* / TODO remove on prod
-         this.prodDatabaseType = jhipsterVar.prodDatabaseType;
-         this.log(chalk.blue('<<<<<BEFORE'));
-         this.log(chalk.blue('entityConfig'));
-         this.log(this.entityConfig);
-         this.log(chalk.blue('fields'));
-         this.log(this.fields);
-         this.log(chalk.blue('relations'));
-         this.log(this.options.entityConfig.data.relationships);
-         this.log(chalk.blue('jhipsterVar'));
-         this.log(jhipsterVar);
-         //*/
+        this.prodDatabaseType = jhipsterVar.prodDatabaseType;
+        this.log(chalk.blue('<<<<<BEFORE'));
+        this.log(chalk.blue('entityConfig'));
+        this.log(this.entityConfig);
+        this.log(chalk.blue('fields'));
+        this.log(this.fields);
+        this.log(chalk.blue('relations'));
+        this.log(this.options.entityConfig.data.relationships);
+        this.log(chalk.blue('jhipsterVar'));
+        this.log(jhipsterVar);
+        //*/
     },
 
 
@@ -202,6 +203,7 @@ module.exports = generator.extend({
 
             let columnName = null;
             let newValue = null;
+            let initialTableIdName = null;
 
             if (relationshipItem.relationshipType === 'many-to-one' || (relationshipItem.relationshipType === 'one-to-one' && relationshipItem.ownerSide)) {
                 columnName = dbh.getColumnIdName(relationshipItem.relationshipName);
@@ -211,8 +213,9 @@ module.exports = generator.extend({
             } else if (relationshipItem.relationshipType === 'many-to-many' && relationshipItem.ownerSide) {
                 columnName = dbh.getPluralColumnIdName(relationshipItem.relationshipName);
                 newValue = `${relationshipItem.relationshipNamePlural}_id`;
+                initialTableIdName = dbh.getPluralColumnIdName(this.entityClass);
 
-                jhipsterFunc.replaceContent(files.liquibaseEntity, `\\<addPrimaryKey columnNames="${dbh.getPluralColumnIdName(this.entityTableName)}, (${columnName}|${oldValue})`, `<addPrimaryKey columnNames="${dbh.getPluralColumnIdName(this.entityTableName)}, ${newValue}`, true);
+                jhipsterFunc.replaceContent(files.liquibaseEntity, `\\<addPrimaryKey columnNames="${initialTableIdName}, (${columnName}|${oldValue})`, `<addPrimaryKey columnNames="${initialTableIdName}, ${newValue}`, true);
                 jhipsterFunc.replaceContent(files.liquibaseConstraints, `referencedTableName="${this.entityTableName}`, `referencedTableName="${this.tableNameInput}`);
                 jhipsterFunc.replaceContent(files.ORM, `inverseJoinColumns = @JoinColumn\\(name="(${columnName}|${oldValue})`, `inverseJoinColumns = @JoinColumn(name="${newValue}`, true);
             } else {
