@@ -1,0 +1,24 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipName": "relOwner",
+            "otherEntityName": "relation_Owner",
+            "relationshipType": "many-to-many",
+            "ownerSide": false,
+            "otherEntityRelationshipName": "relSlave"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "name",
+            "dbhColumnName": "PenName",
+            "fieldType": "String"
+        }
+    ],
+    "changelogDate": "20170524093501",
+    "dto": "no",
+    "service": "no",
+    "entityTableName": "RelationshipSlave",
+    "pagination": "no"
+}
