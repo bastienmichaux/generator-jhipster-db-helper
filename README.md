@@ -1,6 +1,6 @@
 # generator-jhipster-db-helper
 
-[![NPM version][npm-image]][npm-url] <!-- [![Build Status][travis-image]][travis-url] --> [![Dependency Status][daviddm-image]][daviddm-url] [![Join the chat at https://gitter.im/generator-jhipster-db-helper/Lobby](https://badges.gitter.im/generator-jhipster-db-helper/Lobby.svg)](https://gitter.im/generator-jhipster-db-helper/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url] [![Join the chat at https://gitter.im/generator-jhipster-db-helper/Lobby](https://badges.gitter.im/generator-jhipster-db-helper/Lobby.svg)](https://gitter.im/generator-jhipster-db-helper/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 This JHipster module makes mapping on an existing database easier.
 If you're not aware of the difficulties of using an existing database with JHipster, read [this](whatAndWhy.md)
