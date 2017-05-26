@@ -22,6 +22,54 @@ It enables the user to input values corresponding to its existing database and i
 Without this module, you would have to modify each value by hand.
 Count all your tables and your fields, sum everything, multiply by 2 or more (depending on the relations) and this is the number of modifications this module will spare you.
 
+## Usage
+
+Generate an application with `yo jhipster`, run our module with `yo jhipster-db-helper` and you're done.
+Our module will run as a post app/entity hook and you'll have to answer its questions.
+
+However, you can use the option `--force` from Yeoman when generating an entity, provided that you have a configuration file including our module fields for this entity.
+Our module will interpret the option and look for values into the corresponding entity configuration file rather than from user input.
+
+So the following will work :
+
+```shell
+$ cat .jhipster/OTM_Relation_Many.json
+```
+
+```json
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipName": "relOne",
+            "dbhRelationshipId": "relOne_id",
+            "otherEntityName": "oTM_Relation_One",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "name"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "title",
+            "dbhColumnName": "CoverTitle",
+            "fieldType": "String"
+        }
+    ],
+    "changelogDate": "20170524131407",
+    "dto": "no",
+    "service": "no",
+    "entityTableName": "otmRelMany",
+    "pagination": "no"
+}
+```
+
+```shell
+$ yo jhipster:entity OTM_Relation_Many --force
+```
+
+Note that if it's the first time you generate an entity, the field `"dbhRelationshipId"` is optional.
+So you're good to ignore this field if you want to write the configuration files yourself.
+
 ## Installation
 
 ### Prerequisites
