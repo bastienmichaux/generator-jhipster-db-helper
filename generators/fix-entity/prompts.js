@@ -55,7 +55,7 @@ function askForIdName() {
             default: 'id'
         }
     ]).then((props) => {
-        this.IdNameInput = props.dbhIdName;
+        this.idNameInput = props.dbhIdName;
         done();
     });
 }

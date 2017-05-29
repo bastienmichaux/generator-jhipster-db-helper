@@ -39,7 +39,7 @@ module.exports = generator.extend({
 
         // input from user (prompts.js will fill them)
         this.tableNameInput = null;
-        this.IdNameInput = null;
+        this.idNameInput = null;
         this.columnsInput = [];
     },
 
@@ -114,6 +114,10 @@ module.exports = generator.extend({
             jhipsterFunc.replaceContent(paramFiles.liquibaseEntity, `<createTable tableName="${this.entityTableName}`, `<createTable tableName="${newValue}`);
         };
 
+        const replaceIdName = (paramFiles, newValue) => {
+            jhipsterFunc.updateEntityConfig(paramFiles.config, 'dbhIdName', newValue);
+        };
+
         // verify files exist
         filesArr.forEach((file) => {
             if (!fs.existsSync(files[file])) {
@@ -129,6 +133,7 @@ module.exports = generator.extend({
         replaceTableName(files, this.tableNameInput);
 
         // Add/Change/Keep dbhRelationshipId
+        replaceIdName(files, this.idNameInput);
 
         // Add/Change/Keep dbhColumnName for each field
         this.columnsInput.forEach((columnItem) => {
