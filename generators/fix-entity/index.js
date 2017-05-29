@@ -39,6 +39,7 @@ module.exports = generator.extend({
 
         // input from user (prompts.js will fill them)
         this.tableNameInput = null;
+        this.IdNameInput = null;
         this.columnsInput = [];
     },
 
@@ -57,6 +58,7 @@ module.exports = generator.extend({
     // prompt the user for options
     prompting: {
         askForTableName: prompts.askForTableName,
+        askForIdName: prompts.askForIdName,
         askForColumnsName: prompts.askForColumnsName
     },
 
@@ -125,6 +127,8 @@ module.exports = generator.extend({
         }
 
         replaceTableName(files, this.tableNameInput);
+
+        // Add/Change/Keep dbhRelationshipId
 
         // Add/Change/Keep dbhColumnName for each field
         this.columnsInput.forEach((columnItem) => {
