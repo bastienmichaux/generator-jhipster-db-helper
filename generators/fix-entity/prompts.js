@@ -52,7 +52,7 @@ function askForIdName() {
                 return validateColumnName(input, prodDatabaseType);
             }),
             message: 'What id name do you want for this entity ?',
-            default: 'id'
+            default: this.dbhIdName ? this.dbhIdName : 'id'
         }
     ]).then((props) => {
         this.idNameInput = props.dbhIdName;

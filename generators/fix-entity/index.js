@@ -33,6 +33,7 @@ module.exports = generator.extend({
         this.entityConfig = this.options.entityConfig;
         this.entityTableName = this.options.entityConfig.entityTableName;
         this.entityClass = this.options.entityConfig.entityClass;
+        this.dbhIdName = this.options.entityConfig.data.dbhIdName;
         this.fields = this.options.entityConfig.data.fields;
         this.relationships = this.options.entityConfig.data.relationships;
         this.force = this.options.force;
