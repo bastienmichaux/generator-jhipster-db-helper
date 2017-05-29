@@ -38,6 +38,10 @@ module.exports = generator.extend({
         this.relationships = this.options.entityConfig.data.relationships;
         this.force = this.options.force;
 
+        if (this.force && !this.dbhIdName) {
+            throw new Error('You\'ve used option "--force" with an invalid configuration file, fix-entity stops his execution');
+        }
+
         // input from user (prompts.js will fill them)
         this.tableNameInput = null;
         this.idNameInput = null;
@@ -139,9 +143,6 @@ module.exports = generator.extend({
         // Add/Change/Keep dbhColumnName for each field
         this.columnsInput.forEach((columnItem) => {
             const oldValue = columnItem.dbhColumnName;
-            if (!oldValue && this.force) {
-                throw new Error('You used option --force with bad configuration file, it needs dbhColumnName for each field');
-            }
             const newValue = columnItem.columnNameInput || columnItem.dbhColumnName;
 
             updateKey(`"fieldName": "${columnItem.fieldName}"`, 'dbhColumnName', oldValue, newValue);
