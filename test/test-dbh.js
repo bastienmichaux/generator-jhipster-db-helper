@@ -6,7 +6,7 @@ const assert = require('yeoman-assert');
 const path = require('path');
 
 const dbh = require('../generators/dbh.js');
-const DBH_TEST_CONSTANTS = require('../generators/dbh-test-constants');
+const DBH_TEST_CONSTANTS = require('./test-constants.js');
 
 
 // Dbh unit test
