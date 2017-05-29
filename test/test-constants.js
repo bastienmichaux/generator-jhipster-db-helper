@@ -220,7 +220,17 @@ module.exports = {
     },
 
     testCases: {
+        usingGradle: 'usingGradle',
+        usingMaven: 'usingMaven'
+    },
+
+    testConfigDir: {
         usingGradle: 'test/templates/default/usingGradle',
         usingMaven: 'test/templates/default/usingMaven'
+    },
+
+    testConfigFiles: {
+        usingGradle: 'test/templates/default/usingGradle/.yo-rc.json',
+        usingMaven: 'test/templates/default/usingMaven/.yo-rc.json'
     }
 };
