@@ -42,10 +42,17 @@ module.exports = generator.extend({
             throw new Error('You\'ve used option "--force" with an invalid configuration file, fix-entity stops his execution');
         }
 
-        // input from user (prompts.js will fill them)
-        this.tableNameInput = null;
-        this.idNameInput = null;
-        this.columnsInput = [];
+        if (this.force) {
+            // use value from configuration file, don't get input from user
+            this.tableNameInput = this.entityTableName;
+            this.idNameInput = this.dbhIdName;
+            this.columnsInput = this.fields;
+        } else {
+            // input from user (prompts.js will fill them)
+            this.tableNameInput = null;
+            this.idNameInput = null;
+            this.columnsInput = [];
+        }
     },
 
     // check current project state, get configs, etc
@@ -129,11 +136,6 @@ module.exports = generator.extend({
                 throw new Error(`JHipster-db-helper : File not found (${file}: ${files[file]}).`);
             }
         });
-
-        if (this.force) {
-            this.tableNameInput = this.entityTableName;
-            this.columnsInput = this.fields;
-        }
 
         replaceTableName(files, this.tableNameInput);
 
