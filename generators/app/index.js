@@ -146,7 +146,8 @@ module.exports = class extends Generator {
         const getFilesAbsolutePath = () => {
             let arr = [];
 
-            if (this.dbhTestCase !== null) {
+            // will be true if a testCase has been passed
+            if (this.dbhTestCase) {
                 files.forEach((value) => {
                     arr.push(path.join(DBH_TEST_CONSTANTS.testConfigDir[this.dbhTestCase], value));
                 });
@@ -252,6 +253,9 @@ module.exports = class extends Generator {
                 this.clientFramework = jhipsterVar.clientFramework || polyfill.clientFramework;
                 this.clientPackageManager = jhipsterVar.clientPackageManager || polyfill.clientPackageManager;
                 this.message = this.props.message;
+
+                // TODO : fix the following error
+                // 'TypeError: this.log is not a function'
 
                 try {
                     jhipsterFunc.registerModule('generator-jhipster-db-helper', 'app', 'post', 'app', 'A JHipster module for already existing databases');

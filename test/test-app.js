@@ -69,8 +69,6 @@ describe('Post app hook', function () {
 
             // files copied in temporaryFolder
             const files = fs.readdirSync(folder);
-            console.log('==================================');
-            console.log(files);
 
             // grab from the copied files only those who have the naming strategies
             const testedFiles = [
