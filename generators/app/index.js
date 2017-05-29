@@ -55,12 +55,14 @@ module.exports = class extends Generator {
      * when testing with npm test, this function returns a config file for the given test case
      * when used normally, this function returns the current application .yo-rc.json
      */
-    _getConfigFilePath (testCase) {    let filePath = null;
+    _getConfigFilePath (testCase) {
+        let filePath = null;
+
         if (typeof testCase !== 'string') {
             throw new TypeError(`_getConfigFilePath: testCase parameter: expected type 'string', was instead '${typeof testCase}'`);
         }
 
-        if (testCase === null) {
+        if (testCase === '') {
             filePath = path.join(__dirname, '/.yo-rc.json');
         }
         else if (testCase === DBH_TEST_CONSTANTS.testCases.usingMaven) {
@@ -180,7 +182,7 @@ module.exports = class extends Generator {
         this.option('dbhTestCase', {
             desc: 'Test case for this module\'s npm test',
             type: String,
-            defaults: null
+            defaults: ''
         });
 
         this.dbhTestCase = this.options.dbhTestCase;
