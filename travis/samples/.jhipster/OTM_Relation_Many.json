@@ -20,5 +20,6 @@
     "dto": "no",
     "service": "no",
     "entityTableName": "otmRelMany",
-    "pagination": "no"
+    "pagination": "no",
+    "dbhIdName": "id"
 }

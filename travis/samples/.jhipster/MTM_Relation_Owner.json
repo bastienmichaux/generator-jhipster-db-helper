@@ -22,5 +22,6 @@
     "dto": "no",
     "service": "no",
     "entityTableName": "relOwner",
-    "pagination": "no"
+    "pagination": "no",
+    "dbhIdName": "id"
 }
