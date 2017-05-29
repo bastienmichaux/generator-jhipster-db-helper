@@ -1,13 +1,11 @@
 /* global describe, beforeEach, it*/
+/* eslint-disable prefer-arrow-callback */
 
-const path = require('path');
-const fse = require('fs-extra');
-const assert = require('yeoman-assert');
-const helpers = require('yeoman-test');
 const _ = require('lodash');
+const assert = require('yeoman-assert');
+const path = require('path');
 
 const dbh = require('../generators/dbh.js');
-const DBH_CONSTANTS = require('../generators/dbh-constants');
 const DBH_TEST_CONSTANTS = require('../generators/dbh-test-constants');
 
 
@@ -17,9 +15,9 @@ describe('Dbh', function () {
         it('returns the expected app config with Maven as build tool', function () {
             const expectedConfig = DBH_TEST_CONSTANTS.templateConfigFile.usingMaven;
             const f = path.join(__dirname, 'templates/default/usingMaven/.yo-rc.json');
-            
+
             assert.file(f);
-            
+
             return dbh.getAppConfig(f)
             .catch(err => console.error(err))
             .then(onFulfilled => {
@@ -37,22 +35,32 @@ describe('Dbh', function () {
 
             return dbh.getAppConfig(f)
             .catch(err => console.error(err))
-            .then(onFulfilled => {
+            .then((onFulfilled) => {
                 assert(typeof onFulfilled === 'object');
                 assert.deepStrictEqual(expectedConfig, onFulfilled);
-            }, onRejected => {
+            }, (onRejected) => {
                 console.log(onRejected);
             });
         });
         it('throws when a file is not found', function () {
             return dbh.getAppConfig('foo.bar')
-            .then(onFulfilled => {
+            .then((onFulfilled) => {
                 throw new Error('Promise should have been rejected but was instead fulfilled');
-            }, onRejected => {
+            }, (onRejected) => {
                 assert(onRejected instanceof Error);
             });
         });
-        it('throws when the output file is no correct json');
+        it('throws when the output file is no correct json', function () {
+            return dbh.getAppConfig('./templates/default/usingMaven/pom.xml')
+            .then(
+                (onFulfilled) => {
+                    throw new Error('Promise should have been rejected but was instead fulfilled');
+                },
+                (onRejected) => {
+                    assert(onRejected instanceof Error);
+                }
+            );
+        });
     });
     describe('getColumnIdName', function () {
         it('works as expected with treacherous input', function () {
@@ -67,7 +75,7 @@ describe('Dbh', function () {
         });
     });
     describe('getFilesWithNamingStrategy', function () {
-        it(`excludes the Gradle file(s) when given 'maven' as parameter`, function () {
+        it('excludes the Gradle file(s) when given "maven" as parameter', function () {
             // compare sorted arrays (index is irrelevant)
             const files = dbh.getFilesWithNamingStrategy('maven').sort();
             const expectedArray = [
@@ -77,7 +85,7 @@ describe('Dbh', function () {
             ].sort();
             assert(_.isEqual(files, expectedArray));
         });
-        it(`excludes the Maven file(s) when given 'gradle' as parameter`, function () {
+        it('excludes the Maven file(s) when given "gradle" as parameter', function () {
             // compare sorted arrays (index is irrelevant)
             const files = dbh.getFilesWithNamingStrategy('gradle').sort();
             const expectedArray = [
@@ -89,7 +97,7 @@ describe('Dbh', function () {
         });
         it('throws when given an unknown build tool', function () {
             assert.throws(() => {
-                let foo = dbh.getFilesWithNamingStrategy('foo');
+                let foo = dbh.getFilesWithNamingStrategy('foo'); // eslint-disable-line no-unused-vars, prefer-const
             }, Error);
         });
     });
