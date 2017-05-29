@@ -17,8 +17,6 @@ const jhipsterVar = {
 // Stores JHipster functions
 const jhipsterFunc = {};
 
-// polyfill for jhipsterVar and jhipsterFunc when testing, see [issue #19](https://github.com/bastienmichaux/generator-jhipster-db-helper/issues/19)
-let polyfill = {};
 
 module.exports = generator.extend({
     /**
@@ -94,24 +92,6 @@ module.exports = generator.extend({
         this.log(chalk.blue('jhipsterVar'));
         this.log(jhipsterVar);
         //*/
-        // replace missing properties for testing
-        // for the reason why we have to do this, cf [issue #19](https://github.com/bastienmichaux/generator-jhipster-db-helper/issues/19)
-        const configFile = path.join(__dirname, '/.yo-rc.json');
-
-        if (!fs.existsSync(configFile)) {
-            throw new Error(`This file doesn't exist: ${configFile}`);
-        }
-
-        polyfill = this._getPolyfill(configFile)
-        .then(
-            onFulfilled => {
-                return onFulfilled;
-            },
-            onRejected => {
-                return onRejected;
-            }
-        );
-        Object.freeze(polyfill);
     },
 
     // prompt the user for options
