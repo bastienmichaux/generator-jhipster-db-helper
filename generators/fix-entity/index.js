@@ -128,6 +128,13 @@ module.exports = generator.extend({
 
         const replaceIdName = (paramFiles, newValue) => {
             jhipsterFunc.updateEntityConfig(paramFiles.config, 'dbhIdName', newValue);
+
+            /**
+             * (@Column\\(.*\\))? is there to remove any previous @Column tag
+             * (\\s*) is there to catch the indentation
+             * (private Long id;) is the landmark we use to know where to insert the new @Column tag.
+             */
+            jhipsterFunc.replaceContent(paramFiles.ORM, '(@Column\\(.*\\))?(\\s*)(private Long id;)', `$2@Column(name = "${newValue}")$2$3`, true);
         };
 
         // verify files exist
