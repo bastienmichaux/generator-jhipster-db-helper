@@ -13,7 +13,7 @@ const getAppConfig = configFilePath => new Promise((resolve, reject) => {
     if (fs.existsSync(configFilePath)) {
         fs.readFile(configFilePath, 'utf8', (err, data) => {
             if (err) {
-                reject(new Error(`getAppConfig: readFile threw an error.\n${err}`));
+                reject(new Error(`getAppConfig: fs.readFile error.\nPath was ${configFilePath}\n${err}`));
             }
             const appConfigToJson = JSON.parse(data);
 
@@ -88,7 +88,7 @@ const getPluralColumnIdName = name => getColumnIdName(pluralize(name));
 const getFilesWithNamingStrategy = (buildTool) => {
     // fail when application build tool is unknown
     if (!isValidBuildTool(buildTool)) {
-        throw new Error(`buildTool '${buildTool}' is unknown`);
+        throw new Error(`getFilesWithNamingStrategy: buildTool '${buildTool}' is unknown`);
     }
 
     // if build tool is valid, return the files with naming strategy,
