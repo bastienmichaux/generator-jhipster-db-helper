@@ -217,5 +217,10 @@ module.exports = {
             'templates/default/usingMaven/.yo-rc.json',
             'templates/default/usingMaven/pom.xml'
         ],
+    },
+
+    testCases: {
+        usingGradle: 'test/templates/default/usingGradle',
+        usingMaven: 'test/templates/default/usingMaven'
     }
 };
