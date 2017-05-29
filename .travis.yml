@@ -3,7 +3,7 @@ os:
 language:
     - node_js
 node_js:
-    - "6.10.0"
+    - "6.10.3"
 jdk:
     - oraclejdk8
 addons:
@@ -14,12 +14,13 @@ cache:
     yarn : true
     directories:
         - node_modules
+        - $HOME/.m2
 env:
     global:
-    - JHIPSTER_TRAVIS=$TRAVIS_BUILD_DIR/travis
-    - JHIPSTER_INSTALL=$JHIPSTER_TRAVIS/install
-    - JHIPSTER_SAMPLES=$JHIPSTER_TRAVIS/samples
-    - JHIPSTER_SCRIPTS=$JHIPSTER_TRAVIS/scripts
+        - JHIPSTER_TRAVIS=$TRAVIS_BUILD_DIR/travis
+        - JHIPSTER_INSTALL=$JHIPSTER_TRAVIS/install
+        - JHIPSTER_SAMPLES=$JHIPSTER_TRAVIS/samples
+        - JHIPSTER_SCRIPTS=$JHIPSTER_TRAVIS/scripts
 before_install:
     - export JAVA_HOME=/usr/lib/jvm/java-8-oracle
     - yarn global add yo bower gulp-cli generator-jhipster
