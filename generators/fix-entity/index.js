@@ -163,16 +163,7 @@ module.exports = generator.extend({
             }
         }
 
-        /* // refactoring for later
-        // verify files exist
-        const filesArr = Object.keys(files);
-        filesArr.forEach((file) => {
-            if (!fs.existsSync(files[file])) {
-                throw new Error(`JHipster-db-helper : File not found (${file}: ${files[file]}).`);
-            }
-        });
-        */
-        if(this.force) {
+        if (this.force) {
             this.tableNameInput = this.entityTableName;
             this.columnsInput = this.fields;
         }
@@ -182,7 +173,7 @@ module.exports = generator.extend({
         // Add/Change/Keep dbhColumnName for each field
         this.columnsInput.forEach((columnItem) => {
             const oldValue = columnItem.dbhColumnName;
-            if(!oldValue && this.force) {
+            if (!oldValue && this.force) {
                 throw new Error('You used option --force with bad configuration file, it needs dbhColumnName for each field');
             }
             const newValue = columnItem.columnNameInput || columnItem.dbhColumnName;
