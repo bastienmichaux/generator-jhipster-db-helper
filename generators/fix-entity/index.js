@@ -137,8 +137,8 @@ module.exports = generator.extend({
             updateKey(`"fieldName": "${columnItem.fieldName}"`, 'dbhColumnName', oldValue, newValue);
 
             // We search either for our value or JHipster value, so it works even if user didn't accept JHipster overwrite while regenerating
-            jhipsterFunc.replaceContent(files.ORM, `@Column\\(name = "(${columnItem.fieldNameAsDatabaseColumn}|${columnItem.fieldNameUnderscored}|${oldValue})`, `@Column(name = "${newValue}`, true);
-            jhipsterFunc.replaceContent(files.liquibaseEntity, `\\<column name="(${columnItem.fieldNameAsDatabaseColumn}|${columnItem.fieldNameUnderscored}|${oldValue})`, `<column name="${newValue}`, true);
+            jhipsterFunc.replaceContent(files.ORM, `@Column\\(name = "(${columnItem.fieldNameAsDatabaseColumn}|${oldValue})`, `@Column(name = "${newValue}`, true);
+            jhipsterFunc.replaceContent(files.liquibaseEntity, `<column name="(${columnItem.fieldNameAsDatabaseColumn}|${oldValue})`, `<column name="${newValue}`, true);
         });
 
         // Add/Change/Keep dbhRelationshipId
@@ -159,7 +159,7 @@ module.exports = generator.extend({
                 newValue = `${relationshipItem.relationshipNamePlural}_id`;
                 initialTableIdName = dbh.getPluralColumnIdName(this.entityClass);
 
-                jhipsterFunc.replaceContent(files.liquibaseEntity, `\\<addPrimaryKey columnNames="${initialTableIdName}, (${columnName}|${oldValue})`, `<addPrimaryKey columnNames="${initialTableIdName}, ${newValue}`, true);
+                jhipsterFunc.replaceContent(files.liquibaseEntity, `<addPrimaryKey columnNames="${initialTableIdName}, (${columnName}|${oldValue})`, `<addPrimaryKey columnNames="${initialTableIdName}, ${newValue}`, true);
                 jhipsterFunc.replaceContent(files.liquibaseConstraints, `referencedTableName="${this.entityTableName}`, `referencedTableName="${this.tableNameInput}`);
                 jhipsterFunc.replaceContent(files.ORM, `inverseJoinColumns = @JoinColumn\\(name="(${columnName}|${oldValue})`, `inverseJoinColumns = @JoinColumn(name="${newValue}`, true);
             } else {
@@ -169,8 +169,8 @@ module.exports = generator.extend({
 
             updateKey(`"relationshipName": "${relationshipItem.relationshipName}"`, 'dbhRelationshipId', oldValue, newValue);
 
-            jhipsterFunc.replaceContent(files.liquibaseEntity, `\\<column name="(${columnName}|${oldValue})`, `<column name="${newValue}`, true);
-            jhipsterFunc.replaceContent(files.liquibaseConstraints, `\\<addForeignKeyConstraint baseColumnNames="(${columnName}|${oldValue})`, `<addForeignKeyConstraint baseColumnNames="${newValue}`, true);
+            jhipsterFunc.replaceContent(files.liquibaseEntity, `<column name="(${columnName}|${oldValue})`, `<column name="${newValue}`, true);
+            jhipsterFunc.replaceContent(files.liquibaseConstraints, `<addForeignKeyConstraint baseColumnNames="(${columnName}|${oldValue})`, `<addForeignKeyConstraint baseColumnNames="${newValue}`, true);
         });
     },
 
