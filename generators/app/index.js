@@ -1,18 +1,14 @@
-// modules used by the generator
 const chalk = require('chalk');
 const fs = require('fs');
 const Generator = require('yeoman-generator');
 const path = require('path');
 
-// modules use by private db-helper functions
 const BaseGenerator = require('../../node_modules/generator-jhipster/generators/generator-base.js');
 const dbh = require('../dbh.js');
 const DBH_CONSTANTS = require('../dbh-constants');
 const DBH_TEST_CONSTANTS = require('../../test/test-constants.js');
 const jhipsterModuleSubgenerator = require('../../node_modules/generator-jhipster/generators/modules/index.js');
 const packagejs = require('../../package.json'); // gives access to the package.json data
-
-BaseGenerator.prototype.log = (msg) => { console.log(msg); };
 
 // Stores JHipster variables
 const jhipsterVar = {
@@ -25,8 +21,10 @@ const jhipsterFunc = {};
 // polyfill for jhipsterVar and jhipsterFunc when testing, see [issue #19](https://github.com/bastienmichaux/generator-jhipster-db-helper/issues/19)
 let polyfill = {};
 
+Generator.prototype.log = (msg) => { console.log(msg); };
+
 module.exports = class extends Generator {
-    /** duplicate of a JHipster function where we have replaced how the path is handled, because we use absolute paths */
+    /** Duplicate of a JHipster function where we have replaced how the path is handled, because we use absolute paths */
     _replaceContent (filePath, pattern, content, regex) {
         function dbh_replaceContent(args, generator) {
             args.path = args.path || process.cwd();
@@ -51,9 +49,9 @@ module.exports = class extends Generator {
     }
 
     /**
-     * get the absolute path of the config file .yo-rc.json
-     * when testing with npm test, this function returns a config file for the given test case
-     * when used normally, this function returns the current application .yo-rc.json
+     * Get the absolute path of the config file .yo-rc.json.
+     * When testing with npm test, this function returns the config file for the given test case, which is a constant.
+     * When used normally, this function returns the current application's .yo-rc.json.
      */
     _getConfigFilePath (testCase) {
         let filePath = null;
@@ -83,8 +81,8 @@ module.exports = class extends Generator {
     }
 
     /**
-     * get a polyfill for the jhipsterVar and jhipsterFunc properties gone missing when testing
-     * because of a [yeoman-test](https://github.com/bastienmichaux/generator-jhipster-db-helper/issues/19) issue
+     * Get a polyfill for the jhipsterVar and jhipsterFunc properties gone missing when testing
+     * because of a [yeoman-test](https://github.com/bastienmichaux/generator-jhipster-db-helper/issues/19) issue.
      *
      * @param {string} appConfigPath - path to the current .yo-rc.json application file
      */
@@ -123,16 +121,11 @@ module.exports = class extends Generator {
     }
 
     /**
-     * replace Spring naming strategies with more neutral ones
-     * return true if all occurrences are replaced
+     * Replace Spring naming strategies with more neutral ones.
      *
-     * note : after running this function, reference to the ancient naming strategies will still be found in :
-     * ./node_modules/generator-jhipster/generators/server/templates/_pom.xml:
+     * Note : after running this function, a reference to the ancient naming strategies will still be found in :
+     * ./node_modules/generator-jhipster/generators/server/templates/_pom.xml
      * however this doesn't concern us
-     *
-     * @todo : write local test for the return value
-     * @todo : write unit test
-     * @todo : no hardcoded values for removeGradleFiles and removeMavenFiles
      */
     _replaceNamingStrategies (appBuildTool) {
         const physicalOld = DBH_CONSTANTS.physicalNamingStrategyOld;
@@ -141,20 +134,22 @@ module.exports = class extends Generator {
         const implicitOld = DBH_CONSTANTS.implicitNamingStrategyOld;
         const implicitNew = DBH_CONSTANTS.implicitNamingStrategyNew;
 
+        // depending on the application's build tool, get all files where the old naming strategies must be replaced
         const files = dbh.getFilesWithNamingStrategy(appBuildTool);
 
-        const getFilesAbsolutePath = () => {
+        // return an absolute path in order to make debugging easier
+        const getFilesAbsolutePath = (filesArray) => {
             let arr = [];
 
             // will be true if a testCase has been passed
             if (this.dbhTestCase) {
-                files.forEach((value) => {
+                filesArray.forEach((value) => {
                     arr.push(path.join(DBH_TEST_CONSTANTS.testConfigDir[this.dbhTestCase], value));
                 });
             }
 
             else {
-                files.forEach((value) => {
+                filesArray.forEach((value) => {
                     arr.push(path.join(__dirname, value));
                 });
             }
@@ -162,7 +157,7 @@ module.exports = class extends Generator {
             return arr;
         };
 
-        const filesWithAbsolutePath = getFilesAbsolutePath();
+        const filesWithAbsolutePath = getFilesAbsolutePath(files);
 
         // check that each file exists, then replace the naming strategies
         files.forEach((path) => {
@@ -172,7 +167,7 @@ module.exports = class extends Generator {
                 // 2) replace Spring implicit naming strategy
                 this._replaceContent(path, implicitOld, implicitNew);
             } else {
-                throw new Error(`${path} doesn't exist!`);
+                throw new Error(`_replaceNamingStrategies: File doesn't exist! Path was:\n${path}`);
             }
         });
     }
@@ -180,6 +175,8 @@ module.exports = class extends Generator {
     constructor(args, opts) {
         super(args, opts);
 
+        // Option used to make unit tests.
+        // The passed string references constants found in test/test-constants.js.
         this.option('dbhTestCase', {
             desc: 'Test case for this module\'s npm test',
             type: String,
@@ -200,7 +197,7 @@ module.exports = class extends Generator {
             this.options.testmode ? { local: require.resolve('generator-jhipster/generators/modules') } : null
         );
 
-        const configFile = this._getConfigFilePath(this.dbhTestCase); //path.join(__dirname, '/.yo-rc.json');
+        const configFile = this._getConfigFilePath(this.dbhTestCase);
     }
 
     // prompt the user for options
@@ -225,6 +222,9 @@ module.exports = class extends Generator {
         this._getPolyfill(configFile)
         .then(
             onFulfilled => {
+                // direct assignment avoids a left-hand side object property assignment bug
+                // See: https://stackoverflow.com/questions/26288963/weird-behaviour-with-use-strict-and-read-only-properties
+
                 // jhipsterVar properties
                 polyfill.baseName = onFulfilled.baseName;
                 polyfill.packageName = onFulfilled.packageName;
@@ -246,7 +246,7 @@ module.exports = class extends Generator {
                 ? polyfill.buildTool
                 : jhipsterVar.jhipsterConfig.buildTool;
 
-                // declarations done by jhipster-module
+                // declarations done by jhipster-module, polyfill in case of testing
                 this.baseName = jhipsterVar.baseName || polyfill.baseName;
                 this.packageName = jhipsterVar.packageName || polyfill.packageName;
                 this.angularAppName = jhipsterVar.angularAppName || polyfill.angularAppName;
@@ -254,7 +254,7 @@ module.exports = class extends Generator {
                 this.clientPackageManager = jhipsterVar.clientPackageManager || polyfill.clientPackageManager;
                 this.message = this.props.message;
 
-                // TODO : fix the following error
+                // TODO : fix the following error when using jhipsterFunc.registerModule:
                 // 'TypeError: this.log is not a function'
 
                 try {
@@ -270,7 +270,6 @@ module.exports = class extends Generator {
                     this.log(`${chalk.red.bold('WARN!')} Could not register as a jhipster entity post creation hook...\n`);
                     console.error(err);
                 }
-
 
                 // replace files with Spring's naming strategies
                 this.log(chalk.bold.yellow('JHipster-db-helper replaces your naming strategies :'));
