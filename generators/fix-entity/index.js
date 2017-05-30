@@ -130,11 +130,21 @@ module.exports = generator.extend({
             jhipsterFunc.updateEntityConfig(paramFiles.config, 'dbhIdName', newValue);
 
             /**
-             * (@Column\\(.*\\))? is there to remove any previous @Column tag
-             * (\\s*) is there to catch the indentation
-             * (private Long id;) is the landmark we use to know where to insert the new @Column tag.
+             * - (@Column\\(.*\\))? is there to remove any previous @Column tag
+             * - (\\s*) is there to catch the indentation
+             * - (private Long id;) is the landmark we use to know where to insert the new @Column tag.
              */
             jhipsterFunc.replaceContent(paramFiles.ORM, '(@Column\\(.*\\))?(\\s*)(private Long id;)', `$2@Column(name = "${newValue}")$2$3`, true);
+            /**
+             * - (<column name=") A first pattern to match
+             * - (id|${this.dbhIdName}) Either the litteral value id or the previous value set by this module
+             * - (".*>\\s*<constraints primaryKey="true") A second pattern to match
+             *   - " The closure of the name property
+             *   - .*> The end of the column tag.
+             *   - \\s* Any number of white spaces
+             *   - <constraints primaryKey="true" The heart of the pattern we want to match, this makes sure we're at the right place
+             */
+            jhipsterFunc.replaceContent(paramFiles.liquibaseEntity, `(<column name=")(id|${this.dbhIdName})(".*>\\s*<constraints primaryKey="true")`, `$1${newValue}$3`, true);
         };
 
         // verify files exist
