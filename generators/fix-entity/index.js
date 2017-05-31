@@ -2,6 +2,7 @@ const generator = require('yeoman-generator');
 const chalk = require('chalk');
 const prompts = require('./prompts.js');
 const fs = require('fs');
+const path = require('path');
 
 const jhipsterConstants = require('../../node_modules/generator-jhipster/generators/generator-constants.js');
 const jhipsterModuleSubgenerator = require('../../node_modules/generator-jhipster/generators/modules/index.js');
@@ -16,8 +17,6 @@ const jhipsterVar = {
 // Stores JHipster functions
 const jhipsterFunc = {};
 
-// polyfill for jhipsterVar and jhipsterFunc when testing, see [issue #19](https://github.com/bastienmichaux/generator-jhipster-db-helper/issues/19)
-let polyfill = {};
 
 module.exports = generator.extend({
     /**
@@ -35,24 +34,27 @@ module.exports = generator.extend({
         // else return a promise holding the polyfill
         return dbh.getAppConfig(appConfigPath)
         .catch(err => console.error(err))
-        .then((onResolve) => {
-            const conf = onResolve['generator-jhipster'];
-            const poly = {};
+        .then(
+            (onResolve) => {
+                const conf = onResolve['generator-jhipster'];
+                const poly = {};
 
-            // @todo: defensive programming with these properties (hasOwnProperty ? throw ?)
+                // @todo: defensive programming with these properties (hasOwnProperty ? throw ?)
 
-            // jhipsterVar polyfill :
+                // jhipsterVar polyfill :
 
-            poly.jhipsterConfig = conf;
-            poly.javaDir = `${jhipsterConstants.SERVER_MAIN_SRC_DIR + conf.packageFolder}/`;
-            poly.resourceDir = jhipsterConstants.SERVER_MAIN_RES_DIR;
-            poly.replaceContent = jhipsterModuleSubgenerator.prototype.replaceContent;
-            poly.updateEntityConfig = jhipsterModuleSubgenerator.prototype.updateEntityConfig;
+                poly.jhipsterConfig = conf;
+                poly.javaDir = `${jhipsterConstants.SERVER_MAIN_SRC_DIR + conf.packageFolder}/`;
+                poly.resourceDir = jhipsterConstants.SERVER_MAIN_RES_DIR;
+                poly.replaceContent = jhipsterModuleSubgenerator.prototype.replaceContent;
+                poly.updateEntityConfig = jhipsterModuleSubgenerator.prototype.updateEntityConfig;
 
-            // @todo : handle this.options.testMode ?
-
-            return poly;
-        }, onError => console.error(onError));
+                return poly;
+            },
+            (onError) => {
+                console.error(onError)
+            }
+        );
     },
 
     constructor: function (...args) { // eslint-disable-line object-shorthand
@@ -95,13 +97,11 @@ module.exports = generator.extend({
         //*/
     },
 
-
     // prompt the user for options
     prompting: {
         askForTableName: prompts.askForTableName,
         askForColumnsName: prompts.askForColumnsName
     },
-
 
     /**
      * After creating a new entity, replace the value of the table name.
@@ -121,6 +121,8 @@ module.exports = generator.extend({
             ORM: `${jhipsterVar.javaDir}domain/${this.entityConfig.entityClass}.java`,
             liquibaseEntity: getLiquibaseFile('entity')
         };
+
+        const filesArr = Object.keys(files);
 
         if (dbh.hasConstraints(this.relationships)) {
             files.liquibaseConstraints = getLiquibaseFile('entity_constraints');
@@ -153,15 +155,12 @@ module.exports = generator.extend({
             jhipsterFunc.replaceContent(paramFiles.liquibaseEntity, `<createTable tableName="${this.entityTableName}`, `<createTable tableName="${newValue}`);
         };
 
-        this.log(chalk.bold.yellow('writing'));
-
         // verify files exist
-        for (const file in files) {
-            // hasOwnProperty to avoid inherited properties
-            if (files.hasOwnProperty(file) && !fs.existsSync(files[file])) {
+        filesArr.forEach((file) => {
+            if (!fs.existsSync(files[file])) {
                 throw new Error(`JHipster-db-helper : File not found (${file}: ${files[file]}).`);
             }
-        }
+        });
 
         if (this.force) {
             this.tableNameInput = this.entityTableName;
@@ -217,12 +216,6 @@ module.exports = generator.extend({
             jhipsterFunc.replaceContent(files.liquibaseConstraints, `\\<addForeignKeyConstraint baseColumnNames="(${columnName}|${oldValue})`, `<addForeignKeyConstraint baseColumnNames="${newValue}`, true);
         });
     },
-
-    // run installation (npm, bower, etc)
-    install() {
-        this.log(chalk.bold.yellow('install'));
-    },
-
 
     // cleanup, say goodbye
     end() {
