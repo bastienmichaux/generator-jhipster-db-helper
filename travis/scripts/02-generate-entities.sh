@@ -11,6 +11,7 @@ cp -t .jhipster "$JHIPSTER_SAMPLES/.jhipster/MTM_Slave.json" "$JHIPSTER_SAMPLES/
 cp -t .jhipster "$JHIPSTER_SAMPLES/.jhipster/MTM_Relation_Slave.json" "$JHIPSTER_SAMPLES/.jhipster/MTM_Relation_Owner.json"
 cp -t .jhipster "$JHIPSTER_SAMPLES/.jhipster/OTM_Relation_One.json" "$JHIPSTER_SAMPLES/.jhipster/OTM_Relation_Many.json"
 cp -t .jhipster "$JHIPSTER_SAMPLES/.jhipster/NoDBHRelationSlave.json" "$JHIPSTER_SAMPLES/.jhipster/NoDBHRelationOwner.json"
+cp -t .jhipster "$JHIPSTER_SAMPLES/.jhipster/ID_Single.json"
 
 yo jhipster:entity NakedTable --force
 
@@ -33,5 +34,7 @@ yo jhipster:entity OTM_Relation_Many --force
 
 yo jhipster:entity NoDBHRelationSlave --force
 yo jhipster:entity NoDBHRelationOwner --force
+
+yo jhipster:entity ID_Single --force
 
 mvn test
