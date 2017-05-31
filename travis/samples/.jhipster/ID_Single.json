@@ -1,0 +1,17 @@
+{
+    "fluentMethods": true,
+    "relationships": [],
+    "fields": [
+        {
+            "fieldName": "id_single_field",
+            "dbhColumnName": "id_single_field_column",
+            "fieldType": "String"
+        }
+    ],
+    "changelogDate": "20170531085749",
+    "dto": "no",
+    "service": "no",
+    "entityTableName": "id_single_table",
+    "pagination": "no",
+    "dbhIdName": "id_single_column_id"
+}
