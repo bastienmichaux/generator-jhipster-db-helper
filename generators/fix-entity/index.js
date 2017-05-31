@@ -156,7 +156,7 @@ module.exports = generator.extend({
 
         replaceTableName(files, this.tableNameInput);
 
-        // Add/Change/Keep dbhRelationshipId
+        // Add/Change/Keep dbhIdName
         replaceIdName(files, this.idNameInput);
 
         // Add/Change/Keep dbhColumnName for each field
@@ -173,17 +173,20 @@ module.exports = generator.extend({
 
         // Add/Change/Keep dbhRelationshipId
         this.relationships.forEach((relationshipItem) => {
+            const otherEntity = JSON.parse(fs.readFileSync(`${this.entityConfig.jhipsterConfigDirectory}/${relationshipItem.otherEntityNameCapitalized}.json`, 'utf8'));
             const oldValue = relationshipItem.dbhRelationshipId;
 
             let columnName = null;
             let newValue = null;
             let initialTableIdName = null;
 
+
             if (relationshipItem.relationshipType === 'many-to-one' || (relationshipItem.relationshipType === 'one-to-one' && relationshipItem.ownerSide)) {
                 columnName = dbh.getColumnIdName(relationshipItem.relationshipName);
                 newValue = `${relationshipItem.relationshipName}_id`;
 
                 jhipsterFunc.replaceContent(files.liquibaseConstraints, `baseTableName="${this.entityTableName}`, `baseTableName="${this.tableNameInput}`);
+                jhipsterFunc.replaceContent(files.liquibaseConstraints, `(referencedColumnNames=")id("\\s*referencedTableName="${otherEntity.entityTableName}")`, `$1${otherEntity.dbhIdName}$2`, true);
             } else if (relationshipItem.relationshipType === 'many-to-many' && relationshipItem.ownerSide) {
                 columnName = dbh.getPluralColumnIdName(relationshipItem.relationshipName);
                 newValue = `${relationshipItem.relationshipNamePlural}_id`;
