@@ -34,24 +34,27 @@ module.exports = generator.extend({
         // else return a promise holding the polyfill
         return dbh.getAppConfig(appConfigPath)
         .catch(err => console.error(err))
-        .then((onResolve) => {
-            const conf = onResolve['generator-jhipster'];
-            const poly = {};
+        .then(
+            (onResolve) => {
+                const conf = onResolve['generator-jhipster'];
+                const poly = {};
 
-            // @todo: defensive programming with these properties (hasOwnProperty ? throw ?)
+                // @todo: defensive programming with these properties (hasOwnProperty ? throw ?)
 
-            // jhipsterVar polyfill :
+                // jhipsterVar polyfill :
 
-            poly.jhipsterConfig = conf;
-            poly.javaDir = `${jhipsterConstants.SERVER_MAIN_SRC_DIR + conf.packageFolder}/`;
-            poly.resourceDir = jhipsterConstants.SERVER_MAIN_RES_DIR;
-            poly.replaceContent = jhipsterModuleSubgenerator.prototype.replaceContent;
-            poly.updateEntityConfig = jhipsterModuleSubgenerator.prototype.updateEntityConfig;
+                poly.jhipsterConfig = conf;
+                poly.javaDir = `${jhipsterConstants.SERVER_MAIN_SRC_DIR + conf.packageFolder}/`;
+                poly.resourceDir = jhipsterConstants.SERVER_MAIN_RES_DIR;
+                poly.replaceContent = jhipsterModuleSubgenerator.prototype.replaceContent;
+                poly.updateEntityConfig = jhipsterModuleSubgenerator.prototype.updateEntityConfig;
 
-            // @todo : handle this.options.testMode ?
-
-            return poly;
-        }, onError => console.error(onError));
+                return poly;
+            },
+            (onError) => {
+                console.error(onError)
+            }
+        );
     },
 
     constructor: function (...args) { // eslint-disable-line object-shorthand
@@ -113,7 +116,6 @@ module.exports = generator.extend({
          */
         const getLiquibaseFile = type => `${jhipsterVar.resourceDir}config/liquibase/changelog/${this.entityConfig.data.changelogDate}_added_${type}_${this.entityConfig.entityClass}.xml`;
 
-        // TODO: freeze object (safely)
         const files = {
             config: this.entityConfig.filename,
             ORM: `${jhipsterVar.javaDir}domain/${this.entityConfig.entityClass}.java`,
@@ -160,7 +162,6 @@ module.exports = generator.extend({
             }
         });
 
-        // Add/Change/Keep dbhColumnName for each field
         if (this.force) {
             this.tableNameInput = this.entityTableName;
             this.columnsInput = this.fields;

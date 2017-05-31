@@ -50,8 +50,8 @@ module.exports = class extends Generator {
 
     /**
      * Get the absolute path of the config file .yo-rc.json.
-     * When testing with npm test, this function returns the config file for the given test case, which is a constant.
      * When used normally, this function returns the current application's .yo-rc.json.
+     * When testing, this function returns the config file for the given test case, which is a constant.
      */
     _getConfigFilePath (testCase) {
         let filePath = null;
@@ -60,21 +60,24 @@ module.exports = class extends Generator {
             throw new TypeError(`_getConfigFilePath: testCase parameter: expected type 'string', was instead '${typeof testCase}'`);
         }
 
+        // default : not testing
         if (testCase === '') {
             filePath = path.join(__dirname, '/.yo-rc.json');
         }
+        // test cases
         else if (testCase === DBH_TEST_CONSTANTS.testCases.usingMaven) {
             filePath = path.join(__dirname, '../..', DBH_TEST_CONSTANTS.testConfigFiles.usingMaven);
         }
         else if (testCase === DBH_TEST_CONSTANTS.testCases.usingGradle) {
             filePath = path.join(__dirname, '../..', DBH_TEST_CONSTANTS.testConfigFiles.usingGradle);
         }
+        // not a valid test case
         else {
-            throw new Error(`_getConfigFilePath: testCase parameter: not a test case we know of: ${testCase}`);
+            throw new Error(`_getConfigFilePath: testCase parameter: not a test case we know of. testCase was: ${testCase}`);
         }
 
         if (!fs.existsSync(filePath)) {
-            throw new Error(`_getConfigFilePath: Sought after this file, but it doesn't exist: ${filePath}`);
+            throw new Error(`_getConfigFilePath: Sought after this file, but it doesn't exist. Path was:\n${filePath}`);
         }
 
         return filePath;
@@ -94,30 +97,33 @@ module.exports = class extends Generator {
 
         // else return a promise holding the polyfill
         return dbh.getAppConfig(appConfigPath)
-        .catch(err => console.error(err))
-        .then((onResolve) => {
-            const conf = onResolve['generator-jhipster'];
-            const poly = {};
+        .then(
+            (onResolve) => {
+                const conf = onResolve['generator-jhipster'];
+                const poly = {};
 
-            // @todo: defensive programming with these properties (hasOwnProperty ? throw ?)
+                // @todo: defensive programming with these properties (hasOwnProperty ? throw ?)
 
-            // jhipsterVar polyfill :
+                // jhipsterVar polyfill :
+                poly.baseName = conf.baseName;
+                poly.packageName = conf.packageName;
+                poly.angularAppName = conf.angularAppName || null; // handle an undefined value (JSON properties can't be undefined)
+                poly.clientFramework = conf.clientFramework;
+                poly.clientPackageManager = conf.clientPackageManager;
+                poly.buildTool = conf.buildTool;
 
-            poly.baseName = conf.baseName;
-            poly.packageName = conf.packageName;
-            poly.angularAppName = conf.angularAppName || null; // handle an undefined value
-            poly.clientFramework = conf.clientFramework;
-            poly.clientPackageManager = conf.clientPackageManager;
-            poly.buildTool = conf.buildTool;
+                // jhipsterFunc polyfill :
+                poly.registerModule = jhipsterModuleSubgenerator.prototype.registerModule;
+                poly.updateEntityConfig = jhipsterModuleSubgenerator.prototype.updateEntityConfig;
 
-            // jhipsterFunc polyfill :
-            poly.registerModule = jhipsterModuleSubgenerator.prototype.registerModule;
-            poly.updateEntityConfig = jhipsterModuleSubgenerator.prototype.updateEntityConfig;
+                // @todo : handle this.options.testMode ?
 
-            // @todo : handle this.options.testMode ?
-
-            return poly;
-        }, onError => console.error(onError));
+                return poly;
+            },
+            (onError) => {
+                throw new Error(onError);
+            }
+        );
     }
 
     /**
@@ -221,7 +227,7 @@ module.exports = class extends Generator {
 
         this._getPolyfill(configFile)
         .then(
-            onFulfilled => {
+            (onFulfilled) => {
                 // direct assignment avoids a left-hand side object property assignment bug
                 // See: https://stackoverflow.com/questions/26288963/weird-behaviour-with-use-strict-and-read-only-properties
 
@@ -275,7 +281,7 @@ module.exports = class extends Generator {
                 this.log(chalk.bold.yellow('JHipster-db-helper replaces your naming strategies :'));
                 this._replaceNamingStrategies(buildTool);
             },
-            onRejected => {
+            (onRejected) => {
                 throw new Error(onRejected);
             }
         );
