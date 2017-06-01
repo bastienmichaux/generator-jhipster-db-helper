@@ -171,8 +171,18 @@ module.exports = generator.extend({
             jhipsterFunc.replaceContent(files.liquibaseEntity, `<column name="(${columnItem.fieldNameAsDatabaseColumn}|${oldValue})`, `<column name="${newValue}`, true);
         });
 
+        /**
+         * Lots of the relationships's values are guessed from the convention.
+         * But as using this module means you don't respect the convention, these guesses won't be correct and we must guess the values ourselves.
+         */
         // Add/Change/Keep dbhRelationshipId
         this.relationships.forEach((relationshipItem) => {
+            // We don't need to do anything about relationships which don't add any constraint.
+            if (relationshipItem.relationshipType === 'one-to-many' ||
+                (relationshipItem.relationshipType === 'one-to-one' && !relationshipItem.ownerSide) ||
+                (relationshipItem.relationshipType === 'many-to-many' && !relationshipItem.ownerSide)) {
+                return;
+            }
             const otherEntity = JSON.parse(fs.readFileSync(`${this.entityConfig.jhipsterConfigDirectory}/${relationshipItem.otherEntityNameCapitalized}.json`, 'utf8'));
             const oldValue = relationshipItem.dbhRelationshipId;
 
@@ -195,9 +205,6 @@ module.exports = generator.extend({
                 jhipsterFunc.replaceContent(files.liquibaseEntity, `<addPrimaryKey columnNames="${initialTableIdName}, (${columnName}|${oldValue})`, `<addPrimaryKey columnNames="${initialTableIdName}, ${newValue}`, true);
                 jhipsterFunc.replaceContent(files.liquibaseConstraints, `referencedTableName="${this.entityTableName}`, `referencedTableName="${this.tableNameInput}`);
                 jhipsterFunc.replaceContent(files.ORM, `inverseJoinColumns = @JoinColumn\\(name="(${columnName}|${oldValue})`, `inverseJoinColumns = @JoinColumn(name="${newValue}`, true);
-            } else {
-                // We don't need to do anything about relationships which don't add any constraint.
-                return;
             }
 
             updateKey(`"relationshipName": "${relationshipItem.relationshipName}"`, 'dbhRelationshipId', oldValue, newValue);
