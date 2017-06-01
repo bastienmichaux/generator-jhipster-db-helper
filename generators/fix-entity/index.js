@@ -197,6 +197,7 @@ module.exports = generator.extend({
 
                 jhipsterFunc.replaceContent(files.liquibaseConstraints, `baseTableName="${this.entityTableName}`, `baseTableName="${this.tableNameInput}`);
                 jhipsterFunc.replaceContent(files.liquibaseConstraints, `(referencedColumnNames=")id("\\s*referencedTableName="${otherEntity.entityTableName}")`, `$1${otherEntity.dbhIdName}$2`, true);
+                jhipsterFunc.replaceContent(files.ORM, `(@JoinColumn.*)(\\)\\s*private ${relationshipItem.otherEntityNameCapitalized} ${relationshipItem.relationshipName};)`, `$1, name = "${newValue}"$2`, true);
             } else if (relationshipItem.relationshipType === 'many-to-many' && relationshipItem.ownerSide) {
                 columnName = dbh.getPluralColumnIdName(relationshipItem.relationshipName);
                 newValue = `${relationshipItem.relationshipNamePlural}_id`;
