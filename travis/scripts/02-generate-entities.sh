@@ -23,6 +23,7 @@ cp -t .jhipster "$JHIPSTER_SAMPLES/.jhipster/NoDBHRelationSlave.json" "$JHIPSTER
 # sample to rename id column name from entities involved in all possible cases
 cp -t .jhipster "$JHIPSTER_SAMPLES/.jhipster/ID_Single.json"
 cp -t .jhipster "$JHIPSTER_SAMPLES/.jhipster/ID_OTO_Slave.json" "$JHIPSTER_SAMPLES/.jhipster/ID_OTO_Owner.json"
+cp -t .jhipster "$JHIPSTER_SAMPLES/.jhipster/ID_OTM_One.json" "$JHIPSTER_SAMPLES/.jhipster/ID_OTM_Many.json"
 
 yo jhipster:entity NakedTable --force
 yo jhipster:entity DressedTable --force
@@ -45,6 +46,8 @@ yo jhipster:entity NoDBHRelationOwner --force
 yo jhipster:entity ID_Single --force
 yo jhipster:entity ID_OTO_Slave --force
 yo jhipster:entity ID_OTO_Owner --force
+yo jhipster:entity ID_OTM_One --force
+yo jhipster:entity ID_OTM_Many --force
 
 # test if generated application works
 mvn test
