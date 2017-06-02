@@ -3,7 +3,6 @@ const fs = require('fs');
 const Generator = require('yeoman-generator');
 const path = require('path');
 
-const BaseGenerator = require('../../node_modules/generator-jhipster/generators/generator-base.js');
 const dbh = require('../dbh.js');
 const DBH_CONSTANTS = require('../dbh-constants');
 const DBH_TEST_CONSTANTS = require('../../test/test-constants.js');
@@ -19,36 +18,33 @@ const jhipsterVar = {
 const jhipsterFunc = {};
 
 // polyfill for jhipsterVar and jhipsterFunc when testing, see [issue #19](https://github.com/bastienmichaux/generator-jhipster-db-helper/issues/19)
-let polyfill = {};
+// TODO : refactor (no testing logic in production code)
+const polyfill = {};
 
 Generator.prototype.log = (msg) => { console.log(msg); };
 
 module.exports = class extends Generator {
+    // TODO : refactor (no testing logic in production code)
     /**
      * Get the absolute path of the config file .yo-rc.json.
      * When used normally, this function returns the current application's .yo-rc.json.
      * When testing, this function returns the config file for the given test case, which is a constant.
      */
-    _getConfigFilePath (testCase) {
+    _getConfigFilePath(testCase) {
         let filePath = null;
 
         if (typeof testCase !== 'string') {
             throw new TypeError(`_getConfigFilePath: testCase parameter: expected type 'string', was instead '${typeof testCase}'`);
         }
 
-        // default : not testing
+        // set filePath depending on whether the generator is running a test case or not
         if (testCase === '') {
             filePath = path.join(__dirname, '/.yo-rc.json');
-        }
-        // test cases
-        else if (testCase === DBH_TEST_CONSTANTS.testCases.usingMaven) {
+        } else if (testCase === DBH_TEST_CONSTANTS.testCases.usingMaven) {
             filePath = path.join(__dirname, '../..', DBH_TEST_CONSTANTS.testConfigFiles.usingMaven);
-        }
-        else if (testCase === DBH_TEST_CONSTANTS.testCases.usingGradle) {
+        } else if (testCase === DBH_TEST_CONSTANTS.testCases.usingGradle) {
             filePath = path.join(__dirname, '../..', DBH_TEST_CONSTANTS.testConfigFiles.usingGradle);
-        }
-        // not a valid test case
-        else {
+        } else {
             throw new Error(`_getConfigFilePath: testCase parameter: not a test case we know of. testCase was: ${testCase}`);
         }
 
@@ -59,13 +55,14 @@ module.exports = class extends Generator {
         return filePath;
     }
 
+    // TODO : refactor (no testing logic in production code)
     /**
      * Get a polyfill for the jhipsterVar and jhipsterFunc properties gone missing when testing
      * because of a [yeoman-test](https://github.com/bastienmichaux/generator-jhipster-db-helper/issues/19) issue.
      *
      * @param {string} appConfigPath - path to the current .yo-rc.json application file
      */
-    _getPolyfill (appConfigPath) {
+    _getPolyfill(appConfigPath) {
         // stop if file not found
         if (!fs.existsSync(appConfigPath)) {
             throw new Error(`_getPolyfill: File ${appConfigPath} not found`);
@@ -109,7 +106,7 @@ module.exports = class extends Generator {
      * ./node_modules/generator-jhipster/generators/server/templates/_pom.xml
      * however this doesn't concern us
      */
-    _replaceNamingStrategies (appBuildTool) {
+    _replaceNamingStrategies(appBuildTool) {
         const physicalOld = DBH_CONSTANTS.physicalNamingStrategyOld;
         const physicalNew = DBH_CONSTANTS.physicalNamingStrategyNew;
 
@@ -118,28 +115,6 @@ module.exports = class extends Generator {
 
         // depending on the application's build tool, get all files where the old naming strategies must be replaced
         const files = dbh.getFilesWithNamingStrategy(appBuildTool);
-
-        // return an absolute path in order to make debugging easier
-        const getFilesAbsolutePath = (filesArray) => {
-            let arr = [];
-
-            // will be true if a testCase has been passed
-            if (this.dbhTestCase) {
-                filesArray.forEach((value) => {
-                    arr.push(path.join(DBH_TEST_CONSTANTS.testConfigDir[this.dbhTestCase], value));
-                });
-            }
-
-            else {
-                filesArray.forEach((value) => {
-                    arr.push(path.join(__dirname, value));
-                });
-            }
-
-            return arr;
-        };
-
-        const filesWithAbsolutePath = getFilesAbsolutePath(files);
 
         // check that each file exists, then replace the naming strategies
         files.forEach((path) => {
@@ -157,8 +132,8 @@ module.exports = class extends Generator {
     constructor(args, opts) {
         super(args, opts);
 
-        // Option used to make unit tests.
-        // The passed string references constants found in test/test-constants.js.
+        // Option used to make unit tests in temporary directories instead of the current directory.
+        // The passed string references constants, thoses constants can be found in test/test-constants.js.
         this.option('dbhTestCase', {
             desc: 'Test case for this module\'s npm test',
             type: String,
@@ -178,8 +153,6 @@ module.exports = class extends Generator {
             { jhipsterVar, jhipsterFunc },
             this.options.testmode ? { local: require.resolve('generator-jhipster/generators/modules') } : null
         );
-
-        const configFile = this._getConfigFilePath(this.dbhTestCase);
     }
 
     // prompt the user for options
@@ -201,6 +174,7 @@ module.exports = class extends Generator {
     writing() {
         const configFile = this._getConfigFilePath(this.dbhTestCase);
 
+        // TODO : refactor (no testing logic in production code)
         this._getPolyfill(configFile)
         .then(
             (onFulfilled) => {
