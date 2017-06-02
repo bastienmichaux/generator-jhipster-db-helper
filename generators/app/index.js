@@ -39,7 +39,7 @@ module.exports = class extends Generator {
 
         // set filePath depending on whether the generator is running a test case or not
         if (testCase === '') {
-            filePath = path.join(__dirname, '/.yo-rc.json');
+            filePath = path.join(process.cwd(), '/.yo-rc.json');
         } else if (testCase === DBH_TEST_CONSTANTS.testCases.usingMaven) {
             filePath = path.join(__dirname, '../..', DBH_TEST_CONSTANTS.testConfigFiles.usingMaven);
         } else if (testCase === DBH_TEST_CONSTANTS.testCases.usingGradle) {
@@ -133,7 +133,8 @@ module.exports = class extends Generator {
         super(args, opts);
 
         // Option used to make unit tests in temporary directories instead of the current directory.
-        // The passed string references constants, thoses constants can be found in test/test-constants.js.
+        // The passed string argument references constants,
+        // those constants can be found in test/test-constants.js.
         this.option('dbhTestCase', {
             desc: 'Test case for this module\'s npm test',
             type: String,
@@ -267,3 +268,4 @@ module.exports = class extends Generator {
         this.log(chalk.bold.yellow('End of db-helper generator'));
     }
 };
+ 
