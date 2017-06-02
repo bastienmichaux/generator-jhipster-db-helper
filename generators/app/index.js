@@ -40,10 +40,8 @@ module.exports = class extends Generator {
         // set filePath depending on whether the generator is running a test case or not
         if (testCase === '') {
             filePath = path.join(process.cwd(), '/.yo-rc.json');
-        } else if (testCase === DBH_TEST_CONSTANTS.testCases.usingMaven) {
-            filePath = path.join(__dirname, '../..', DBH_TEST_CONSTANTS.testConfigFiles.usingMaven);
-        } else if (testCase === DBH_TEST_CONSTANTS.testCases.usingGradle) {
-            filePath = path.join(__dirname, '../..', DBH_TEST_CONSTANTS.testConfigFiles.usingGradle);
+        } else if (DBH_TEST_CONSTANTS.testCases[testCase] !== undefined) {
+            filePath = path.join(__dirname, '../..', DBH_TEST_CONSTANTS.testConfigFiles[testCase]);
         } else {
             throw new Error(`_getConfigFilePath: testCase parameter: not a test case we know of. testCase was: ${testCase}`);
         }
