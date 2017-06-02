@@ -42,7 +42,7 @@ describe('Post app hook', function () {
 
             return Generator.prototype._getPolyfill(f)
             .then(
-                onFulfilled => {
+                (onFulfilled) => {
                     assert(dbh.isNotEmptyString(onFulfilled.baseName));
                     assert(dbh.isNotEmptyString(onFulfilled.packageName));
                     assert(dbh.isNotEmptyString(onFulfilled.angularAppName) || onFulfilled.angularAppName === null);
@@ -52,7 +52,7 @@ describe('Post app hook', function () {
                     assert(typeof onFulfilled.registerModule === 'function');
                     assert(typeof onFulfilled.updateEntityConfig === 'function');
                 },
-                onRejected => {
+                (onRejected) => {
                     return onRejected;
                 }
             );

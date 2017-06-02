@@ -101,7 +101,7 @@ const getFilesWithNamingStrategy = (buildTool) => {
 
 /**
  * Check if these relationships add constraints.
- * Typically, an one-to-many relationship doesn't add a constraint to the entity on the one side
+ * Typically, a one-to-many relationship doesn't add a constraint to the entity on the one side
  * but it does on the many side.
  *
  * @param relationships - an array of relationship to check
@@ -144,7 +144,8 @@ const replaceContent = (absolutePath, pattern, content, regex, generator) => {
     
     body = body.replace(re, content);
     generator.fs.write(absolutePath, body);
-}
+};
+
 
 /** Validate user input when asking for a SQL column name */
 const validateColumnName = (input, dbType) => {

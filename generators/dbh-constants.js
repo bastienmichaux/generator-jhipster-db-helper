@@ -24,7 +24,7 @@ const constants = {
      */
     appConfigFile: '.yo-rc.json',
 
-    /** supported build tools */
+    /** build tools supported by JHipster */
     buildTools: ['maven', 'gradle'],
 
     oracleLimitations: {
