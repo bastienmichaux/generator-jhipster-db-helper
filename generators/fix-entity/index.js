@@ -4,7 +4,6 @@ const prompts = require('./prompts.js');
 const fs = require('fs');
 
 const dbh = require('../dbh.js');
-const DBH_CONSTANTS = require('../dbh-constants.js');
 
 // Stores JHipster variables
 const jhipsterVar = {
@@ -18,6 +17,17 @@ const jhipsterFunc = {};
 module.exports = generator.extend({
     constructor: function (...args) { // eslint-disable-line object-shorthand
         generator.apply(this, args);
+
+        // Option used to make unit tests in temporary directories instead of the current directory.
+        // The passed string argument references constants,
+        // those constants can be found in test/test-constants.js.
+        this.option('dbhTestCase', {
+            desc: 'Test case for this module\'s npm test',
+            type: String,
+            defaults: ''
+        });
+
+        this.dbhTestCase = this.options.dbhTestCase;
 
         // All information from entity generator
         this.entityConfig = this.options.entityConfig;
@@ -42,19 +52,6 @@ module.exports = generator.extend({
             this.options.testmode ? { local: require.resolve('generator-jhipster/generators/modules') } : null
         );
         this.appConfig = jhipsterVar.jhipsterConfig;
-
-        /* / TODO remove on prod
-        this.prodDatabaseType = jhipsterVar.prodDatabaseType;
-        this.log(chalk.blue('<<<<<BEFORE'));
-        this.log(chalk.blue('entityConfig'));
-        this.log(this.entityConfig);
-        this.log(chalk.blue('fields'));
-        this.log(this.fields);
-        this.log(chalk.blue('relations'));
-        this.log(this.options.entityConfig.data.relationships);
-        this.log(chalk.blue('jhipsterVar'));
-        this.log(jhipsterVar);
-        //*/
     },
 
     // prompt the user for options

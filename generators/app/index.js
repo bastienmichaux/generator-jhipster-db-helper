@@ -15,9 +15,36 @@ const jhipsterVar = {
 // Stores JHipster functions
 const jhipsterFunc = {};
 
-Generator.prototype.log = (msg) => { console.log(msg); };
-
 module.exports = class extends Generator {
+    // TODO : refactor (no testing logic in production code)
+    /**
+     * Get the absolute path of the config file .yo-rc.json.
+     * When used normally, this function returns the current application's .yo-rc.json.
+     * When testing, this function returns the config file for the given test case, which is a constant.
+     */
+    _getConfigFilePath(testCase) {
+        let filePath = null;
+
+        if (typeof testCase !== 'string') {
+            throw new TypeError(`_getConfigFilePath: testCase parameter: expected type 'string', was instead '${typeof testCase}'`);
+        }
+
+        // set filePath depending on whether the generator is running a test case or not
+        if (testCase === '') {
+            filePath = path.join(process.cwd(), '/.yo-rc.json');
+        } else if (DBH_CONSTANTS.testCases[testCase] !== undefined) {
+            filePath = path.join(__dirname, '..', DBH_CONSTANTS.testConfigFiles[testCase]);
+        } else {
+            throw new Error(`_getConfigFilePath: testCase parameter: not a test case we know of. testCase was: ${testCase}`);
+        }
+
+        if (!fs.existsSync(filePath)) {
+            throw new Error(`_getConfigFilePath: Sought after this file, but it doesn't exist. Path was:\n${filePath}`);
+        }
+
+        return filePath;
+    }
+
     /**
      * Replace Spring naming strategies with more neutral ones.
      *
@@ -46,6 +73,23 @@ module.exports = class extends Generator {
                 throw new Error(`_replaceNamingStrategies: File doesn't exist! Path was:\n${path}`);
             }
         });
+    }
+
+    constructor(args, opts) {
+        super(args, opts);
+
+        /**
+         * dbhTestCase: Option used to make unit tests in temporary directories instead of the current directory.
+         * The passed string argument references constants.
+         * those constants can be found in dbh-constants.js.
+         */
+        this.option('dbhTestCase', {
+            desc: 'Test case for this module\'s npm test',
+            type: String,
+            defaults: ''
+        });
+
+        this.dbhTestCase = this.options.dbhTestCase;
     }
 
     // check current project state, get configs, etc
@@ -83,7 +127,7 @@ module.exports = class extends Generator {
         this.packageName = jhipsterVar.packageName;
         this.angularAppName = jhipsterVar.angularAppName;
         this.clientFramework = jhipsterVar.clientFramework;
-        this.clientPackageManager = jhipsterVar.clientPackageManage ;
+        this.clientPackageManager = jhipsterVar.clientPackageManage;
         this.message = this.props.message;
 
         try {
