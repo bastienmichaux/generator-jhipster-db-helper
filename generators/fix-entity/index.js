@@ -11,7 +11,7 @@ const DBH_CONSTANTS = require('../dbh-constants.js');
 
 // Stores JHipster variables
 const jhipsterVar = {
-    moduleName: DBH_CONSTANTS.fixEntityModuleName
+    moduleName: DBH_CONSTANTS.moduleName.postEntityGenerator
 };
 
 // Stores JHipster functions

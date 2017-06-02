@@ -12,7 +12,7 @@ const packagejs = require('../../package.json'); // gives access to the package.
 
 // Stores JHipster variables
 const jhipsterVar = {
-    moduleName: DBH_CONSTANTS.moduleName
+    moduleName: DBH_CONSTANTS.moduleName.postAppGenerator
 };
 
 // Stores JHipster functions
@@ -243,14 +243,12 @@ module.exports = class extends Generator {
                     jhipsterFunc.registerModule('generator-jhipster-db-helper', 'app', 'post', 'app', 'A JHipster module for already existing databases');
                 } catch (err) {
                     this.log(`${chalk.red.bold('WARN!')} Could not register as a jhipster entity post creation hook...\n`);
-                    console.error(err);
                 }
 
                 try {
                     jhipsterFunc.registerModule('generator-jhipster-db-helper', 'entity', 'post', 'fix-entity', 'A JHipster module to circumvent JHipster limitations about names');
                 } catch (err) {
                     this.log(`${chalk.red.bold('WARN!')} Could not register as a jhipster entity post creation hook...\n`);
-                    console.error(err);
                 }
 
                 // replace files with Spring's naming strategies

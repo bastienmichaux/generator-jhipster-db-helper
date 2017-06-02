@@ -72,8 +72,10 @@ const constants = {
     physicalNamingStrategyNew: 'org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl',
 
     /** modules name */
-    moduleName: 'db-helper',
-    fixEntityModuleName: 'fix-entity'
+    moduleName: {
+        postAppGenerator: 'db-helper',
+        postEntityGenerator: 'fix-entity'
+    }
 };
 
 module.exports = constants;
