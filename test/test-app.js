@@ -35,29 +35,6 @@ describe('Post app hook', function () {
             assert.textEqual(expectedFile, testedPath);
         });
     });
-    describe('_getPolyfill', function () {
-        it('returns a valid polyfill', function () {
-            const f = path.join(__dirname, 'templates/default/usingMaven/.yo-rc.json');
-            assert.file(f);
-
-            return Generator.prototype._getPolyfill(f)
-            .then(
-                (onFulfilled) => {
-                    assert(dbh.isNotEmptyString(onFulfilled.baseName));
-                    assert(dbh.isNotEmptyString(onFulfilled.packageName));
-                    assert(dbh.isNotEmptyString(onFulfilled.angularAppName) || onFulfilled.angularAppName === null);
-                    assert(dbh.isNotEmptyString(onFulfilled.clientFramework));
-                    assert(dbh.isNotEmptyString(onFulfilled.clientPackageManager));
-                    assert(dbh.isNotEmptyString(onFulfilled.buildTool) && dbh.isValidBuildTool(onFulfilled.buildTool));
-                    assert(typeof onFulfilled.registerModule === 'function');
-                    assert(typeof onFulfilled.updateEntityConfig === 'function');
-                },
-                (onRejected) => {
-                    return onRejected;
-                }
-            );
-        });
-    });
     // TODO : reduce code duplication when assigning 'testedFiles'
     describe('_replaceNamingStrategies, with an application using Maven', function() {
         it('works', function () {
