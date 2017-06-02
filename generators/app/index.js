@@ -175,43 +175,30 @@ module.exports = class extends Generator {
 
         // TODO : refactor (no testing logic in production code)
         this._getPolyfill(configFile)
+        // this block holds the polyfilling for jhipsterVar and jhipsterFunc properties gone missing when testing
         .then(
             (onFulfilled) => {
-                // direct assignment avoids a left-hand side object property assignment bug
-                // See: https://stackoverflow.com/questions/26288963/weird-behaviour-with-use-strict-and-read-only-properties
-
-                // jhipsterVar properties
-                polyfill.baseName = onFulfilled.baseName;
-                polyfill.packageName = onFulfilled.packageName;
-                polyfill.angularAppName = onFulfilled.angularAppName;
-                polyfill.clientFramework = onFulfilled.clientFramework;
-                polyfill.clientPackageManager = onFulfilled.clientPackageManager;
-                polyfill.buildTool = onFulfilled.buildTool;
-
-                // jhipsterFunc properties
-                polyfill.registerModule = onFulfilled.registerModule;
-                polyfill.updateEntityConfig = onFulfilled.updateEntityConfig;
-
                 // polyfill jhipsterFunc.registerModule
-                if (jhipsterFunc.registerModule === undefined) {
-                    jhipsterFunc.registerModule = polyfill.registerModule;
-                }
+                jhipsterFunc.registerModule = onFulfilled.registerModule;
 
-                const buildTool = jhipsterVar.jhipsterConfig === undefined
-                ? polyfill.buildTool
+                jhipsterVar.buildTool = jhipsterVar.jhipsterConfig === undefined
+                ? onFulfilled.buildTool
                 : jhipsterVar.jhipsterConfig.buildTool;
 
                 // declarations done by jhipster-module, polyfill in case of testing
-                this.baseName = jhipsterVar.baseName || polyfill.baseName;
-                this.packageName = jhipsterVar.packageName || polyfill.packageName;
-                this.angularAppName = jhipsterVar.angularAppName || polyfill.angularAppName;
-                this.clientFramework = jhipsterVar.clientFramework || polyfill.clientFramework;
-                this.clientPackageManager = jhipsterVar.clientPackageManager || polyfill.clientPackageManager;
+                this.baseName = jhipsterVar.baseName || onFulfilled.baseName;
+                this.packageName = jhipsterVar.packageName || onFulfilled.packageName;
+                this.angularAppName = jhipsterVar.angularAppName || onFulfilled.angularAppName;
+                this.clientFramework = jhipsterVar.clientFramework || onFulfilled.clientFramework;
+                this.clientPackageManager = jhipsterVar.clientPackageManager || onFulfilled.clientPackageManager;
                 this.message = this.props.message;
-
-                // TODO : fix the following error when using jhipsterFunc.registerModule:
-                // 'TypeError: this.log is not a function'
-
+            },
+            (onRejected) => {
+                throw new Error(onRejected);
+            }
+        )
+        .then(
+            (onFulfilled) => {
                 try {
                     jhipsterFunc.registerModule('generator-jhipster-db-helper', 'app', 'post', 'app', 'A JHipster module for already existing databases');
                 } catch (err) {
@@ -226,7 +213,7 @@ module.exports = class extends Generator {
 
                 // replace files with Spring's naming strategies
                 this.log(chalk.bold.yellow('JHipster-db-helper replaces your naming strategies :'));
-                this._replaceNamingStrategies(buildTool);
+                this._replaceNamingStrategies(jhipsterVar.buildTool);
             },
             (onRejected) => {
                 throw new Error(onRejected);
