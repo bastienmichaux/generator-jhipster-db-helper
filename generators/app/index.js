@@ -24,30 +24,6 @@ let polyfill = {};
 Generator.prototype.log = (msg) => { console.log(msg); };
 
 module.exports = class extends Generator {
-    /** Duplicate of a JHipster function where we have replaced how the path is handled, because we use absolute paths */
-    _replaceContent (filePath, pattern, content, regex) {
-        function dbh_replaceContent(args, generator) {
-            args.path = args.path || process.cwd();
-
-            // this line has been modified in respect to jhipster's util.js replaceContent
-            // because we use absolute paths
-            const fullPath = args.file;
-
-            const re = args.regex ? new RegExp(args.pattern, 'g') : args.pattern;
-
-            let body = generator.fs.read(fullPath);
-            body = body.replace(re, args.content);
-            generator.fs.write(fullPath, body);
-        }
-
-        dbh_replaceContent({
-            file: filePath,
-            pattern,
-            content,
-            regex
-        }, this);
-    }
-
     /**
      * Get the absolute path of the config file .yo-rc.json.
      * When used normally, this function returns the current application's .yo-rc.json.
@@ -169,9 +145,9 @@ module.exports = class extends Generator {
         files.forEach((path) => {
             if (fs.existsSync(path)) {
                 // 1) replace Spring physical naming strategy
-                this._replaceContent(path, physicalOld, physicalNew);
+                dbh.replaceContent(path, physicalOld, physicalNew, null, this);
                 // 2) replace Spring implicit naming strategy
-                this._replaceContent(path, implicitOld, implicitNew);
+                dbh.replaceContent(path, implicitOld, implicitNew, null, this);
             } else {
                 throw new Error(`_replaceNamingStrategies: File doesn't exist! Path was:\n${path}`);
             }

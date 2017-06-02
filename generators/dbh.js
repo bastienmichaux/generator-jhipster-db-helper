@@ -137,6 +137,15 @@ const hasConstraints = (relationships) => {
 const isNotEmptyString = x => typeof x === 'string' && x !== '';
 
 
+/** Duplicate of a JHipster function where we have replaced how the path is handled, because we use absolute paths */
+const replaceContent = (absolutePath, pattern, content, regex, generator) => {
+    const re = regex ? new RegExp(pattern, 'g') : pattern;
+    let body = generator.fs.read(absolutePath);
+    
+    body = body.replace(re, content);
+    generator.fs.write(absolutePath, body);
+}
+
 /** Validate user input when asking for a SQL column name */
 const validateColumnName = (input, dbType) => {
     if (input === '') {
@@ -180,6 +189,7 @@ module.exports = {
     hasConstraints,
     isNotEmptyString,
     isValidBuildTool,
+    replaceContent,
     validateColumnName,
     validateTableName
 };
