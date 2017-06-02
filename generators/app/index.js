@@ -52,50 +52,7 @@ module.exports = class extends Generator {
 
         return filePath;
     }
-
-    // TODO : refactor (no testing logic in production code)
-    /**
-     * Get a polyfill for the jhipsterVar and jhipsterFunc properties gone missing when testing
-     * because of a [yeoman-test](https://github.com/bastienmichaux/generator-jhipster-db-helper/issues/19) issue.
-     *
-     * @param {string} appConfigPath - path to the current .yo-rc.json application file
-     */
-    _getPolyfill(appConfigPath) {
-        // stop if file not found
-        if (!fs.existsSync(appConfigPath)) {
-            throw new Error(`_getPolyfill: File ${appConfigPath} not found`);
-        }
-
-        // else return a promise holding the polyfill
-        return dbh.getAppConfig(appConfigPath)
-        .then(
-            (onResolve) => {
-                const conf = onResolve['generator-jhipster'];
-                const poly = {};
-
-                // @todo: defensive programming with these properties (hasOwnProperty ? throw ?)
-
-                // jhipsterVar polyfill :
-                poly.baseName = conf.baseName;
-                poly.packageName = conf.packageName;
-                poly.angularAppName = conf.angularAppName || null; // handle an undefined value (JSON properties can't be undefined)
-                poly.clientFramework = conf.clientFramework;
-                poly.clientPackageManager = conf.clientPackageManager;
-                poly.buildTool = conf.buildTool;
-
-                // jhipsterFunc polyfill :
-                poly.registerModule = jhipsterModuleSubgenerator.prototype.registerModule;
-                poly.updateEntityConfig = jhipsterModuleSubgenerator.prototype.updateEntityConfig;
-
-                // @todo : handle this.options.testMode ?
-
-                return poly;
-            },
-            (onError) => {
-                throw new Error(onError);
-            }
-        );
-    }
+    
 
     /**
      * Replace Spring naming strategies with more neutral ones.
@@ -174,7 +131,7 @@ module.exports = class extends Generator {
         const configFile = this._getConfigFilePath(this.dbhTestCase);
 
         // TODO : refactor (no testing logic in production code)
-        this._getPolyfill(configFile)
+        dbh.postAppPolyfill(configFile)
         // this block holds the polyfilling for jhipsterVar and jhipsterFunc properties gone missing when testing
         .then(
             (onFulfilled) => {

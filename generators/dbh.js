@@ -1,5 +1,6 @@
 const DBH_CONSTANTS = require('./dbh-constants');
 const jhipsterCore = require('jhipster-core');
+const jhipsterModuleSubgenerator = require('../node_modules/generator-jhipster/generators/modules/index.js');
 const pluralize = require('pluralize');
 const fs = require('fs');
 
@@ -28,6 +29,49 @@ const getAppConfig = configFilePath => new Promise((resolve, reject) => {
         reject(new Error(`getAppConfig: file ${configFilePath} not found`));
     }
 });
+
+/**
+ * Get a polyfill for the jhipsterVar and jhipsterFunc properties gone missing when testing
+ * because of a [yeoman-test](https://github.com/bastienmichaux/generator-jhipster-db-helper/issues/19) issue.
+ *
+ * @param {string} appConfigPath - path to the current .yo-rc.json application file
+ */
+const postAppPolyfill = (appConfigPath) => {
+    // stop if file not found
+    if (!fs.existsSync(appConfigPath)) {
+        throw new Error(`_getPolyfill: File ${appConfigPath} not found`);
+    }
+
+    // else return a promise holding the polyfill
+    return getAppConfig(appConfigPath)
+    .then(
+        (onResolve) => {
+            const conf = onResolve['generator-jhipster'];
+            const poly = {};
+
+            // @todo: defensive programming with these properties (hasOwnProperty ? throw ?)
+
+            // jhipsterVar polyfill :
+            poly.baseName = conf.baseName;
+            poly.packageName = conf.packageName;
+            poly.angularAppName = conf.angularAppName || null; // handle an undefined value (JSON properties can't be undefined)
+            poly.clientFramework = conf.clientFramework;
+            poly.clientPackageManager = conf.clientPackageManager;
+            poly.buildTool = conf.buildTool;
+
+            // jhipsterFunc polyfill :
+            poly.registerModule = jhipsterModuleSubgenerator.prototype.registerModule;
+            poly.updateEntityConfig = jhipsterModuleSubgenerator.prototype.updateEntityConfig;
+
+            // @todo : handle this.options.testMode ?
+
+            return poly;
+        },
+        (onError) => {
+            throw new Error(onError);
+        }
+    );
+}
 
 
 /**
@@ -190,6 +234,7 @@ module.exports = {
     hasConstraints,
     isNotEmptyString,
     isValidBuildTool,
+    postAppPolyfill,
     replaceContent,
     validateColumnName,
     validateTableName
