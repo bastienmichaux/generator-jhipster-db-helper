@@ -131,7 +131,7 @@ module.exports = class extends Generator {
         const configFile = this._getConfigFilePath(this.dbhTestCase);
 
         // TODO : refactor (no testing logic in production code)
-        this._getPolyfill(configFile)
+        dbh.postAppPolyfill(configFile)
         // this block polyfills the jhipsterVar and jhipsterFunc properties that could have gone missing when testing
         .then(
             (onFulfilled) => {
