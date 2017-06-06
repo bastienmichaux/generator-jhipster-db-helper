@@ -183,6 +183,7 @@ module.exports = generator.extend({
                 (relationshipItem.relationshipType === 'many-to-many' && !relationshipItem.ownerSide)) {
                 return;
             }
+
             const otherEntity = JSON.parse(fs.readFileSync(`${this.entityConfig.jhipsterConfigDirectory}/${relationshipItem.otherEntityNameCapitalized}.json`, 'utf8'));
             const oldValue = relationshipItem.dbhRelationshipId;
 
@@ -222,6 +223,19 @@ module.exports = generator.extend({
 
             jhipsterFunc.replaceContent(files.liquibaseEntity, `<column name="(${columnName}|${oldValue})`, `<column name="${newValue}`, true);
             jhipsterFunc.replaceContent(files.liquibaseConstraints, `<addForeignKeyConstraint baseColumnNames="(${columnName}|${oldValue})`, `<addForeignKeyConstraint baseColumnNames="${newValue}`, true);
+
+            // The annotation @JsonProperty needs this additional import
+            const newImport = 'import com.fasterxml.jackson.annotation.JsonProperty;';
+            const landmarkImport = 'import org.hibernate.annotations.Cache;';
+            jhipsterFunc.replaceContent(files.ORM, `(${newImport})?\n${landmarkImport}`, `${newImport}\n${landmarkImport}`, true);
+            const oldAddition = '@JsonProperty\\(".*"\\)';
+            const addition = `@JsonProperty("${relationshipItem.otherEntityNameCapitalized}")`;
+            const landmark = `public ${relationshipItem.otherEntityNameCapitalized} get${relationshipItem.otherEntityNameCapitalized}`;
+            /**
+             * (${oldAddition}\\s*)? - $1 : remove a possibly present old annotation
+             * (\\n( |\\t)*) - $2 : catch the indentation
+             */
+            jhipsterFunc.replaceContent(files.ORM, `(${oldAddition}\\s*)?(\\n( |\\t)*)${landmark}`, `$2${addition}$2${landmark}`, true);
         });
     },
 
