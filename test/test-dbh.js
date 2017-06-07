@@ -172,27 +172,46 @@ describe('Dbh', function () {
         it('returns a valid polyfill', function () {
             const f = path.join(__dirname, 'templates/default/usingMaven/.yo-rc.json');
             assert.file(f);
-
             return dbh.postAppPolyfill(f)
-                .then(
-                    (onFulfilled) => {
-                        assert(dbh.isNotEmptyString(onFulfilled.baseName));
-                        assert(dbh.isNotEmptyString(onFulfilled.packageName));
-                        assert(dbh.isNotEmptyString(onFulfilled.angularAppName) || onFulfilled.angularAppName === null);
-                        assert(dbh.isNotEmptyString(onFulfilled.clientFramework));
-                        assert(dbh.isNotEmptyString(onFulfilled.clientPackageManager));
-                        assert(dbh.isNotEmptyString(onFulfilled.buildTool) && dbh.isValidBuildTool(onFulfilled.buildTool));
-                        assert(typeof onFulfilled.registerModule === 'function');
-                        assert(typeof onFulfilled.updateEntityConfig === 'function');
-                    },
-                    (onRejected) => {
-                        return onRejected;
-                    }
-                );
+            .then(
+                (onFulfilled) => {
+                    assert(dbh.isNotEmptyString(onFulfilled.baseName));
+                    assert(dbh.isNotEmptyString(onFulfilled.packageName));
+                    assert(dbh.isNotEmptyString(onFulfilled.angularAppName) || onFulfilled.angularAppName === null);
+                    assert(dbh.isNotEmptyString(onFulfilled.clientFramework));
+                    assert(dbh.isNotEmptyString(onFulfilled.clientPackageManager));
+                    assert(dbh.isNotEmptyString(onFulfilled.buildTool) && dbh.isValidBuildTool(onFulfilled.buildTool));
+                    assert(typeof onFulfilled.registerModule === 'function');
+                    assert(typeof onFulfilled.updateEntityConfig === 'function');
+                },
+                (onRejected) => {
+                    return onRejected;
+                }
+            );
         });
     });
     describe('postEntityPolyfill', function () {
-        it('returns a valid polyfill');
+        it('returns a valid polyfill', function () {
+            const f = path.join(__dirname, 'templates/default/usingMaven/.yo-rc.json');
+            assert.file(f);
+
+            return dbh.postEntityPolyfill(f)
+            .catch(err => console.log(err))
+            .then(
+                (onFulfilled) => {
+                    console.log('================================');
+                    console.log(onFulfilled);
+                    assert(typeof onFulfilled.jhipsterConfig === 'object');
+                    assert(dbh.isNotEmptyString(onFulfilled.javaDir));
+                    assert(dbh.isNotEmptyString(onFulfilled.resourceDir));
+                    assert(typeof onFulfilled.replaceContent === 'function');
+                    assert(typeof onFulfilled.updateEntityConfig === 'function');
+                },
+                (onRejected) => {
+                    console.error(onRejected);
+                }
+            );
+        });
     });
     describe('validateColumnName', function () {
         // messages output by validateColumnName
