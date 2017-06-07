@@ -4,18 +4,18 @@
  * test/templates/entities : base entities
  * test/templates/expectedEntities : expected json files after search & replace
  **/
-const path = require('path');
-const fse = require('fs-extra');
+
+/* global describe, beforeEach, it*/
+/* eslint-disable prefer-arrow-callback */
+
 const assert = require('yeoman-assert');
-const helpers = require('yeoman-test');
 
-const dbh = require('../generators/dbh.js');
-const Generator = require('../generators/fix-entity/index.js');
-
-const deps = [];
+const generator = require('../generators/fix-entity/index.js');
 
 describe('Post entity hook', function () {
     describe('module', function () {
-        it('works');
+        it('works', function () {
+            assert(generator !== undefined);
+        });
     });
 });
