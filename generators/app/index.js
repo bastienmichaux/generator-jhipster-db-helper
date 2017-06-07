@@ -109,10 +109,12 @@ module.exports = class extends Generator {
     constructor(args, opts) {
         super(args, opts);
 
-        // Option used to make unit tests in temporary directories instead of the current directory.
-        // The passed string argument references constants,
-        // those constants can be found in test/test-constants.js.
-        this.option('dbhTestCase', {
+        /**
+         * dbhTestCase: Option used to make unit tests in temporary directories instead of the current directory.
+         * The passed string argument references constants.
+         * those constants can be found in test/test-constants.js.
+         */
+         this.option('dbhTestCase', {
             desc: 'Test case for this module\'s npm test',
             type: String,
             defaults: ''
