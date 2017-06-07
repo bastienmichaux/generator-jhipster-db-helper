@@ -1,5 +1,4 @@
 const chalk = require('chalk');
-const generator = require('yeoman-generator');
 const dbh = require('../dbh.js');
 
 module.exports = {
@@ -11,7 +10,7 @@ module.exports = {
  * Ask the table name for an entity
  */
 function askForTableName() {
-    if(this.force) {
+    if (this.force) {
         return;
     }
 
@@ -22,7 +21,7 @@ function askForTableName() {
         {
             type: 'input',
             name: 'dbhTableName',
-            validate: (input => {
+            validate: ((input) => {
                 const prodDatabaseType = this.appConfig.prodDatabaseType;
                 return validateTableName(input, prodDatabaseType);
             }),
@@ -68,7 +67,7 @@ function askForColumnName(done) {
         {
             type: 'input',
             name: 'dbhColumnName',
-            validate: (input => {
+            validate: ((input) => {
                 const prodDatabaseType = this.appConfig.prodDatabaseType;
                 return validateColumnName(input, prodDatabaseType);
             }),

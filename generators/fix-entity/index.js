@@ -2,10 +2,7 @@ const generator = require('yeoman-generator');
 const chalk = require('chalk');
 const prompts = require('./prompts.js');
 const fs = require('fs');
-const path = require('path');
 
-const jhipsterConstants = require('../../node_modules/generator-jhipster/generators/generator-constants.js');
-const jhipsterModuleSubgenerator = require('../../node_modules/generator-jhipster/generators/modules/index.js');
 const dbh = require('../dbh.js');
 const DBH_CONSTANTS = require('../dbh-constants.js');
 

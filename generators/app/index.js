@@ -6,7 +6,6 @@ const path = require('path');
 const dbh = require('../dbh.js');
 const DBH_CONSTANTS = require('../dbh-constants');
 const DBH_TEST_CONSTANTS = require('../../test/test-constants.js');
-const jhipsterModuleSubgenerator = require('../../node_modules/generator-jhipster/generators/modules/index.js');
 const packagejs = require('../../package.json'); // gives access to the package.json data
 
 // Stores JHipster variables
@@ -19,7 +18,7 @@ const jhipsterFunc = {};
 
 // polyfill for jhipsterVar and jhipsterFunc when testing, see [issue #19](https://github.com/bastienmichaux/generator-jhipster-db-helper/issues/19)
 // TODO : refactor (no testing logic in production code)
-const polyfill = {};
+const polyfill = {}; // eslint-disable-line no-unused-vars
 
 Generator.prototype.log = (msg) => { console.log(msg); };
 
@@ -52,7 +51,7 @@ module.exports = class extends Generator {
 
         return filePath;
     }
-    
+
 
     /**
      * Replace Spring naming strategies with more neutral ones.
@@ -211,4 +210,3 @@ module.exports = class extends Generator {
         this.log(chalk.bold.yellow('End of db-helper generator'));
     }
 };
- 
