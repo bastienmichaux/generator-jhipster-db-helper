@@ -20,12 +20,15 @@ describe('Dbh', function () {
 
             return dbh.getAppConfig(f)
             .catch(err => console.error(err))
-            .then(onFulfilled => {
-                assert(typeof onFulfilled === 'object');
-                assert.deepStrictEqual(expectedConfig, onFulfilled);
-            }, onRejected => {
-                console.log(onRejected);
-            });
+            .then(
+                (onFulfilled) => {
+                    assert(typeof onFulfilled === 'object');
+                    assert.deepStrictEqual(expectedConfig, onFulfilled);
+                },
+                (onRejected) => {
+                    console.log(onRejected);
+                }
+            );
         });
         it('returns the expected app config with Gradle as build tool', function () {
             const expectedConfig = DBH_TEST_CONSTANTS.templateConfigFile.usingGradle;
@@ -185,7 +188,7 @@ describe('Dbh', function () {
                     assert(typeof onFulfilled.updateEntityConfig === 'function');
                 },
                 (onRejected) => {
-                    return onRejected;
+                    console.error(onRejected);
                 }
             );
         });

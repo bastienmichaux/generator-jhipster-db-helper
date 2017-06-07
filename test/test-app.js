@@ -1,4 +1,5 @@
 /* global describe, beforeEach, it*/
+/* eslint-disable prefer-arrow-callback */
 
 const path = require('path');
 const fs = require('fs');
@@ -6,13 +7,10 @@ const fse = require('fs-extra');
 const assert = require('yeoman-assert');
 const helpers = require('yeoman-test');
 
-const dbh = require('../generators/dbh.js');
 const DBH_CONSTANTS = require('../generators/dbh-constants');
 const DBH_TEST_CONSTANTS = require('./test-constants');
 
 const Generator = require('../generators/app/index.js');
-const GeneratorBase = require('../node_modules/generator-jhipster/generators/generator-base.js');
-const jhipsterModuleSubgenerator = require('../node_modules/generator-jhipster/generators/modules/index.js');
 
 const deps = [
     [helpers.createDummyGenerator(), 'jhipster:modules']
@@ -36,7 +34,7 @@ describe('Post app hook', function () {
         });
     });
     // TODO : reduce code duplication when assigning 'testedFiles'
-    describe('_replaceNamingStrategies, with an application using Maven', function() {
+    describe('_replaceNamingStrategies, with an application using Maven', function () {
         it('works', function () {
             assert.file(postAppGenerator);
 
@@ -73,7 +71,7 @@ describe('Post app hook', function () {
              * then we check the naming strategies have been replaced
              */
             return helpers.run(postAppGenerator)
-            .withOptions({ dbhTestCase: DBH_TEST_CONSTANTS.testCases.usingMaven}) // this option allow testing outside of an application
+            .withOptions({ dbhTestCase: DBH_TEST_CONSTANTS.testCases.usingMaven }) // this option allow testing outside of an application
             .withGenerators(deps) // generator(s) we compose with
             .inDir(temporaryFolder, function () {
                 // copy the files that the generator will modify
@@ -116,7 +114,7 @@ describe('Post app hook', function () {
             );
         });
     });
-    describe('_replaceNamingStrategies, with an application using Gradle', function() {
+    describe('_replaceNamingStrategies, with an application using Gradle', function () {
         // cf. unit test above
         it('works', function () {
             // folder where we copy the files
@@ -144,7 +142,7 @@ describe('Post app hook', function () {
             });
 
             return helpers.run(postAppGenerator)
-            .withOptions({dbhTestCase: DBH_TEST_CONSTANTS.testCases.usingGradle}) // this option allow testing outside of an application
+            .withOptions({ dbhTestCase: DBH_TEST_CONSTANTS.testCases.usingGradle }) // this option allow testing outside of an application
             .withGenerators(deps) // generator(s) we compose with
             .inDir(temporaryFolder, function () {
                 // copy the files that the generator will modify
