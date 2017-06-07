@@ -98,7 +98,7 @@ describe('Post app hook', function () {
                     });
                 },
                 (onError) => {
-                    throw new Error(onError);
+                    console.error(onError);
                 }
             )
             .then(
@@ -109,7 +109,7 @@ describe('Post app hook', function () {
                 (onError) => {
                     // in case of error, empty the test folder anyway
                     fse.emptyDirSync(temporaryFolder);
-                    throw new Error(onError);
+                    console.error(onError);
                 }
             );
         });
@@ -167,13 +167,9 @@ describe('Post app hook', function () {
                         assert.fileContent(currentFile, DBH_CONSTANTS.implicitNamingStrategyNew);
                         assert.fileContent(currentFile, DBH_CONSTANTS.physicalNamingStrategyNew);
                     });
-                    // empty the test folder for the next test session
-                    fse.emptyDirSync(temporaryFolder);
                 },
                 (onError) => {
-                    // in case of error, empty the test folder anyway
-                    fse.emptyDirSync(temporaryFolder);
-                    throw new Error(onError);
+                    console.error(onError);
                 }
             )
             .then(
@@ -184,7 +180,7 @@ describe('Post app hook', function () {
                 (onError) => {
                     // in case of error, empty the test folder anyway
                     fse.emptyDirSync(temporaryFolder);
-                    throw new Error(onError);
+                    console.error(onError);
                 }
             );
         });
