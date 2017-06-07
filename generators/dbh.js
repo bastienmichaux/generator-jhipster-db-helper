@@ -16,6 +16,8 @@ const getAppConfig = configFilePath => new Promise((resolve, reject) => {
             if (err) {
                 reject(new Error(`getAppConfig: fs.readFile error.\nPath was ${configFilePath}\n${err}`));
             }
+
+            // TODO : search if this statement should be in a try/catch or not
             const appConfigToJson = JSON.parse(data);
 
             // handle undefined object
@@ -88,8 +90,6 @@ const postEntityPolyfill = (appConfigPath) => {
             const conf = onResolve['generator-jhipster'];
             const poly = {};
 
-            // @todo: defensive programming with these properties (hasOwnProperty ? throw ?)
-
             // jhipsterVar polyfill :
             poly.jhipsterConfig = conf;
             poly.javaDir = `${jhipsterConstants.SERVER_MAIN_SRC_DIR + conf.packageFolder}/`;
@@ -100,7 +100,7 @@ const postEntityPolyfill = (appConfigPath) => {
             return poly;
         },
         (onError) => {
-            console.error(onError)
+            console.error(onError);
         }
     );
 };
