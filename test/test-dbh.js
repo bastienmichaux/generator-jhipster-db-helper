@@ -11,29 +11,6 @@ const DBH_TEST_CONSTANTS = require('./test-constants.js');
 
 // Dbh unit test
 describe('Dbh', function () {
-    describe('_getPolyfill', function () {
-        it('returns a valid polyfill', function () {
-            const f = path.join(__dirname, 'templates/default/usingMaven/.yo-rc.json');
-            assert.file(f);
-
-            return dbh.postAppPolyfill(f)
-            .then(
-                (onFulfilled) => {
-                    assert(dbh.isNotEmptyString(onFulfilled.baseName));
-                    assert(dbh.isNotEmptyString(onFulfilled.packageName));
-                    assert(dbh.isNotEmptyString(onFulfilled.angularAppName) || onFulfilled.angularAppName === null);
-                    assert(dbh.isNotEmptyString(onFulfilled.clientFramework));
-                    assert(dbh.isNotEmptyString(onFulfilled.clientPackageManager));
-                    assert(dbh.isNotEmptyString(onFulfilled.buildTool) && dbh.isValidBuildTool(onFulfilled.buildTool));
-                    assert(typeof onFulfilled.registerModule === 'function');
-                    assert(typeof onFulfilled.updateEntityConfig === 'function');
-                },
-                (onRejected) => {
-                    return onRejected;
-                }
-            );
-        });
-    });
     describe('getAppConfig', function () {
         it('returns the expected app config with Maven as build tool', function () {
             const expectedConfig = DBH_TEST_CONSTANTS.templateConfigFile.usingMaven;
@@ -190,6 +167,32 @@ describe('Dbh', function () {
             assert(dbh.isValidBuildTool('foo') === false);
             assert(dbh.isValidBuildTool() === false);
         });
+    });
+    describe('postAppPolyfill', function () {
+        it('returns a valid polyfill', function () {
+            const f = path.join(__dirname, 'templates/default/usingMaven/.yo-rc.json');
+            assert.file(f);
+
+            return dbh.postAppPolyfill(f)
+                .then(
+                    (onFulfilled) => {
+                        assert(dbh.isNotEmptyString(onFulfilled.baseName));
+                        assert(dbh.isNotEmptyString(onFulfilled.packageName));
+                        assert(dbh.isNotEmptyString(onFulfilled.angularAppName) || onFulfilled.angularAppName === null);
+                        assert(dbh.isNotEmptyString(onFulfilled.clientFramework));
+                        assert(dbh.isNotEmptyString(onFulfilled.clientPackageManager));
+                        assert(dbh.isNotEmptyString(onFulfilled.buildTool) && dbh.isValidBuildTool(onFulfilled.buildTool));
+                        assert(typeof onFulfilled.registerModule === 'function');
+                        assert(typeof onFulfilled.updateEntityConfig === 'function');
+                    },
+                    (onRejected) => {
+                        return onRejected;
+                    }
+                );
+        });
+    });
+    describe('postEntityPolyfill', function () {
+        it('returns a valid polyfill');
     });
     describe('validateColumnName', function () {
         // messages output by validateColumnName
