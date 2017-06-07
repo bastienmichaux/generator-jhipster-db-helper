@@ -8,7 +8,6 @@ const assert = require('yeoman-assert');
 const helpers = require('yeoman-test');
 
 const DBH_CONSTANTS = require('../generators/dbh-constants');
-const DBH_TEST_CONSTANTS = require('./test-constants');
 
 const Generator = require('../generators/app/index.js');
 
@@ -22,13 +21,13 @@ describe('Post app hook', function () {
     describe('_getConfigFilePath', function () {
         it('return the expected file (gradle)', function () {
             const expectedFile = path.join(__dirname, 'templates/default/usingGradle/.yo-rc.json');
-            const testedPath = Generator.prototype._getConfigFilePath(DBH_TEST_CONSTANTS.testCases.usingGradle);
+            const testedPath = Generator.prototype._getConfigFilePath(DBH_CONSTANTS.testCases.usingGradle);
             assert.file(expectedFile);
             assert.textEqual(expectedFile, testedPath);
         });
         it('return the expected file (maven)', function () {
             const expectedFile = path.join(__dirname, 'templates/default/usingMaven/.yo-rc.json');
-            const testedPath = Generator.prototype._getConfigFilePath(DBH_TEST_CONSTANTS.testCases.usingMaven);
+            const testedPath = Generator.prototype._getConfigFilePath(DBH_CONSTANTS.testCases.usingMaven);
             assert.file(expectedFile);
             assert.textEqual(expectedFile, testedPath);
         });
@@ -71,7 +70,7 @@ describe('Post app hook', function () {
              * then we check the naming strategies have been replaced
              */
             return helpers.run(postAppGenerator)
-            .withOptions({ dbhTestCase: DBH_TEST_CONSTANTS.testCases.usingMaven }) // this option allow testing outside of an application
+            .withOptions({ dbhTestCase: DBH_CONSTANTS.testCases.usingMaven }) // this option allow testing outside of an application
             .withGenerators(deps) // generator(s) we compose with
             .inDir(temporaryFolder, function () {
                 // copy the files that the generator will modify
@@ -142,7 +141,7 @@ describe('Post app hook', function () {
             });
 
             return helpers.run(postAppGenerator)
-            .withOptions({ dbhTestCase: DBH_TEST_CONSTANTS.testCases.usingGradle }) // this option allow testing outside of an application
+            .withOptions({ dbhTestCase: DBH_CONSTANTS.testCases.usingGradle }) // this option allow testing outside of an application
             .withGenerators(deps) // generator(s) we compose with
             .inDir(temporaryFolder, function () {
                 // copy the files that the generator will modify

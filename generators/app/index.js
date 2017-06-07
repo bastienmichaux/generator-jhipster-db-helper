@@ -5,7 +5,6 @@ const path = require('path');
 
 const dbh = require('../dbh.js');
 const DBH_CONSTANTS = require('../dbh-constants');
-const DBH_TEST_CONSTANTS = require('../../test/test-constants.js');
 const packagejs = require('../../package.json'); // gives access to the package.json data
 
 // Stores JHipster variables
@@ -16,9 +15,7 @@ const jhipsterVar = {
 // Stores JHipster functions
 const jhipsterFunc = {};
 
-// polyfill for jhipsterVar and jhipsterFunc when testing, see [issue #19](https://github.com/bastienmichaux/generator-jhipster-db-helper/issues/19)
-// TODO : refactor (no testing logic in production code)
-const polyfill = {}; // eslint-disable-line no-unused-vars
+let dbhVar = {};
 
 Generator.prototype.log = (msg) => { console.log(msg); };
 
@@ -39,8 +36,8 @@ module.exports = class extends Generator {
         // set filePath depending on whether the generator is running a test case or not
         if (testCase === '') {
             filePath = path.join(process.cwd(), '/.yo-rc.json');
-        } else if (DBH_TEST_CONSTANTS.testCases[testCase] !== undefined) {
-            filePath = path.join(__dirname, '../..', DBH_TEST_CONSTANTS.testConfigFiles[testCase]);
+        } else if (DBH_CONSTANTS.testCases[testCase] !== undefined) {
+            filePath = path.join(__dirname, '..', DBH_CONSTANTS.testConfigFiles[testCase]);
         } else {
             throw new Error(`_getConfigFilePath: testCase parameter: not a test case we know of. testCase was: ${testCase}`);
         }
@@ -50,6 +47,33 @@ module.exports = class extends Generator {
         }
 
         return filePath;
+    }
+
+    // get jhipsterVar and jhipsterFunc properties
+    // without worrying about discrepancies between testing, dev & production code
+    _getDbhVar(testCase) {
+        const configFile = this._getConfigFilePath(testCase);
+
+        dbh.postAppPolyfill(configFile)
+        .then(
+            (onFulfilled) => {
+                const result = {};
+
+                result.registerModule = onFulfilled.registerModule;
+
+                result.buildTool = onFulfilled.buildTool;
+                result.baseName = onFulfilled.baseName;
+                result.packageName = onFulfilled.packageName;
+                result.angularAppName = onFulfilled.angularAppName;
+                result.clientFramework = onFulfilled.clientFramework;
+                result.clientPackageManager = onFulfilled.clientPackageManager;
+
+                return result;
+            },
+            (onRejected) => {
+                throw new Error(onRejected);
+            }
+        );
     }
 
 
@@ -108,6 +132,8 @@ module.exports = class extends Generator {
             { jhipsterVar, jhipsterFunc },
             this.options.testmode ? { local: require.resolve('generator-jhipster/generators/modules') } : null
         );
+
+        dbhVar = this._getDbhVar(this.dbhTestCase);
     }
 
     // prompt the user for options
@@ -127,63 +153,31 @@ module.exports = class extends Generator {
 
     // write the generator-specific files
     writing() {
-        const configFile = this._getConfigFilePath(this.dbhTestCase);
+        this.message = this.props.message;
 
-        // TODO : refactor (no testing logic in production code)
-        dbh.postAppPolyfill(configFile)
-        // this block polyfills the jhipsterVar and jhipsterFunc properties that could have gone missing when testing
-        .then(
-            (onFulfilled) => {
-                // polyfill jhipsterFunc.registerModule
-                jhipsterFunc.registerModule = onFulfilled.registerModule;
+        try {
+            dbhVar.registerModule('generator-jhipster-db-helper', 'app', 'post', 'app', 'A JHipster module for already existing databases');
+        } catch (err) {
+            this.log(`${chalk.red.bold('WARN!')} Could not register as a jhipster entity post creation hook...\n`);
+        }
 
-                jhipsterVar.buildTool = jhipsterVar.jhipsterConfig === undefined
-                ? onFulfilled.buildTool
-                : jhipsterVar.jhipsterConfig.buildTool;
+        try {
+            dbhVar.registerModule('generator-jhipster-db-helper', 'entity', 'post', 'fix-entity', 'A JHipster module to circumvent JHipster limitations about names');
+        } catch (err) {
+            this.log(`${chalk.red.bold('WARN!')} Could not register as a jhipster entity post creation hook...\n`);
+        }
 
-                // declarations done by jhipster-module, polyfill in case of testing
-                this.baseName = jhipsterVar.baseName || onFulfilled.baseName;
-                this.packageName = jhipsterVar.packageName || onFulfilled.packageName;
-                this.angularAppName = jhipsterVar.angularAppName || onFulfilled.angularAppName;
-                this.clientFramework = jhipsterVar.clientFramework || onFulfilled.clientFramework;
-                this.clientPackageManager = jhipsterVar.clientPackageManager || onFulfilled.clientPackageManager;
-                this.message = this.props.message;
-            },
-            (onRejected) => {
-                throw new Error(onRejected);
-            }
-        )
-        // this block holds the logic not related to polyfilling/testing
-        .then(
-            (onFulfilled) => {
-                try {
-                    jhipsterFunc.registerModule('generator-jhipster-db-helper', 'app', 'post', 'app', 'A JHipster module for already existing databases');
-                } catch (err) {
-                    this.log(`${chalk.red.bold('WARN!')} Could not register as a jhipster entity post creation hook...\n`);
-                }
-
-                try {
-                    jhipsterFunc.registerModule('generator-jhipster-db-helper', 'entity', 'post', 'fix-entity', 'A JHipster module to circumvent JHipster limitations about names');
-                } catch (err) {
-                    this.log(`${chalk.red.bold('WARN!')} Could not register as a jhipster entity post creation hook...\n`);
-                }
-
-                // replace files with Spring's naming strategies
-                this.log(chalk.bold.yellow('JHipster-db-helper replaces your naming strategies :'));
-                this._replaceNamingStrategies(jhipsterVar.buildTool);
-            },
-            (onRejected) => {
-                throw new Error(onRejected);
-            }
-        );
+        // replace files with Spring's naming strategies
+        this.log(chalk.bold.yellow('JHipster-db-helper replaces your naming strategies :'));
+        this._replaceNamingStrategies(dbhVar.buildTool);
     }
 
     // run installation (npm, bower, etc)
     install() {
-        let logMsg = `To install your dependencies manually, run: ${chalk.yellow.bold(`${this.clientPackageManager} install`)}`;
+        let logMsg = `To install your dependencies manually, run: ${chalk.yellow.bold(`${dbhVar.clientPackageManager} install`)}`;
 
-        if (this.clientFramework === 'angular1') {
-            logMsg = `To install your dependencies manually, run: ${chalk.yellow.bold(`${this.clientPackageManager} install & bower install`)}`;
+        if (dbhVar.clientFramework === 'angular1') {
+            logMsg = `To install your dependencies manually, run: ${chalk.yellow.bold(`${dbhVar.clientPackageManager} install & bower install`)}`;
         }
 
         const injectDependenciesAndConstants = (err) => {
@@ -196,9 +190,9 @@ module.exports = class extends Generator {
         };
 
         const installConfig = {
-            bower: this.clientFramework === 'angular1',
-            npm: this.clientPackageManager !== 'yarn',
-            yarn: this.clientPackageManager === 'yarn',
+            bower: dbhVar.clientFramework === 'angular1',
+            npm: dbhVar.clientPackageManager !== 'yarn',
+            yarn: dbhVar.clientPackageManager === 'yarn',
             callback: injectDependenciesAndConstants
         };
 

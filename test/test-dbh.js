@@ -6,14 +6,14 @@ const assert = require('yeoman-assert');
 const path = require('path');
 
 const dbh = require('../generators/dbh.js');
-const DBH_TEST_CONSTANTS = require('./test-constants.js');
+const DBH_CONSTANTS = require('../generators/dbh-constants');
 
 
 // Dbh unit test
 describe('Dbh', function () {
     describe('getAppConfig', function () {
         it('returns the expected app config with Maven as build tool', function () {
-            const expectedConfig = DBH_TEST_CONSTANTS.templateConfigFile.usingMaven;
+            const expectedConfig = DBH_CONSTANTS.templateConfigFile.usingMaven;
             const f = path.join(__dirname, 'templates/default/usingMaven/.yo-rc.json');
 
             assert.file(f);
@@ -31,7 +31,7 @@ describe('Dbh', function () {
             );
         });
         it('returns the expected app config with Gradle as build tool', function () {
-            const expectedConfig = DBH_TEST_CONSTANTS.templateConfigFile.usingGradle;
+            const expectedConfig = DBH_CONSTANTS.templateConfigFile.usingGradle;
             const f = path.join(__dirname, 'templates/default/usingGradle/.yo-rc.json');
 
             assert.file(f);
@@ -123,7 +123,7 @@ describe('Dbh', function () {
         });
     });
     describe('hasConstraints', function () {
-        const relationshipsSamples = DBH_TEST_CONSTANTS.relationshipsSamples;
+        const relationshipsSamples = DBH_CONSTANTS.relationshipsSamples;
 
         it('returns false with empty relation', function () {
             assert(dbh.hasConstraints(relationshipsSamples.Empty) === false);
