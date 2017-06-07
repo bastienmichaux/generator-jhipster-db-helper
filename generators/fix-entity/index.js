@@ -8,7 +8,7 @@ const DBH_CONSTANTS = require('../dbh-constants.js');
 
 // Stores JHipster variables
 const jhipsterVar = {
-    moduleName: DBH_CONSTANTS.moduleName.postEntityGenerator
+    moduleName: 'fix-entity'
 };
 
 // Stores JHipster functions
@@ -30,17 +30,6 @@ module.exports = generator.extend({
         // input from user (prompts.js will fill them)
         this.tableNameInput = null;
         this.columnsInput = [];
-
-        // Option used to make unit tests in temporary directories instead of the current directory.
-        // The passed string argument references constants,
-        // those constants can be found in test/test-constants.js.
-        this.option('dbhTestCase', {
-            desc: 'Test case for this module\'s npm test',
-            type: String,
-            defaults: ''
-        });
-
-        this.dbhTestCase = this.options.dbhTestCase;
     },
 
     // check current project state, get configs, etc

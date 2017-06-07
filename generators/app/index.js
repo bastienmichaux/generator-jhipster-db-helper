@@ -76,7 +76,6 @@ module.exports = class extends Generator {
         );
     }
 
-
     /**
      * Replace Spring naming strategies with more neutral ones.
      *
@@ -105,21 +104,6 @@ module.exports = class extends Generator {
                 throw new Error(`_replaceNamingStrategies: File doesn't exist! Path was:\n${path}`);
             }
         });
-    }
-
-    constructor(args, opts) {
-        super(args, opts);
-
-        // Option used to make unit tests in temporary directories instead of the current directory.
-        // The passed string argument references constants,
-        // those constants can be found in test/test-constants.js.
-        this.option('dbhTestCase', {
-            desc: 'Test case for this module\'s npm test',
-            type: String,
-            defaults: ''
-        });
-
-        this.dbhTestCase = this.options.dbhTestCase;
     }
 
     // check current project state, get configs, etc
