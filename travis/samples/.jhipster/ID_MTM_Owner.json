@@ -1,0 +1,27 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipName": "iD_MTM_Slave",
+            "dbhRelationshipId": "iD_MTM_Slaves_id",
+            "otherEntityName": "iD_MTM_Slave",
+            "relationshipType": "many-to-many",
+            "otherEntityField": "id",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "iD_MTM_Owner"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "id_mtm_owner_field",
+            "dbhColumnName": "id_mtm_owner_field_column",
+            "fieldType": "String"
+        }
+    ],
+    "changelogDate": "20170607101948",
+    "dto": "no",
+    "service": "no",
+    "entityTableName": "id_mtm_owner_table",
+    "pagination": "no",
+    "dbhIdName": "id_mtm_owner_column_id"
+}
