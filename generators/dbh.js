@@ -1,4 +1,5 @@
 const DBH_CONSTANTS = require('./dbh-constants');
+const jhipsterConstants = require('../node_modules/generator-jhipster/generators/generator-constants.js');
 const jhipsterCore = require('jhipster-core');
 const jhipsterModuleSubgenerator = require('../node_modules/generator-jhipster/generators/modules/index.js');
 const pluralize = require('pluralize');
@@ -75,7 +76,12 @@ const postAppPolyfill = (appConfigPath) => {
     );
 };
 
-
+/**
+ * get a polyfill for the jhipsterVar and jhipsterFunc properties gone missing when testing
+ * because of a [yeoman-test](https://github.com/bastienmichaux/generator-jhipster-db-helper/issues/19) issue
+ *
+ * @param {string} appConfigPath - path to the current .yo-rc.json application file
+ */
 const postEntityPolyfill = (appConfigPath) => {
     // stop if file not found
     if (!fs.existsSync(appConfigPath)) {
@@ -83,7 +89,7 @@ const postEntityPolyfill = (appConfigPath) => {
     }
 
     // else return a promise holding the polyfill
-    return dbh.getAppConfig(appConfigPath)
+    return getAppConfig(appConfigPath)
     .catch(err => console.error(err))
     .then(
         (onResolve) => {
@@ -171,6 +177,7 @@ const getFilesWithNamingStrategy = (buildTool) => {
     // including those specific to the application build tool
     const baseFiles = DBH_CONSTANTS.filesWithNamingStrategy.base;
     const result = baseFiles.concat(DBH_CONSTANTS.filesWithNamingStrategy[buildTool]);
+
     return result;
 };
 
@@ -182,7 +189,7 @@ const getFilesWithNamingStrategy = (buildTool) => {
  *
  * @param relationships - an array of relationship to check
  * @returns true if and only if it contains at least one relationship with a constraint, false otherwise
- * @todo type checking on parameter, replace 'for of' with an array method, complex condition could be rewritten as a function
+ * TODO complex condition could be rewritten as a function
  */
 const hasConstraints = (relationships) => {
     if (!Array.isArray((relationships))) {
