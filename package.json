@@ -10,7 +10,7 @@
   "author": {
     "name": "Bastien Michaux",
     "email": "bastienmichaux@gmail.com",
-    "url": ""
+    "url": "https://github.com/bastienmichaux/generator-jhipster-db-helper"
   },
   "files": [
     "generators"
