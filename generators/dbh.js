@@ -71,7 +71,39 @@ const postAppPolyfill = (appConfigPath) => {
             throw new Error(onError);
         }
     );
-}
+};
+
+
+const postEntityPolyfill = (appConfigPath) => {
+    // stop if file not found
+    if (!fs.existsSync(appConfigPath)) {
+        throw new Error(`_getPolyfill: File ${appConfigPath} not found`);
+    }
+
+    // else return a promise holding the polyfill
+    return dbh.getAppConfig(appConfigPath)
+    .catch(err => console.error(err))
+    .then(
+        (onResolve) => {
+            const conf = onResolve['generator-jhipster'];
+            const poly = {};
+
+            // @todo: defensive programming with these properties (hasOwnProperty ? throw ?)
+
+            // jhipsterVar polyfill :
+            poly.jhipsterConfig = conf;
+            poly.javaDir = `${jhipsterConstants.SERVER_MAIN_SRC_DIR + conf.packageFolder}/`;
+            poly.resourceDir = jhipsterConstants.SERVER_MAIN_RES_DIR;
+            poly.replaceContent = jhipsterModuleSubgenerator.prototype.replaceContent;
+            poly.updateEntityConfig = jhipsterModuleSubgenerator.prototype.updateEntityConfig;
+
+            return poly;
+        },
+        (onError) => {
+            console.error(onError)
+        }
+    );
+};
 
 
 /**
@@ -185,7 +217,7 @@ const isNotEmptyString = x => typeof x === 'string' && x !== '';
 const replaceContent = (absolutePath, pattern, content, regex, generator) => {
     const re = regex ? new RegExp(pattern, 'g') : pattern;
     let body = generator.fs.read(absolutePath);
-    
+
     body = body.replace(re, content);
     generator.fs.write(absolutePath, body);
 };
@@ -235,6 +267,7 @@ module.exports = {
     isNotEmptyString,
     isValidBuildTool,
     postAppPolyfill,
+    postEntityPolyfill,
     replaceContent,
     validateColumnName,
     validateTableName
