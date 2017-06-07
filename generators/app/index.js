@@ -116,6 +116,8 @@ module.exports = class extends Generator {
             { jhipsterVar, jhipsterFunc },
             this.options.testmode ? { local: require.resolve('generator-jhipster/generators/modules') } : null
         );
+
+        dbhVar = this._getDbhVar(this.dbhTestCase);
     }
 
     // prompt the user for options
