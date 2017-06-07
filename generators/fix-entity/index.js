@@ -19,46 +19,9 @@ const jhipsterFunc = {};
 
 
 module.exports = generator.extend({
-    /**
-     * get a polyfill for the jhipsterVar and jhipsterFunc properties gone missing when testing
-     * because of a [yeoman-test](https://github.com/bastienmichaux/generator-jhipster-db-helper/issues/19) issue
-     *
-     * @param {string} appConfigPath - path to the current .yo-rc.json application file
-     */
-    _getPolyfill: (appConfigPath) => {
-        // stop if file not found
-        if (!fs.existsSync(appConfigPath)) {
-            throw new Error(`_getPolyfill: File ${appConfigPath} not found`);
-        }
-
-        // else return a promise holding the polyfill
-        return dbh.getAppConfig(appConfigPath)
-        .catch(err => console.error(err))
-        .then(
-            (onResolve) => {
-                const conf = onResolve['generator-jhipster'];
-                const poly = {};
-
-                // @todo: defensive programming with these properties (hasOwnProperty ? throw ?)
-
-                // jhipsterVar polyfill :
-
-                poly.jhipsterConfig = conf;
-                poly.javaDir = `${jhipsterConstants.SERVER_MAIN_SRC_DIR + conf.packageFolder}/`;
-                poly.resourceDir = jhipsterConstants.SERVER_MAIN_RES_DIR;
-                poly.replaceContent = jhipsterModuleSubgenerator.prototype.replaceContent;
-                poly.updateEntityConfig = jhipsterModuleSubgenerator.prototype.updateEntityConfig;
-
-                return poly;
-            },
-            (onError) => {
-                console.error(onError)
-            }
-        );
-    },
-
     constructor: function (...args) { // eslint-disable-line object-shorthand
         generator.apply(this, args);
+
         // All information from entity generator
         this.entityConfig = this.options.entityConfig;
         this.entityTableName = this.options.entityConfig.entityTableName;
@@ -70,6 +33,17 @@ module.exports = generator.extend({
         // input from user (prompts.js will fill them)
         this.tableNameInput = null;
         this.columnsInput = [];
+
+        // Option used to make unit tests in temporary directories instead of the current directory.
+        // The passed string argument references constants,
+        // those constants can be found in test/test-constants.js.
+        this.option('dbhTestCase', {
+            desc: 'Test case for this module\'s npm test',
+            type: String,
+            defaults: ''
+        });
+
+        this.dbhTestCase = this.options.dbhTestCase;
     },
 
     // check current project state, get configs, etc
