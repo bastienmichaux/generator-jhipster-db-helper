@@ -199,8 +199,6 @@ describe('Dbh', function () {
             .catch(err => console.log(err))
             .then(
                 (onFulfilled) => {
-                    console.log('================================');
-                    console.log(onFulfilled);
                     assert(typeof onFulfilled.jhipsterConfig === 'object');
                     assert(dbh.isNotEmptyString(onFulfilled.javaDir));
                     assert(dbh.isNotEmptyString(onFulfilled.resourceDir));
