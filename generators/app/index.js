@@ -5,7 +5,6 @@ const path = require('path');
 
 const dbh = require('../dbh.js');
 const DBH_CONSTANTS = require('../dbh-constants');
-const DBH_TEST_CONSTANTS = require('../../test/test-constants.js');
 const packagejs = require('../../package.json'); // gives access to the package.json data
 
 // Stores JHipster variables
@@ -23,36 +22,6 @@ const polyfill = {}; // eslint-disable-line no-unused-vars
 Generator.prototype.log = (msg) => { console.log(msg); };
 
 module.exports = class extends Generator {
-    // TODO : refactor (no testing logic in production code)
-    /**
-     * Get the absolute path of the config file .yo-rc.json.
-     * When used normally, this function returns the current application's .yo-rc.json.
-     * When testing, this function returns the config file for the given test case, which is a constant.
-     */
-    _getConfigFilePath(testCase) {
-        let filePath = null;
-
-        if (typeof testCase !== 'string') {
-            throw new TypeError(`_getConfigFilePath: testCase parameter: expected type 'string', was instead '${typeof testCase}'`);
-        }
-
-        // set filePath depending on whether the generator is running a test case or not
-        if (testCase === '') {
-            filePath = path.join(process.cwd(), '/.yo-rc.json');
-        } else if (DBH_TEST_CONSTANTS.testCases[testCase] !== undefined) {
-            filePath = path.join(__dirname, '../..', DBH_TEST_CONSTANTS.testConfigFiles[testCase]);
-        } else {
-            throw new Error(`_getConfigFilePath: testCase parameter: not a test case we know of. testCase was: ${testCase}`);
-        }
-
-        if (!fs.existsSync(filePath)) {
-            throw new Error(`_getConfigFilePath: Sought after this file, but it doesn't exist. Path was:\n${filePath}`);
-        }
-
-        return filePath;
-    }
-
-
     /**
      * Replace Spring naming strategies with more neutral ones.
      *
@@ -81,21 +50,6 @@ module.exports = class extends Generator {
                 throw new Error(`_replaceNamingStrategies: File doesn't exist! Path was:\n${path}`);
             }
         });
-    }
-
-    constructor(args, opts) {
-        super(args, opts);
-
-        // Option used to make unit tests in temporary directories instead of the current directory.
-        // The passed string argument references constants,
-        // those constants can be found in test/test-constants.js.
-        this.option('dbhTestCase', {
-            desc: 'Test case for this module\'s npm test',
-            type: String,
-            defaults: ''
-        });
-
-        this.dbhTestCase = this.options.dbhTestCase;
     }
 
     // check current project state, get configs, etc
@@ -127,55 +81,12 @@ module.exports = class extends Generator {
 
     // write the generator-specific files
     writing() {
-        const configFile = this._getConfigFilePath(this.dbhTestCase);
-
-        // TODO : refactor (no testing logic in production code)
-        dbh.postAppPolyfill(configFile)
-        // this block polyfills the jhipsterVar and jhipsterFunc properties that could have gone missing when testing
-        .then(
-            (onFulfilled) => {
-                // polyfill jhipsterFunc.registerModule
-                jhipsterFunc.registerModule = onFulfilled.registerModule;
-
-                jhipsterVar.buildTool = jhipsterVar.jhipsterConfig === undefined
-                ? onFulfilled.buildTool
-                : jhipsterVar.jhipsterConfig.buildTool;
-
-                // declarations done by jhipster-module, polyfill in case of testing
-                this.baseName = jhipsterVar.baseName || onFulfilled.baseName;
-                this.packageName = jhipsterVar.packageName || onFulfilled.packageName;
-                this.angularAppName = jhipsterVar.angularAppName || onFulfilled.angularAppName;
-                this.clientFramework = jhipsterVar.clientFramework || onFulfilled.clientFramework;
-                this.clientPackageManager = jhipsterVar.clientPackageManager || onFulfilled.clientPackageManager;
-                this.message = this.props.message;
-            },
-            (onRejected) => {
-                throw new Error(onRejected);
-            }
-        )
-        // this block holds the logic not related to polyfilling/testing
-        .then(
-            (onFulfilled) => {
-                try {
-                    jhipsterFunc.registerModule('generator-jhipster-db-helper', 'app', 'post', 'app', 'A JHipster module for already existing databases');
-                } catch (err) {
-                    this.log(`${chalk.red.bold('WARN!')} Could not register as a jhipster entity post creation hook...\n`);
-                }
-
-                try {
-                    jhipsterFunc.registerModule('generator-jhipster-db-helper', 'entity', 'post', 'fix-entity', 'A JHipster module to circumvent JHipster limitations about names');
-                } catch (err) {
-                    this.log(`${chalk.red.bold('WARN!')} Could not register as a jhipster entity post creation hook...\n`);
-                }
-
-                // replace files with Spring's naming strategies
-                this.log(chalk.bold.yellow('JHipster-db-helper replaces your naming strategies :'));
-                this._replaceNamingStrategies(jhipsterVar.buildTool);
-            },
-            (onRejected) => {
-                throw new Error(onRejected);
-            }
-        );
+        this.baseName = jhipsterVar.baseName || onFulfilled.baseName;
+        this.packageName = jhipsterVar.packageName || onFulfilled.packageName;
+        this.angularAppName = jhipsterVar.angularAppName || onFulfilled.angularAppName;
+        this.clientFramework = jhipsterVar.clientFramework || onFulfilled.clientFramework;
+        this.clientPackageManager = jhipsterVar.clientPackageManager || onFulfilled.clientPackageManager;
+        this.message = this.props.message;
     }
 
     // run installation (npm, bower, etc)
