@@ -62,6 +62,7 @@ function askForColumnsName() {
  */
 function askForColumnName(done) {
     const validateColumnName = dbh.validateColumnName;
+    const defaultAnswer = this.field.dbhColumnName || this.field.fieldNameAsDatabaseColumn || this.field.dbhColumnName;
 
     const prompts = [
         {
@@ -72,7 +73,7 @@ function askForColumnName(done) {
                 return validateColumnName(input, prodDatabaseType);
             }),
             message: `What column name do you want for the field "${this.field.fieldName}" ?`,
-            default: this.field.dbhColumnName === undefined ? this.field.fieldNameAsDatabaseColumn : this.field.dbhColumnName
+            default: defaultAnswer
         }
     ];
 
