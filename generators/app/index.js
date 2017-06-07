@@ -15,10 +15,6 @@ const jhipsterVar = {
 // Stores JHipster functions
 const jhipsterFunc = {};
 
-// polyfill for jhipsterVar and jhipsterFunc when testing, see [issue #19](https://github.com/bastienmichaux/generator-jhipster-db-helper/issues/19)
-// TODO : refactor (no testing logic in production code)
-const polyfill = {}; // eslint-disable-line no-unused-vars
-
 Generator.prototype.log = (msg) => { console.log(msg); };
 
 module.exports = class extends Generator {
@@ -81,12 +77,26 @@ module.exports = class extends Generator {
 
     // write the generator-specific files
     writing() {
-        this.baseName = jhipsterVar.baseName || onFulfilled.baseName;
-        this.packageName = jhipsterVar.packageName || onFulfilled.packageName;
-        this.angularAppName = jhipsterVar.angularAppName || onFulfilled.angularAppName;
-        this.clientFramework = jhipsterVar.clientFramework || onFulfilled.clientFramework;
-        this.clientPackageManager = jhipsterVar.clientPackageManager || onFulfilled.clientPackageManager;
+        this._replaceNamingStrategies(jhipsterVar.jhipsterConfig.buildTool);
+
+        this.baseName = jhipsterVar.baseName;
+        this.packageName = jhipsterVar.packageName;
+        this.angularAppName = jhipsterVar.angularAppName;
+        this.clientFramework = jhipsterVar.clientFramework;
+        this.clientPackageManager = jhipsterVar.clientPackageManage ;
         this.message = this.props.message;
+
+        try {
+            jhipsterFunc.registerModule('generator-jhipster-db-helper', 'app', 'post', 'app', 'A JHipster module for already existing databases');
+        } catch (err) {
+            this.log(`${chalk.red.bold('WARN!')} Could not register as a jhipster entity post creation hook...\n`);
+        }
+
+        try {
+            jhipsterFunc.registerModule('generator-jhipster-db-helper', 'entity', 'post', 'fix-entity', 'A JHipster module to circumvent JHipster limitations about names');
+        } catch (err) {
+            this.log(`${chalk.red.bold('WARN!')} Could not register as a jhipster entity post creation hook...\n`);
+        }
     }
 
     // run installation (npm, bower, etc)
