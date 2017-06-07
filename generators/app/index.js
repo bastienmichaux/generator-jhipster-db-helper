@@ -54,7 +54,7 @@ module.exports = class extends Generator {
     _getDbhVar(testCase) {
         const configFile = this._getConfigFilePath(testCase);
 
-        dbh.postAppPolyfill(configFile)
+        return dbh.postAppPolyfill(configFile)
         .then(
             (onFulfilled) => {
                 const result = {};
@@ -132,8 +132,6 @@ module.exports = class extends Generator {
             { jhipsterVar, jhipsterFunc },
             this.options.testmode ? { local: require.resolve('generator-jhipster/generators/modules') } : null
         );
-
-        dbhVar = this._getDbhVar(this.dbhTestCase);
     }
 
     // prompt the user for options
@@ -155,21 +153,37 @@ module.exports = class extends Generator {
     writing() {
         this.message = this.props.message;
 
-        try {
-            dbhVar.registerModule('generator-jhipster-db-helper', 'app', 'post', 'app', 'A JHipster module for already existing databases');
-        } catch (err) {
-            this.log(`${chalk.red.bold('WARN!')} Could not register as a jhipster entity post creation hook...\n`);
-        }
+        this._getDbhVar(this.dbhTestCase)
+        .then(
+            (onFulfilled) => {
+                dbhVar = onFulfilled;
+            },
+            (onRejected) => {
+                console.error(onRejected);
+            }
+        )
+        .then(
+            (onFulfilled) => {
+                try {
+                    dbhVar.registerModule('generator-jhipster-db-helper', 'app', 'post', 'app', 'A JHipster module for already existing databases');
+                } catch (err) {
+                    this.log(`${chalk.red.bold('WARN!')} Could not register as a jhipster entity post creation hook...\n`);
+                }
 
-        try {
-            dbhVar.registerModule('generator-jhipster-db-helper', 'entity', 'post', 'fix-entity', 'A JHipster module to circumvent JHipster limitations about names');
-        } catch (err) {
-            this.log(`${chalk.red.bold('WARN!')} Could not register as a jhipster entity post creation hook...\n`);
-        }
+                try {
+                    dbhVar.registerModule('generator-jhipster-db-helper', 'entity', 'post', 'fix-entity', 'A JHipster module to circumvent JHipster limitations about names');
+                } catch (err) {
+                    this.log(`${chalk.red.bold('WARN!')} Could not register as a jhipster entity post creation hook...\n`);
+                }
 
-        // replace files with Spring's naming strategies
-        this.log(chalk.bold.yellow('JHipster-db-helper replaces your naming strategies :'));
-        this._replaceNamingStrategies(dbhVar.buildTool);
+                // replace files with Spring's naming strategies
+                this.log(chalk.bold.yellow('JHipster-db-helper replaces your naming strategies :'));
+                this._replaceNamingStrategies(dbhVar.buildTool);
+            },
+            (onRejected) => {
+                console.error(onRejected);
+            }
+        );
     }
 
     // run installation (npm, bower, etc)
