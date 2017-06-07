@@ -24,6 +24,7 @@ cp -t .jhipster "$JHIPSTER_SAMPLES/.jhipster/NoDBHRelationSlave.json" "$JHIPSTER
 cp -t .jhipster "$JHIPSTER_SAMPLES/.jhipster/ID_Single.json"
 cp -t .jhipster "$JHIPSTER_SAMPLES/.jhipster/ID_OTO_Slave.json" "$JHIPSTER_SAMPLES/.jhipster/ID_OTO_Owner.json"
 cp -t .jhipster "$JHIPSTER_SAMPLES/.jhipster/ID_OTM_One.json" "$JHIPSTER_SAMPLES/.jhipster/ID_OTM_Many.json"
+cp -t .jhipster "$JHIPSTER_SAMPLES/.jhipster/ID_MTM_Slave.json" "$JHIPSTER_SAMPLES/.jhipster/ID_MTM_Owner.json"
 
 yo jhipster:entity NakedTable --force
 yo jhipster:entity DressedTable --force
@@ -48,6 +49,8 @@ yo jhipster:entity ID_OTO_Slave --force
 yo jhipster:entity ID_OTO_Owner --force
 yo jhipster:entity ID_OTM_One --force
 yo jhipster:entity ID_OTM_Many --force
+yo jhipster:entity ID_MTM_Slave --force
+yo jhipster:entity ID_MTM_Owner --force
 
 # test if generated application works
 mvn test
