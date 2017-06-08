@@ -168,11 +168,6 @@ const getPluralColumnIdName = name => getColumnIdName(pluralize(name));
  * @returns The returned array holds the configuration files where references to the naming strategies can be found
  */
 const getFilesWithNamingStrategy = (buildTool) => {
-    // fail when application build tool is unknown
-    if (!isValidBuildTool(buildTool)) {
-        throw new Error(`getFilesWithNamingStrategy: buildTool '${buildTool}' is unknown`);
-    }
-
     // if build tool is valid, return the files with naming strategy,
     // including those specific to the application build tool
     const baseFiles = DBH_CONSTANTS.filesWithNamingStrategy.base;
@@ -230,6 +225,41 @@ const replaceContent = (absolutePath, pattern, content, regex, generator) => {
 };
 
 
+/**
+ * Replace Spring naming strategies with more neutral ones.
+ *
+ * Note : after running this function, a reference to the ancient naming strategies will still be found in :
+ * ./node_modules/generator-jhipster/generators/server/templates/_pom.xml
+ * however this doesn't concern us
+ */
+const replaceNamingStrategies = (appBuildTool) => {
+    const physicalOld = DBH_CONSTANTS.physicalNamingStrategyOld;
+    const physicalNew = DBH_CONSTANTS.physicalNamingStrategyNew;
+
+    const implicitOld = DBH_CONSTANTS.implicitNamingStrategyOld;
+    const implicitNew = DBH_CONSTANTS.implicitNamingStrategyNew;
+
+    // fail when application build tool is unknown
+    if (!isValidBuildTool(appBuildTool)) {
+        throw new Error(`replaceNamingStrategies: buildTool parameter '${buildTool}' is unknown`);
+    }
+
+    // depending on the application's build tool, get all files where the old naming strategies must be replaced
+    const files = getFilesWithNamingStrategy(appBuildTool);
+
+    // check that each file exists, then replace the naming strategies
+    files.forEach((path) => {
+        if (fs.existsSync(path)) {
+            // 1) replace Spring physical naming strategy
+            replaceContent(path, physicalOld, physicalNew, null, this);
+            // 2) replace Spring implicit naming strategy
+            replaceContent(path, implicitOld, implicitNew, null, this);
+        } else {
+            throw new Error(`_replaceNamingStrategies: File doesn't exist! Path was:\n${path}`);
+        }
+    });
+}
+
 /** Validate user input when asking for a SQL column name */
 const validateColumnName = (input, dbType) => {
     if (input === '') {
@@ -276,6 +306,7 @@ module.exports = {
     postAppPolyfill,
     postEntityPolyfill,
     replaceContent,
+    replaceNamingStrategies,
     validateColumnName,
     validateTableName
 };

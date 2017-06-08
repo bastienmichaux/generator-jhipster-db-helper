@@ -133,8 +133,6 @@ module.exports = class extends Generator {
             { jhipsterVar, jhipsterFunc },
             this.options.testmode ? { local: require.resolve('generator-jhipster/generators/modules') } : null
         );
-
-        dbhVar = this._getDbhVar(this.dbhTestCase);
     }
 
     // prompt the user for options
@@ -181,7 +179,7 @@ module.exports = class extends Generator {
 
                 // replace files with Spring's naming strategies
                 this.log(chalk.bold.yellow('JHipster-db-helper replaces your naming strategies :'));
-                this._replaceNamingStrategies(dbhVar.buildTool);
+                dbh.replaceNamingStrategies(dbhVar.buildTool);
             },
             (onRejected) => {
                 console.error(onRejected);
