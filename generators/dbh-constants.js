@@ -77,7 +77,7 @@ const constants = {
         postEntityGenerator: 'fix-entity'
     },
 
-    // TEST CONSTANTS ///////////////////////////////////////////////////////
+    /* TEST CONSTANTS ******************************************************/
 
     relationshipsSamples: {
         oneToOneOwner: [
