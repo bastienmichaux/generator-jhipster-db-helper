@@ -1,6 +1,8 @@
+/** jhipster-db-helper constants */
+/* eslint-disable quotes, quote-props, key-spacing */
+
 const jhicore = require('jhipster-core');
 
-/** jhipster-db-helper constants */
 const constants = {
     /**
      * Configuration files in generator-jhipster that include the Spring naming strategies (as of JHipster 4.1.1).

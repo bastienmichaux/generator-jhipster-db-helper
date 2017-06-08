@@ -4,7 +4,6 @@ const prompts = require('./prompts.js');
 const fs = require('fs');
 
 const dbh = require('../dbh.js');
-const DBH_CONSTANTS = require('../dbh-constants.js');
 
 // Stores JHipster variables
 const jhipsterVar = {

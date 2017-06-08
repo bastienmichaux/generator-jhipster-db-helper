@@ -112,7 +112,7 @@ module.exports = class extends Generator {
          * The passed string argument references constants.
          * those constants can be found in dbh-constants.js.
          */
-         this.option('dbhTestCase', {
+        this.option('dbhTestCase', {
             desc: 'Test case for this module\'s npm test',
             type: String,
             defaults: ''
@@ -156,7 +156,7 @@ module.exports = class extends Generator {
         this.packageName = jhipsterVar.packageName;
         this.angularAppName = jhipsterVar.angularAppName;
         this.clientFramework = jhipsterVar.clientFramework;
-        this.clientPackageManager = jhipsterVar.clientPackageManage ;
+        this.clientPackageManager = jhipsterVar.clientPackageManage;
         this.message = this.props.message;
 
         try {

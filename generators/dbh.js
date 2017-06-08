@@ -241,7 +241,7 @@ const replaceNamingStrategies = (appBuildTool) => {
 
     // fail when application build tool is unknown
     if (!isValidBuildTool(appBuildTool)) {
-        throw new Error(`replaceNamingStrategies: buildTool parameter '${buildTool}' is unknown`);
+        throw new Error(`replaceNamingStrategies: buildTool parameter '${appBuildTool}' is unknown`);
     }
 
     // depending on the application's build tool, get all files where the old naming strategies must be replaced
@@ -258,7 +258,7 @@ const replaceNamingStrategies = (appBuildTool) => {
             throw new Error(`_replaceNamingStrategies: File doesn't exist! Path was:\n${path}`);
         }
     });
-}
+};
 
 /** Validate user input when asking for a SQL column name */
 const validateColumnName = (input, dbType) => {
