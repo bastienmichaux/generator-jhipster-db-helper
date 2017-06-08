@@ -174,10 +174,10 @@ module.exports = class extends Generator {
 
     // run installation (npm, bower, etc)
     install() {
-        let logMsg = `To install your dependencies manually, run: ${chalk.yellow.bold(`${dbhVar.clientPackageManager} install`)}`;
+        let logMsg = `To install your dependencies manually, run: ${chalk.yellow.bold(`${this.clientPackageManager} install`)}`;
 
-        if (dbhVar.clientFramework === 'angular1') {
-            logMsg = `To install your dependencies manually, run: ${chalk.yellow.bold(`${dbhVar.clientPackageManager} install & bower install`)}`;
+        if (this.clientFramework === 'angular1') {
+            logMsg = `To install your dependencies manually, run: ${chalk.yellow.bold(`${this.clientPackageManager} install & bower install`)}`;
         }
 
         const injectDependenciesAndConstants = (err) => {
@@ -190,9 +190,9 @@ module.exports = class extends Generator {
         };
 
         const installConfig = {
-            bower: dbhVar.clientFramework === 'angular1',
-            npm: dbhVar.clientPackageManager !== 'yarn',
-            yarn: dbhVar.clientPackageManager === 'yarn',
+            bower: this.clientFramework === 'angular1',
+            npm: this.clientPackageManager !== 'yarn',
+            yarn: this.clientPackageManager === 'yarn',
             callback: injectDependenciesAndConstants
         };
 
