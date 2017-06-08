@@ -15,8 +15,6 @@ const jhipsterVar = {
 // Stores JHipster functions
 const jhipsterFunc = {};
 
-Generator.prototype.log = (msg) => { console.log(msg); };
-
 module.exports = class extends Generator {
     // TODO : refactor (no testing logic in production code)
     /**
@@ -45,33 +43,6 @@ module.exports = class extends Generator {
         }
 
         return filePath;
-    }
-
-    // get jhipsterVar and jhipsterFunc properties
-    // without worrying about discrepancies between testing, dev & production code
-    _getDbhVar(testCase) {
-        const configFile = this._getConfigFilePath(testCase);
-
-        return dbh.postAppPolyfill(configFile)
-        .then(
-            (onFulfilled) => {
-                const result = {};
-
-                result.registerModule = onFulfilled.registerModule;
-
-                result.buildTool = onFulfilled.buildTool;
-                result.baseName = onFulfilled.baseName;
-                result.packageName = onFulfilled.packageName;
-                result.angularAppName = onFulfilled.angularAppName;
-                result.clientFramework = onFulfilled.clientFramework;
-                result.clientPackageManager = onFulfilled.clientPackageManager;
-
-                return result;
-            },
-            (onRejected) => {
-                throw new Error(onRejected);
-            }
-        );
     }
 
     /**

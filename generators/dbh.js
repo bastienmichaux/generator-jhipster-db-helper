@@ -215,6 +215,7 @@ const isNotEmptyString = x => typeof x === 'string' && x !== '';
 
 
 /** Duplicate of a JHipster function where we have replaced how the path is handled, because we use absolute paths */
+
 const replaceContent = (absolutePath, pattern, content, regex, generator) => {
     const re = regex ? new RegExp(pattern, 'g') : pattern;
     let body = generator.fs.read(absolutePath);
@@ -223,6 +224,13 @@ const replaceContent = (absolutePath, pattern, content, regex, generator) => {
     generator.fs.write(absolutePath, body);
 };
 
+const _replaceContent = (absolutePath, pattern, content, regex) => {
+    const re = regex ? new RegExp(pattern, 'g') : pattern;
+    let body = fs.readFileSync(absolutePath);
+
+    body = body.replace(re, content);
+    fs.write(absolutePath, body); // fs.createWriteStream is recommended
+};
 
 /**
  * Replace Spring naming strategies with more neutral ones.
@@ -268,6 +276,7 @@ const validateColumnName = (input, dbType) => {
     } else if (dbType === 'oracle' && input.length > DBH_CONSTANTS.oracleLimitations.tableNameHardMaxLength) {
         return 'Your column name is too long for Oracle, try a shorter name';
     }
+    
     return true;
 };
 

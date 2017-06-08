@@ -98,14 +98,6 @@ describe('Dbh', function () {
             ].sort();
             assert(_.isEqual(files, expectedArray));
         });
-        // throw statement moved to dbh.replaceNamingStrategies
-        /*
-        it('throws when given an unknown build tool', function () {
-            assert.throws(() => {
-                let foo = dbh.getFilesWithNamingStrategy('foo'); // eslint-disable-line no-unused-vars, prefer-const
-            }, Error);
-        });
-        */
     });
     describe('getPluralColumnIdName', function () {
         it('works as expected', function () {
