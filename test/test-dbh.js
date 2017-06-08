@@ -195,6 +195,11 @@ describe('Dbh', function () {
                 }
             );
         });
+        it('throws when given a non-existing file', function () {
+            assert.throws(() => {
+                let foo = dbh.postAppPolyfill('.nonExistingFile');
+            }, Error);
+        });
     });
     describe('postEntityPolyfill', function () {
         it('returns a valid polyfill', function () {
@@ -216,9 +221,21 @@ describe('Dbh', function () {
                 }
             );
         });
+        it('throws when given a non-existing file', function () {
+            assert.throws(() => {
+                let foo = dbh.postEntityPolyfill('.nonExistingFile');
+            }, Error);
+        });
+    });
+    describe('replaceContent', function () {
+        it('works');
     });
     describe('replaceNamingStrategies', function () {
-        it('throws when given an unknown build tool');
+        it('throws when given an unknown build tool', function () {
+            assert.throws(() => {
+                replaceNamingStrategies('foo');
+            }, Error);
+        });
     });
     describe('validateColumnName', function () {
         // messages output by validateColumnName

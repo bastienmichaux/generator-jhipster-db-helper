@@ -90,7 +90,6 @@ const postEntityPolyfill = (appConfigPath) => {
 
     // else return a promise holding the polyfill
     return getAppConfig(appConfigPath)
-    .catch(err => console.error(err))
     .then(
         (onResolve) => {
             const conf = onResolve['generator-jhipster'];
@@ -249,11 +248,11 @@ const replaceNamingStrategies = (appBuildTool) => {
 
     // check that each file exists, then replace the naming strategies
     files.forEach((path) => {
-        if (fs.existsSync(path)) {
+        if (fs.existsSync(file)) {
             // 1) replace Spring physical naming strategy
-            replaceContent(path, physicalOld, physicalNew, null, this);
+            replaceContent(file, physicalOld, physicalNew, null, this);
             // 2) replace Spring implicit naming strategy
-            replaceContent(path, implicitOld, implicitNew, null, this);
+            replaceContent(file, implicitOld, implicitNew, null, this);
         } else {
             throw new Error(`_replaceNamingStrategies: File doesn't exist! Path was:\n${path}`);
         }
