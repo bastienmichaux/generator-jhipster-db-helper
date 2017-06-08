@@ -7,12 +7,14 @@ const fse = require('fs-extra');
 const assert = require('yeoman-assert');
 const helpers = require('yeoman-test');
 
+const dbh = require('../generators/dbh.js');
 const DBH_CONSTANTS = require('../generators/dbh-constants');
 
 const Generator = require('../generators/app/index.js');
 
 const deps = [
-    [helpers.createDummyGenerator(), 'jhipster:modules']
+    // TODO: .createDummyGenerator(jhipsterVar, jhipsterFunc)
+    [helpers.createDummyGenerator(), 'jhipster:modules'],
 ];
 
 const postAppGenerator = path.join(__dirname, '../generators/app/index.js');
@@ -61,54 +63,73 @@ describe('Post app hook', function () {
                 assert.file(filesAbsolutePath[index]);
             });
 
-            /**
-             * run the post-app generator (generators/app/index.js)
-             * the options passed allow us to test outside of an application
-             * the deps object is needed because this generator needs jhipster:modules
-             * in the temporary folder, we copy the files and assert they have the old naming strategies
-             * (as it would happen in an application where jhipster-db-helper hasn't been run yet)
-             * then we check the naming strategies have been replaced
-             */
-            return helpers.run(postAppGenerator)
-            .withOptions({ dbhTestCase: DBH_CONSTANTS.testCases.usingMaven }) // this option allow testing outside of an application
-            .withGenerators(deps) // generator(s) we compose with
-            .inDir(temporaryFolder, function () {
-                // copy the files that the generator will modify
-                fse.copySync(folder, temporaryFolder);
+            let mockedVars = null;
 
-                // assert that the old naming strategies are still there
-                testedFiles.forEach((currentFile) => {
-                    assert.file(currentFile);
-                    assert.fileContent(currentFile, DBH_CONSTANTS.implicitNamingStrategyOld);
-                    assert.fileContent(currentFile, DBH_CONSTANTS.physicalNamingStrategyOld);
-                    assert.noFileContent(currentFile, DBH_CONSTANTS.implicitNamingStrategyNew);
-                    assert.noFileContent(currentFile, DBH_CONSTANTS.physicalNamingStrategyNew);
-                });
-            })
+            //TODO: declare mocked jhipsterVar & jhipsterFunc
+            return dbh.postAppPolyfill('/home/altissiadev/Desktop/generator-jhipster-db-helper/test/templates/default/usingMaven/.yo-rc.json')
             .then(
-                (tmpFolder) => {
-                    // assert the tested files have the new naming strategies
-                    testedFiles.forEach((currentFile) => {
-                        assert.file(currentFile);
-                        assert.noFileContent(currentFile, DBH_CONSTANTS.implicitNamingStrategyOld);
-                        assert.noFileContent(currentFile, DBH_CONSTANTS.physicalNamingStrategyOld);
-                        assert.fileContent(currentFile, DBH_CONSTANTS.implicitNamingStrategyNew);
-                        assert.fileContent(currentFile, DBH_CONSTANTS.physicalNamingStrategyNew);
-                    });
+                (onFulfilled) => {
+                    mockedVars = onFulfilled;
                 },
-                (onError) => {
-                    console.error(onError);
+                (onRejected) => {
+                    console.error(onRejected);
                 }
             )
             .then(
-                (tmpFolder) => {
-                    // empty the test folder for the next test session
-                    fse.emptyDirSync(temporaryFolder);
+                (onFulfilled) => {
+                    /**
+                     * run the post-app generator (generators/app/index.js)
+                     * the options passed allow us to test outside of an application
+                     * the deps object is needed because this generator needs jhipster:modules
+                     * in the temporary folder, we copy the files and assert they have the old naming strategies
+                     * (as it would happen in an application where jhipster-db-helper hasn't been run yet)
+                     * then we check the naming strategies have been replaced
+                     */
+                    return helpers.run(postAppGenerator)
+                    .withOptions({ dbhTestCase: DBH_CONSTANTS.testCases.usingMaven }) // this option allow testing outside of an application
+                    .withGenerators(deps) // generator(s) we compose with
+                    .inDir(temporaryFolder, function () {
+                        // copy the files that the generator will modify
+                        fse.copySync(folder, temporaryFolder);
+
+                        // assert that the old naming strategies are still there
+                        testedFiles.forEach((currentFile) => {
+                            assert.file(currentFile);
+                            assert.fileContent(currentFile, DBH_CONSTANTS.implicitNamingStrategyOld);
+                            assert.fileContent(currentFile, DBH_CONSTANTS.physicalNamingStrategyOld);
+                            assert.noFileContent(currentFile, DBH_CONSTANTS.implicitNamingStrategyNew);
+                            assert.noFileContent(currentFile, DBH_CONSTANTS.physicalNamingStrategyNew);
+                        });
+                    })
+                    .then(
+                        (tmpFolder) => {
+                            // assert the tested files have the new naming strategies
+                            testedFiles.forEach((currentFile) => {
+                                assert.file(currentFile);
+                                assert.noFileContent(currentFile, DBH_CONSTANTS.implicitNamingStrategyOld);
+                                assert.noFileContent(currentFile, DBH_CONSTANTS.physicalNamingStrategyOld);
+                                assert.fileContent(currentFile, DBH_CONSTANTS.implicitNamingStrategyNew);
+                                assert.fileContent(currentFile, DBH_CONSTANTS.physicalNamingStrategyNew);
+                            });
+                        },
+                        (onError) => {
+                            console.error(onError);
+                        }
+                    )
+                    .then(
+                        (tmpFolder) => {
+                            // empty the test folder for the next test session
+                            fse.emptyDirSync(temporaryFolder);
+                        },
+                        (onError) => {
+                            // in case of error, empty the test folder anyway
+                            fse.emptyDirSync(temporaryFolder);
+                            console.error(onError);
+                        }
+                    );
                 },
-                (onError) => {
-                    // in case of error, empty the test folder anyway
-                    fse.emptyDirSync(temporaryFolder);
-                    console.error(onError);
+                (onRejected) => {
+                    console.error(onRejected);
                 }
             );
         });

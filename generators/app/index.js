@@ -15,8 +15,6 @@ const jhipsterVar = {
 // Stores JHipster functions
 const jhipsterFunc = {};
 
-let dbhVar = {};
-
 Generator.prototype.log = (msg) => { console.log(msg); };
 
 module.exports = class extends Generator {
@@ -76,51 +74,17 @@ module.exports = class extends Generator {
         );
     }
 
-    /**
-     * Replace Spring naming strategies with more neutral ones.
-     *
-     * Note : after running this function, a reference to the ancient naming strategies will still be found in :
-     * ./node_modules/generator-jhipster/generators/server/templates/_pom.xml
-     * however this doesn't concern us
-     */
-    _replaceNamingStrategies(appBuildTool) {
-        const physicalOld = DBH_CONSTANTS.physicalNamingStrategyOld;
-        const physicalNew = DBH_CONSTANTS.physicalNamingStrategyNew;
+    /** Duplicate of a JHipster function where we have replaced how the path is handled, because we use absolute paths */
+    _replaceContent (absolutePath, pattern, content, regex, generator) {
+        const re = regex ? new RegExp(pattern, 'g') : pattern;
+        let body = generator.fs.read(absolutePath);
 
-        const implicitOld = DBH_CONSTANTS.implicitNamingStrategyOld;
-        const implicitNew = DBH_CONSTANTS.implicitNamingStrategyNew;
-
-        // depending on the application's build tool, get all files where the old naming strategies must be replaced
-        const files = dbh.getFilesWithNamingStrategy(appBuildTool);
-
-        // check that each file exists, then replace the naming strategies
-        files.forEach((path) => {
-            if (fs.existsSync(path)) {
-                // 1) replace Spring physical naming strategy
-                dbh.replaceContent(path, physicalOld, physicalNew, null, this);
-                // 2) replace Spring implicit naming strategy
-                dbh.replaceContent(path, implicitOld, implicitNew, null, this);
-            } else {
-                throw new Error(`_replaceNamingStrategies: File doesn't exist! Path was:\n${path}`);
-            }
-        });
+        body = body.replace(re, content);
+        generator.fs.write(absolutePath, body);
     }
 
     constructor(args, opts) {
         super(args, opts);
-
-        /**
-         * dbhTestCase: Option used to make unit tests in temporary directories instead of the current directory.
-         * The passed string argument references constants.
-         * those constants can be found in dbh-constants.js.
-         */
-         this.option('dbhTestCase', {
-            desc: 'Test case for this module\'s npm test',
-            type: String,
-            defaults: ''
-        });
-
-        this.dbhTestCase = this.options.dbhTestCase;
     }
 
     // check current project state, get configs, etc
@@ -154,60 +118,44 @@ module.exports = class extends Generator {
     writing() {
         this.message = this.props.message;
 
-        this._getDbhVar(this.dbhTestCase)
-        .then(
-            (onFulfilled) => {
-                dbhVar = onFulfilled;
-            },
-            (onRejected) => {
-                console.error(onRejected);
-            }
-        )
-        .then(
-            (onFulfilled) => {
-                try {
-                    dbhVar.registerModule('generator-jhipster-db-helper', 'app', 'post', 'app', 'A JHipster module for already existing databases');
-                } catch (err) {
-                    this.log(`${chalk.red.bold('WARN!')} Could not register as a jhipster entity post creation hook...\n`);
-                }
+        try {
+            jhipsterFunc.registerModule('generator-jhipster-db-helper', 'app', 'post', 'app', 'A JHipster module for already existing databases');
+        } catch (err) {
+            this.log(`${chalk.red.bold('WARN!')} Could not register as a jhipster entity post creation hook...\n`);
+        }
 
-                try {
-                    dbhVar.registerModule('generator-jhipster-db-helper', 'entity', 'post', 'fix-entity', 'A JHipster module to circumvent JHipster limitations about names');
-                } catch (err) {
-                    this.log(`${chalk.red.bold('WARN!')} Could not register as a jhipster entity post creation hook...\n`);
-                }
+        try {
+            jhipsterFunc.registerModule('generator-jhipster-db-helper', 'entity', 'post', 'fix-entity', 'A JHipster module to circumvent JHipster limitations about names');
+        } catch (err) {
+            this.log(`${chalk.red.bold('WARN!')} Could not register as a jhipster entity post creation hook...\n`);
+        }
 
-                // replace files with Spring's naming strategies
-                this.log(chalk.bold.yellow('JHipster-db-helper replaces your naming strategies :'));
-                dbh.replaceNamingStrategies(dbhVar.buildTool);
-            },
-            (onRejected) => {
-                console.error(onRejected);
-            }
-        );
+        // replace files with Spring's naming strategies
+        this.log(chalk.bold.yellow('JHipster-db-helper replaces your naming strategies :'));
+        dbh.replaceNamingStrategies(jhipsterVar.jhipsterConfig.buildTool);
     }
 
     // run installation (npm, bower, etc)
     install() {
-        let logMsg = `To install your dependencies manually, run: ${chalk.yellow.bold(`${dbhVar.clientPackageManager} install`)}`;
+        let logMsg = `To install your dependencies manually, run: ${chalk.yellow.bold(`${jhipsterVar.clientPackageManager} install`)}`;
 
-        if (dbhVar.clientFramework === 'angular1') {
-            logMsg = `To install your dependencies manually, run: ${chalk.yellow.bold(`${dbhVar.clientPackageManager} install & bower install`)}`;
+        if (jhipsterVar.clientFramework === 'angular1') {
+            logMsg = `To install your dependencies manually, run: ${chalk.yellow.bold(`${jhipsterVar.clientPackageManager} install & bower install`)}`;
         }
 
         const injectDependenciesAndConstants = (err) => {
             if (err) {
                 this.log('Install of dependencies failed!');
                 this.log(logMsg);
-            } else if (this.clientFramework === 'angular1') {
+            } else if (jhipsterVar.clientFramework === 'angular1') {
                 this.spawnCommand('gulp', ['install']);
             }
         };
 
         const installConfig = {
-            bower: dbhVar.clientFramework === 'angular1',
-            npm: dbhVar.clientPackageManager !== 'yarn',
-            yarn: dbhVar.clientPackageManager === 'yarn',
+            bower: jhipsterVar.clientFramework === 'angular1',
+            npm: jhipsterVar.clientPackageManager !== 'yarn',
+            yarn: jhipsterVar.clientPackageManager === 'yarn',
             callback: injectDependenciesAndConstants
         };
 
