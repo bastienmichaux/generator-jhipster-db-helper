@@ -33,7 +33,7 @@ Our module will interpret the option and look for values into the corresponding 
 So the following will work :
 
 ```shell
-$ cat .jhipster/OTM_Relation_Many.json
+$ cat .jhipster/Book.json
 ```
 
 ```json
@@ -41,30 +41,38 @@ $ cat .jhipster/OTM_Relation_Many.json
     "fluentMethods": true,
     "relationships": [
         {
-            "relationshipName": "relOne",
-            "dbhRelationshipId": "relOne_id",
-            "otherEntityName": "oTM_Relation_One",
-            "relationshipType": "many-to-one",
-            "otherEntityField": "name"
+            "relationshipName": "theAuthor",
+            "dbhRelationshipId": "theAuthors_id",
+            "otherEntityName": "author",
+            "relationshipType": "many-to-many",
+            "otherEntityField": "name",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "myBook"
         }
     ],
     "fields": [
         {
             "fieldName": "title",
-            "dbhColumnName": "CoverTitle",
+            "dbhColumnName": "coverTitle",
             "fieldType": "String"
+        },
+        {
+            "fieldName": "publicationDate",
+            "dbhColumnName": "PubDay",
+            "fieldType": "LocalDate"
         }
     ],
-    "changelogDate": "20170524131407",
+    "changelogDate": "20170529125334",
     "dto": "no",
     "service": "no",
-    "entityTableName": "otmRelMany",
-    "pagination": "no"
+    "entityTableName": "Papyrus",
+    "pagination": "no",
+    "dbhIdName": "IDshouldALWAYSjustBEid"
 }
 ```
 
 ```shell
-$ yo jhipster:entity OTM_Relation_Many --force
+$ yo jhipster:entity Book --force
 ```
 
 Note that if it's the first time you generate an entity, the field `"dbhRelationshipId"` is optional.

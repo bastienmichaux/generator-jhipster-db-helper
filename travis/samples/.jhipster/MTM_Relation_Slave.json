@@ -20,5 +20,6 @@
     "dto": "no",
     "service": "no",
     "entityTableName": "relSlave",
-    "pagination": "no"
+    "pagination": "no",
+    "dbhIdName": "id"
 }

@@ -25,5 +25,6 @@
     "dto": "no",
     "service": "no",
     "entityTableName": "otm_many",
-    "pagination": "no"
+    "pagination": "no",
+    "dbhIdName": "id"
 }

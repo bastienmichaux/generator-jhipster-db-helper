@@ -20,5 +20,6 @@
     "dto": "no",
     "service": "no",
     "entityTableName": "OTO_Slave",
-    "pagination": "no"
+    "pagination": "no",
+    "dbhIdName": "id"
 }
