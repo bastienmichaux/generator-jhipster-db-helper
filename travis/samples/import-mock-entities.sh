@@ -14,17 +14,10 @@ USAGE='Usage: import-mock-entities [-i test-case-id] [-d test-case-name] jhipste
 SCRIPT_DIR=`cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd`
 CASES_NUMBER=`ls -l "$SCRIPT_DIR/entities" | grep -c ^d`
 
-# --- parameter processing functions ------------------------------------
-ID_SIZE=3 # Number of digits used by the id
-# add leading zeros so it has a total size of $ID_SIZE
-# param : $1 the number to transform into an id
-idFromNumber() {
-    echo `printf %0"$ID_SIZE"d ${1%.*}`
-}
 # --- parameters --------------------------------------------------------
-testCaseId=`idFromNumber "$CASES_NUMBER"` # the unique identifying number associated with the test case
-testCaseName='' # the test case description used for the directory name containing the mock entities # todo get testCase name when not provided
-jhipsterApplication='' # the path to the application containing the mocks
+paramTestCaseId='' # the unique identifying number associated with the test case
+paramTestCaseName='' # the test case description used for the directory name containing the mock entities # todo get testCase name when not provided
+paramJhipsterApplication='' # the path to the application containing the mocks
 
 # --- Options processing -----------------------------------------------
 while getopts "i:n:h" optname
@@ -47,10 +40,10 @@ $USAGE
 			exit 0;
 			;;
 		"i")
-			testCaseNumber=$OPTARG
+			paramTestCaseId=$OPTARG
 			;;
 		"n")
-			testCaseDescription=$OPTARG
+			paramTestCaseName=$OPTARG
 			;;
 		":")
 			echo "Missing option parameter" >&2
@@ -74,8 +67,24 @@ shift $(($OPTIND - 1))
 
 # One argument, anything else is an error.
 if [ "$#" -eq 1 ]; then
-	jhipsterApplication=$1
+	paramJhipsterApplication=$1
 else
 	echo "You must provide one and only one parameter (not counting options) : $USAGE" >&2;
 	exit 1;
 fi
+
+# --- parameter processing functions ------------------------------------
+ID_SIZE=3 # Number of digits used by the id
+# add leading zeros so it has a total size of $ID_SIZE
+# param : $1 the number to transform into an id
+idFromNumber() {
+    echo `printf %0"$ID_SIZE"d ${1%.*}`
+}
+
+# --- processing parameters ----------------------------------------------
+if [[ "$paramTestCaseId" ]]; then
+    testCaseId=`idFromNumber "$paramTestCaseId"`
+else
+    testCaseId=`idFromNumber "$CASES_NUMBER"`
+fi
+echo "$testCaseId"
