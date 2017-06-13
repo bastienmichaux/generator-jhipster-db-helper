@@ -154,7 +154,7 @@ Adrien Horgnies & Bastien Michaux
 [travis-image]: https://travis-ci.org/bastienmichaux/generator-jhipster-db-helper.svg?branch=master
 [travis-url]: https://travis-ci.org/bastienmichaux/generator-jhipster-db-helper
 [daviddm-image]: https://david-dm.org/bastienmichaux/generator-jhipster-db-helper.svg?theme=shields.io
-[daviddm-url]: https://david-dm.org/bastienmichaux/generator-jhipster-module
+[daviddm-url]: https://david-dm.org/bastienmichaux/generator-jhipster-db-helper
 [gitter-url]: https://gitter.im/generator-jhipster-db-helper/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
 [gitter-img]: https://badges.gitter.im/generator-jhipster-db-helper/Lobby.svg
 
