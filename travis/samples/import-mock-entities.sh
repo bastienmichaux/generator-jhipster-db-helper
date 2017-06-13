@@ -8,7 +8,7 @@
 
 VERSION=0.0.0
 NAME='import-mock-entities'
-USAGE='Usage: import-mock-entities [-i <test-case-id>] [-d <test-case-name>] <jhipster-application>'
+USAGE='Usage: import-mock-entities [-i test-case-id] [-d test-case-name] jhipster-application'
 
 # --- arguments --------------------------------------------------------
 testCaseId=-1 # the unique identifying number associated with the test case # todo get testCaseId when not provided
@@ -20,16 +20,19 @@ while getopts "i:n:h" optname
 do
 	case "$optname" in
 		"h")
-			echo "import-mock-entities, a script to help you generate mocks for a travis test case
-			Version: $VERSION
-			Usage: $USAGE
-			# param : <jhipster-application> the path to a jhipster application where you generated the entities you want to add as mocks
-			# -h           Print this help message
-			# -n <test-case-number>         Set the number to associate with the test case (prefix for directory, suffix for entities)
-                                            If not given, counts the directories inside the directory 'entities' relative to this script and add one.
-			# -d <test-case-description>    The string that must be used for the directory name containing the mock entities.
-			                                If not given, use the basename of the last parameter which is the JHipster application which contains the entities you want to add.
-			"
+			echo "import-mock-entities; a script to help you generate mocks for a travis test case
+Version: $VERSION
+
+$USAGE
+
+# param : jhipster-application    path to a jhipster application where you generated the entities you want to add as mocks
+
+# -h                              Print this help message
+# -n test-case-number             Set the number to associate with the test case (prefix for directory, suffix for entities)
+                                  If not given, counts the directories inside the directory 'entities' relative to this script and add one.
+# -d test-case-description        The string that must be used for the directory name containing the mock entities.
+                                  If not given, use the basename of the last parameter which is the JHipster application which contains the entities you want to add.
+"
 			exit 0;
 			;;
 		"i")
@@ -39,12 +42,12 @@ do
 			testCaseDescription=$OPTARG
 			;;
 		":")
-			echo "No argument value for option $OPTARG" >&2
+			echo "Missing option parameter" >&2
 			echo "$USAGE"
 			exit 1;
 			;;
 		"?")
-			echo "Unknown option $OPTARG"
+			echo "Unknown option" >&2
 			echo "$USAGE"
 			exit 1;
 			;;
