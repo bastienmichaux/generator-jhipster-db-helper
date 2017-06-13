@@ -113,4 +113,20 @@ if [ ! -d "$entitiesDir" ]; then
     echo "$entitiesDir doesn't exist !"
     exit 1
 fi
-ls "$entitiesDir"
+
+# --- script internal functions ------------------------------------------
+
+entityNameFromPath() {
+    basename=${1##*/}
+    noExtensionName=${basename%.json}
+    echo "$noExtensionName"
+}
+
+# --- finding entities ---------------------------------------------------
+entityListTempFile=`mktemp /tmp/"$NAME"-XXXXX`
+
+find "$entitiesDir" -type f -regex ".*\.json" | while read file; do entityNameFromPath "$file" >> "$entityListTempFile"; done
+
+cat "$entityListTempFile"
+
+rm "$entityListTempFile"
