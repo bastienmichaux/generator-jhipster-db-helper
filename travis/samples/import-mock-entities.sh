@@ -16,9 +16,15 @@ CASES_NUMBER=`ls -l "$SCRIPT_DIR/entities" | grep -c ^d`
 ENTITIES_DIR_BASENAME=".jhipster"
 
 # --- parameters --------------------------------------------------------
-paramTestCaseId='' # the unique identifying number associated with the test case
-paramTestCaseName='' # the test case description used for the directory name containing the mock entities # todo get testCase name when not provided
-paramJhipsterApplication='' # the path to the application containing the mocks
+# the unique identifying number associated with the test case
+paramTestCaseId=''
+testCaseId=''
+# the test case description used for the directory name containing the mock entities
+paramTestCaseName=''
+testCaseName=''
+# the path to the application containing the mocks
+paramJhipsterApplication=''
+jhipsterApplication=''
 
 # --- Options processing -----------------------------------------------
 while getopts "i:n:h" optname
