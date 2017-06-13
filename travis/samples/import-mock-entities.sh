@@ -10,12 +10,19 @@ VERSION=0.0.0
 NAME='import-mock-entities'
 USAGE='Usage: import-mock-entities [-i test-case-id] [-d test-case-name] jhipster-application'
 
-# --- arguments --------------------------------------------------------
+# --- local environment variable
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+CASES_NUMBER="$( ls -l "$SCRIPT_DIR/entities" | grep -c ^d)"
+
+# --- parameter processing functions ------------------------------------
+
+
+# --- parameters --------------------------------------------------------
 testCaseId=-1 # the unique identifying number associated with the test case # todo get testCaseId when not provided
 testCaseName='' # the test case description used for the directory name containing the mock entities # todo get testCase name when not provided
 jhipsterApplication='' # the path to the application containing the mocks
-# --- Options processing -----------------------------------------------
 
+# --- Options processing -----------------------------------------------
 while getopts "i:n:h" optname
 do
 	case "$optname" in
