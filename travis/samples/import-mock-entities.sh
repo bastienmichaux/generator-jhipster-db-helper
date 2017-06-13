@@ -13,6 +13,7 @@ USAGE='Usage: import-mock-entities [-i test-case-id] [-d test-case-name] jhipste
 # --- local environment variable
 SCRIPT_DIR=`cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd`
 CASES_NUMBER=`ls -l "$SCRIPT_DIR/entities" | grep -c ^d`
+ENTITIES_DIR_BASENAME=".jhipster"
 
 # --- parameters --------------------------------------------------------
 paramTestCaseId='' # the unique identifying number associated with the test case
@@ -67,7 +68,8 @@ shift $(($OPTIND - 1))
 
 # One argument, anything else is an error.
 if [ "$#" -eq 1 ]; then
-	paramJhipsterApplication=$1
+    # This assign the parameter at position one and removes any ending "/" character
+	paramJhipsterApplication="$1"
 else
 	echo "You must provide one and only one parameter (not counting options) : $USAGE" >&2;
 	exit 1;
@@ -80,11 +82,29 @@ ID_SIZE=3 # Number of digits used by the id
 idFromNumber() {
     echo `printf %0"$ID_SIZE"d ${1%.*}`
 }
+nameFromPath() {
+    noSlashName=${1%/}
+    basename=${noSlashName##*/}
+    echo "$basename"
+}
 
 # --- processing parameters ----------------------------------------------
-if [[ "$paramTestCaseId" ]]; then
+if [ "$paramTestCaseId" ]; then
     testCaseId=`idFromNumber "$paramTestCaseId"`
 else
     testCaseId=`idFromNumber "$CASES_NUMBER"`
 fi
-echo "$testCaseId"
+
+if [ "$paramTestCaseName" ]; then
+    testCaseName="$paramTestCaseName"
+else
+    testCaseName=`nameFromPath "$paramJhipsterApplication"`
+fi
+testCaseNameWithId="$testCaseId-$testCaseName"
+
+entitiesDir="$paramJhipsterApplication/$ENTITIES_DIR_BASENAME"
+if [ ! -d "$entitiesDir" ]; then
+    echo "$entitiesDir doesn't exist !"
+    exit 1
+fi
+ls "$entitiesDir"
