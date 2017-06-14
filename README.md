@@ -5,10 +5,17 @@
 This JHipster module makes mapping on an existing database easier.
 If you're not aware of the difficulties of using an existing database with JHipster, read [this](whatAndWhy.md)
 
-1. Answer questions after creating or regenerating an entity :
+## quick start
+
+**Step one** : Answer questions after creating or regenerating an entity
+
 ![the questions this module will ask for a given entity 'Book'][demo-picture]
-1. And let our module do all the necessary modifications (here are the differences for the JPA file) :
+
+**Step two** : Let our module do all the necessary modifications (see here some of them)
+
 ![the modifications this module will do in the JPA file for a given entity][demo-jpa-picture]
+
+**Step three** : Profit
 
 Check [this application][demo-app] to see all the modifications our module do or check our [notes](whatAndWhy.md) for details.
 
