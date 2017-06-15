@@ -138,7 +138,13 @@ mockEntitiesDir="$testCaseNameWithId"
 mkdir "$mockEntitiesDir"
 
 while read entity || [[ -n "$entity" ]]; do
-    echo "found $entity"
+    entityNameWithId="$entity"_"$testCaseId"
+    entityFileNameWithId="$entityNameWithId".json
+
+    cp "$entitiesDir"/"$entity".json "$mockEntitiesDir"/"$entityFileNameWithId"
+    # todo add prefix to table name
+
+    # todo add entry into configuration file into dir
 done < "$entityListTempFile"
 
 rm "$entityListTempFile"
