@@ -122,22 +122,50 @@ entityNameFromPath() {
     echo "$noExtensionName"
 }
 
-# --- finding entities ---------------------------------------------------
+# --- messages -----------------------------------------------------------
+
+EXISTING_DIR_WARNING="
+# To ABORT, empty this file, save and quit.
+# This configuration will overwrite the previous one
+# If a matching mock entity configuration is found, it is KEPT
+"
+
+INSTRUCTIONS="
+# Everything below this line is ignored, do NOT modify anything below
+### INSTRUCTIONS ###
+# Empty lines are ignored
+# Lines beginning with # are ignored
+# Don't use inline comments
+# A valid line only contain an entity name (no leading or trailing space)
+#
+# Reorder entities according the wanted order of generation
+#
+# The order to obtain a valid JHipster application is such that the owner of a
+# relationship is generated before the other end of the relationship
+"
+
+# --- mocking entities ---------------------------------------------------
 entityListTempFile=`mktemp /tmp/"$NAME"-XXXXX`
-
-find "$entitiesDir" -type f -regex ".*\.json" | while read file; do entityNameFromPath "$file" >> "$entityListTempFile"; done
-
-# todo add explanation within comments into the file
-
-"${EDITOR:-nano}" "$entityListTempFile"
 
 # todo offer option to automatically move the directory
 mockEntitiesDir="$testCaseNameWithId"
 mocksConfigurationFile="$mockEntitiesDir"/mocks.conf
 
-# todo warn user if directory already exists (and tell him what is in it)
-mkdir "$mockEntitiesDir"
+if [ -d "$mockEntitiesDir" ]; then
+    echo "# $mockEntitiesDir already exists. $EXISTING_DIR_WARNING" >> "$entityListTempFile"
+else
+    mkdir "$mockEntitiesDir"
+fi
 
+# creating starting configuration from current application
+find "$entitiesDir" -type f -regex ".*\.json" | while read file; do entityNameFromPath "$file" >> "$entityListTempFile"; done
+
+echo "$INSTRUCTIONS" >> "$entityListTempFile"
+
+# offering user to tweak the configuration
+"${EDITOR:-nano}" "$entityListTempFile"
+
+# creating mocks and final configuration
 while read line || [[ -n "$line" ]]; do
     if [ "$line" = '### INSTRUCTIONS ###' ]; then
         break
