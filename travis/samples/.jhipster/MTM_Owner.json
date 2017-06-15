@@ -27,5 +27,6 @@
     "dto": "no",
     "service": "no",
     "entityTableName": "TABLE_ownerMTM",
-    "pagination": "no"
+    "pagination": "no",
+    "dbhIdName": "id"
 }

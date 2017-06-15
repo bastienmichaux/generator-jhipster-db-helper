@@ -1,0 +1,24 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipName": "iD_OTM_Many",
+            "otherEntityName": "iD_OTM_Many",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "iD_OTM_One"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "id_otm_one_field",
+            "dbhColumnName": "id_otm_one_field_column",
+            "fieldType": "String"
+        }
+    ],
+    "changelogDate": "20170601101804",
+    "dto": "no",
+    "service": "no",
+    "entityTableName": "id_otm_one_table",
+    "pagination": "no",
+    "dbhIdName": "id_otm_one_column_id"
+}

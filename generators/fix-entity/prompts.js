@@ -3,6 +3,7 @@ const dbh = require('../dbh.js');
 
 module.exports = {
     askForTableName,
+    askForIdName,
     askForColumnsName
 };
 
@@ -30,6 +31,31 @@ function askForTableName() {
         }
     ]).then((props) => {
         this.tableNameInput = props.dbhTableName;
+        done();
+    });
+}
+
+function askForIdName() {
+    if (this.force) {
+        return;
+    }
+
+    const validateColumnName = dbh.validateColumnName;
+    const done = this.async();
+
+    this.prompt([
+        {
+            type: 'input',
+            name: 'dbhIdName',
+            validate: ((input) => {
+                const prodDatabaseType = this.appConfig.prodDatabaseType;
+                return validateColumnName(input, prodDatabaseType);
+            }),
+            message: 'What id name do you want for this entity ?',
+            default: this.dbhIdName ? this.dbhIdName : 'id'
+        }
+    ]).then((props) => {
+        this.idNameInput = props.dbhIdName;
         done();
     });
 }
