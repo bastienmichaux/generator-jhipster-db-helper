@@ -173,7 +173,7 @@ else
 fi
 
 # creating starting configuration from current application
-find "$entitiesDir" -type f -regex ".*\.json" | while read file; do entityNameFromPath "$file" >> "$entityListTempFile"; done
+find "$entitiesDir" -maxdepth 1 -type f -regex ".*\.json" | while read file; do entityNameFromPath "$file" >> "$entityListTempFile"; done
 
 echo "$INSTRUCTIONS" >> "$entityListTempFile"
 
