@@ -11,8 +11,9 @@ NAME='import-mock-entities'
 USAGE='Usage: import-mock-entities [-i test-case-id] [-d test-case-name] jhipster-application'
 
 # --- local environment variable
-SCRIPT_DIR=`cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd`
-CASES_NUMBER=`ls -l "$SCRIPT_DIR/entities" | grep -c ^d`
+TRAVIS_SCRIPT_DIR=`cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd`
+TRAVIS_ENTITIES_DIR="$TRAVIS_SCRIPT_DIR"/"entities"
+CASES_NUMBER=`ls -l "$TRAVIS_SCRIPT_DIR/entities" | grep -c ^d`
 ENTITIES_DIR_BASENAME=".jhipster"
 
 # --- parameters --------------------------------------------------------
@@ -89,8 +90,9 @@ idFromNumber() {
     echo `printf %0"$ID_SIZE"d ${1%.*}`
 }
 nameFromPath() {
-    noSlashName=${1%/}
-    basename=${noSlashName##*/}
+    realPath=`realpath "$1"`
+    noTrailingSlashName=${realPath%/}
+    basename=${noTrailingSlashName##*/}
     echo "$basename"
 }
 
