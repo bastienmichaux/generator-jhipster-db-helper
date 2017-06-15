@@ -8,9 +8,9 @@
 
 VERSION=0.0.0
 NAME='import-mock-entities'
-USAGE='Usage: import-mock-entities [-i test-case-id] [-d test-case-name] jhipster-application'
+USAGE='Usage: import-mock-entities [-t] [-i test-case-id] [-d test-case-name] jhipster-application'
 
-# --- local environment variable
+# --- local environment information variable -----------------------------
 TRAVIS_SCRIPT_DIR=`cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd`
 TRAVIS_ENTITIES_DIR="$TRAVIS_SCRIPT_DIR"/"entities"
 CASES_NUMBER=`ls -l "$TRAVIS_SCRIPT_DIR/entities" | grep -c ^d`
@@ -26,9 +26,11 @@ testCaseName=''
 # the path to the application containing the mocks
 paramJhipsterApplication=''
 jhipsterApplication=''
+# if we want to automatically move the created folder to ./entities, default is no (empty value)
+paramCreateInTravis=''
 
 # --- Options processing -----------------------------------------------
-while getopts "i:n:h" optname
+while getopts "ti:n:h" optname
 do
 	case "$optname" in
 		"h")
@@ -40,12 +42,17 @@ $USAGE
 # param : jhipster-application    path to a jhipster application where you generated the entities you want to add as mocks
 
 # -h                              Print this help message
+# -t                              Create mocks at supposed destination : 'generator-db-helper/travis/samples/entities'
+                                  This won't work if you moved the script
 # -n test-case-number             Set the number to associate with the test case (prefix for directory, suffix for entities)
                                   If not given, counts the directories inside the directory 'entities' relative to this script and add one.
 # -d test-case-description        The string that must be used for the directory name containing the mock entities.
                                   If not given, use the basename of the last parameter which is the JHipster application which contains the entities you want to add.
 "
 			exit 0;
+			;;
+		"t")
+			paramCreateInTravis='yes'
 			;;
 		"i")
 			paramTestCaseId=$OPTARG
@@ -149,8 +156,10 @@ INSTRUCTIONS="
 # --- mocking entities ---------------------------------------------------
 entityListTempFile=`mktemp /tmp/"$NAME"-XXXXX`
 
-# todo offer option to automatically move the directory
 mockEntitiesDir="$testCaseNameWithId"
+if [ "$paramCreateInTravis" ]; then
+    mockEntitiesDir="$TRAVIS_ENTITIES_DIR"/"$mockEntitiesDir"
+fi
 mocksConfigurationFile="$mockEntitiesDir"/mocks.conf
 
 if [ -d "$mockEntitiesDir" ]; then
