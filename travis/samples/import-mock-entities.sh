@@ -127,6 +127,8 @@ entityListTempFile=`mktemp /tmp/"$NAME"-XXXXX`
 
 find "$entitiesDir" -type f -regex ".*\.json" | while read file; do entityNameFromPath "$file" >> "$entityListTempFile"; done
 
+# todo add explanation within comments into the file
+
 "${EDITOR:-nano}" "$entityListTempFile"
 
 rm "$entityListTempFile"
