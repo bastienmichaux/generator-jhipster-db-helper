@@ -24,41 +24,42 @@ All the entities used by the travis build are stored in the directory `travis/sa
 The directories and files must follow certain rules :
 1. Each test case has its own directory inside `travis/samples/entities`
 1. This directory name is composed with a unique three digits number following the previous test case, then some
- words, with `-` as a word separator, describing the test case.
+ words describing the test case, with `-` as a word separator.
 1. This directory contains all the entities the test case uses.
-1. This directory can contain a markdown document to give more information about the test case. Its name should reflect
- the test case.
-1. Any file without a `.json` extension will be ignored.
+1. If you want to give more information about the test case, write it in `description.md`.
+1. Any file without a `.json` extension will be ignored when loading the test case.
 
 
 ```
-travis/samples/entities
-├── 000-table-with-fields
-│   ├── Beverage_000_A.json
-│   ├── Bug_000_B.json
-│   ├── Developer_000_C.json
-│   └── Mug_000_D.json
+travis/samples/entities/
+├── 000-only-table-name
+│   ├── Beverage_000.json
+│   ├── Bug_000.json
+│   ├── Developer_000.json
+│   ├── entities.conf
+│   └── Mug_000.json
 ├── 001-table-with-fields
-│   ├── Beverage_001_A.json
-│   ├── Bug_001_B.json
-│   ├── Developer_001_C.json
-│   └── Mug_001_D.json
-└── 002-one-to-one
-    ├── Beverage_002_A.json
-    ├── Bug_002_B.json
-    ├── Developer_002_C.json
-    ├── Mug_002_D.json
-    └── one-to-one.md
+│   ├── Beverage_001.json
+│   ├── Bug_001.json
+│   ├── Developer_001.json
+│   ├── entities.conf
+│   └── Mug_001.json
+└── 002-one-to-one-table-only
+    ├── Beverage_002.json
+    ├── Bug_002.json
+    ├── Developer_002.json
+    ├── entities.conf
+    ├── Mug_002.json
+    └── description.md
 ```
 
-### The entity name
+### The entity file name
 
-The entity name is such as `EntityName_xxx_AAA.json`. This name respects these rules :
+The entity file name is such as `EntityName_xxx.json`.
+This name respects these rules :
 
 1. It ends with the extension `.json`.
-1. It has two suffixes :
-    1. The first one is an underscore character followed by the test case identifying number.
-    1. The second one is composed of capital letters which indicate the order in which the
-     entity must be generated and will be removed before doing so, according to the suffix's 
-     alphabetic order.
-1. For the main test, name of the entity must be valid according to JHipster.
+1. It has a suffix, an underscore character followed by the test case identifying number.
+1. For the main test, the name of the entity must be valid according to JHipster.
+
+And of course, the name of the entity will be the same but without the extension.
