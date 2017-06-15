@@ -134,4 +134,8 @@ find "$entitiesDir" -type f -regex ".*\.json" | while read file; do entityNameFr
 # todo offer option to automatically move the directory
 mkdir "$testCaseNameWithId"
 
+while read entity || [[ -n "$entity" ]]; do
+    echo "found $entity"
+done < "$entityListTempFile"
+
 rm "$entityListTempFile"
