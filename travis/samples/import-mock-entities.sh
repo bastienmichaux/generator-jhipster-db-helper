@@ -177,10 +177,13 @@ while read line || [[ -n "$line" ]]; do
     fi
 
     entityNameWithId="$entity"_"$testCaseId"
-    entityFileNameWithId="$entityNameWithId".json
+    entityFileNameWithId="$mockEntitiesDir"/"$entityNameWithId".json
 
-    cp "$entitiesDir"/"$entity".json "$mockEntitiesDir"/"$entityFileNameWithId"
-    # todo add prefix to table name
+    if [ ! -f "$entityFileNameWithId" ]; then
+        cp "$entitiesDir"/"$entity".json "$entityFileNameWithId"
+        # add suffix the entityTableName
+        sed -i -e 's/\("entityTableName": ".*\)\(",\)/\1_'"$testCaseId"'\2/g' "$entityFileNameWithId"
+    fi
 
     echo "$entityNameWithId" >> "$mocksConfigurationFile"
 done < "$entityListTempFile"
