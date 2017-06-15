@@ -6,7 +6,7 @@
 # This script's purpose is to help you generate mocks for a travis test case
 # ----------------------------------------------------------------------
 
-VERSION=0.0.0
+VERSION=1.0.0
 NAME='import-mock-entities'
 USAGE='Usage: import-mock-entities [-t] [-i test-case-id] [-d test-case-name] jhipster-application'
 HELP="
