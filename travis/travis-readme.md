@@ -8,6 +8,15 @@ The main goal of our Travis configuration is to create a JHipster application wi
 They are organized in a specific manner to ensure extensibility, maintainability and
  log readability.
 
+### Automatic generation
+
+You don't need to know the rules to add a new use case, just do this :
+1. Create a jhipster application **with our module**
+1. Create the entities you want in your use case
+1. Run `$ import-mock-entities ~/my-jhipster-application`
+
+That's it, you can stop reading this chapter :-D.
+
 ### The directory structure
 
 All the entities used by the travis build are stored in the directory `travis/samples/entities`.
