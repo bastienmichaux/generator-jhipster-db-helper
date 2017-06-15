@@ -131,4 +131,7 @@ find "$entitiesDir" -type f -regex ".*\.json" | while read file; do entityNameFr
 
 "${EDITOR:-nano}" "$entityListTempFile"
 
+# todo offer option to automatically move the directory
+mkdir "$testCaseNameWithId"
+
 rm "$entityListTempFile"
