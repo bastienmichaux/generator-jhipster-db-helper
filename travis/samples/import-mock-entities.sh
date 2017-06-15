@@ -138,7 +138,16 @@ mocksConfigurationFile="$mockEntitiesDir"/mocks.conf
 # todo warn user if directory already exists (and tell him what is in it)
 mkdir "$mockEntitiesDir"
 
-while read entity || [[ -n "$entity" ]]; do
+while read line || [[ -n "$line" ]]; do
+    if [ "$line" = '### INSTRUCTIONS ###' ]; then
+        break
+    # skip iteration if it's an empty line or comment line
+    elif [ -z "$line" ] || [[ "$line" =~ \s*#.* ]]; then
+        continue
+    else
+        entity="$line"
+    fi
+
     entityNameWithId="$entity"_"$testCaseId"
     entityFileNameWithId="$entityNameWithId".json
 
