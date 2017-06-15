@@ -8,21 +8,23 @@
 
 VERSION=1.0.0
 NAME='import-mock-entities'
-USAGE='Usage: import-mock-entities [-t] [-i test-case-id] [-d test-case-name] jhipster-application'
+USAGE='Usage: import-mock-entities [-t] [-i test-case-id] [-n test-case-name] jhipster-application'
+CONCRETE_USAGE='user@host$ ./import-mock-entities.sh -t -i 27 -n  ~/MyJhipsterApplication'
 HELP="
 import-mock-entities; a script to help you generate mocks for a travis test case
 Version: $VERSION
 
 $USAGE
+Ex. : $CONCRETE_USAGE
 
 # param : jhipster-application    path to a jhipster application where you generated the entities you want to add as mocks
 
 # -h                              Print this help message
 # -t                              Create mocks at supposed destination : 'generator-db-helper/travis/samples/entities'
                                   This won't work if you moved the script
-# -n test-case-number             Set the number to associate with the test case (prefix for directory, suffix for entities)
+# -i test-case-id                 Set the number to associate with the test case (prefix for directory, suffix for entities)
                                   If not given, counts the directories inside the directory 'entities' relative to this script and add one.
-# -d test-case-description        The string that must be used for the directory name containing the mock entities.
+# -n test-case-description        The string that must be used for the directory name containing the mock entities.
                                   If not given, use the basename of the last parameter which is the JHipster application which contains the entities you want to add.
 "
 
@@ -171,7 +173,7 @@ else
 fi
 
 # creating starting configuration from current application
-find "$entitiesDir" -type f -regex ".*\.json" | while read file; do entityNameFromPath "$file" >> "$entityListTempFile"; done
+find "$entitiesDir" -maxdepth 1 -type f -regex ".*\.json" | while read file; do entityNameFromPath "$file" >> "$entityListTempFile"; done
 
 echo "$INSTRUCTIONS" >> "$entityListTempFile"
 
