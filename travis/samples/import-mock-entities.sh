@@ -133,6 +133,7 @@ find "$entitiesDir" -type f -regex ".*\.json" | while read file; do entityNameFr
 
 # todo offer option to automatically move the directory
 mockEntitiesDir="$testCaseNameWithId"
+mocksConfigurationFile="$mockEntitiesDir"/mocks.conf
 
 # todo warn user if directory already exists (and tell him what is in it)
 mkdir "$mockEntitiesDir"
@@ -144,7 +145,7 @@ while read entity || [[ -n "$entity" ]]; do
     cp "$entitiesDir"/"$entity".json "$mockEntitiesDir"/"$entityFileNameWithId"
     # todo add prefix to table name
 
-    # todo add entry into configuration file into dir
+    echo "$entityNameWithId" >> "$mocksConfigurationFile"
 done < "$entityListTempFile"
 
 rm "$entityListTempFile"
