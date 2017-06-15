@@ -1,7 +1,6 @@
 # How does our travis build work ?
 
-The main goal of our Travis configuration is to create a JHipster application with the test cases we support and run
- tests against that application.
+The main goal of our Travis configuration is to create a JHipster application with the test cases we support and run tests against that application.
  
 ## Entities
 
@@ -12,7 +11,7 @@ They are organized in a specific manner to ensure extensibility, maintainability
 
 You don't need to know the rules to add a new use case, just do this :
 1. Create a jhipster application **with our module**
-1. Create the entities you want in your use case
+1. Using JHipster, create the entities you want in your use case
 1. Run `$ import-mock-entities ~/my-jhipster-application`
 
 That's it, you can stop reading this chapter :-D.
@@ -21,11 +20,10 @@ That's it, you can stop reading this chapter :-D.
 
 All the entities used by the travis build are stored in the directory `travis/samples/entities`.
 
-The directories and files must follow certain rules :
+The directories and files must follow these rules :
 1. Each test case has its own directory inside `travis/samples/entities`
-1. This directory name is composed with a unique three digits number following the previous test case, then some
- words describing the test case, with `-` as a word separator.
-1. This directory contains all the entities the test case uses.
+1. This directory name is composed with a unique three digits number following the previous test case, then some words describing the test case, with `-` as a word separator.
+1. This directory contains all the entities that the test case uses.
 1. If you want to give more information about the test case, write it in `description.md`.
 1. Any file without a `.json` extension will be ignored when loading the test case.
 
@@ -53,23 +51,24 @@ travis/samples/entities/
     └── description.md
 ```
 
-### The entity file name
+### Entity file name
 
-The entity file name is such as `EntityName_xxx.json`.
-This name respects these rules :
+The entity file name is something like `EntityName_xxx.json`.
 
-1. It ends with the extension `.json`.
+Follow these rules :
+
 1. It has a suffix, an underscore character followed by the test case identifying number.
 1. For the main test, the name of the entity must be valid according to JHipster.
+1. It ends with the extension `.json`.
 
 And of course, the name of the entity will be the same but without the extension.
 
-### The configuration file
+### Configuration file
 
-Because we don't solve the entities's dependencies, you must precise them in a 
-configuration file `entities.conf`.
+We don't solve the entities's dependencies, so you must specify them in a configuration file called `entities.conf`.
 
 This configuration file is a list of the entities in the correct order, one entity per line.
+
 The following is a valid configuration file.
 
 ```
