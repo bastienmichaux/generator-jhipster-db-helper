@@ -9,6 +9,22 @@
 VERSION=0.0.0
 NAME='import-mock-entities'
 USAGE='Usage: import-mock-entities [-t] [-i test-case-id] [-d test-case-name] jhipster-application'
+HELP="
+import-mock-entities; a script to help you generate mocks for a travis test case
+Version: $VERSION
+
+$USAGE
+
+# param : jhipster-application    path to a jhipster application where you generated the entities you want to add as mocks
+
+# -h                              Print this help message
+# -t                              Create mocks at supposed destination : 'generator-db-helper/travis/samples/entities'
+                                  This won't work if you moved the script
+# -n test-case-number             Set the number to associate with the test case (prefix for directory, suffix for entities)
+                                  If not given, counts the directories inside the directory 'entities' relative to this script and add one.
+# -d test-case-description        The string that must be used for the directory name containing the mock entities.
+                                  If not given, use the basename of the last parameter which is the JHipster application which contains the entities you want to add.
+"
 
 # --- local environment information variable -----------------------------
 TRAVIS_SCRIPT_DIR=`cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd`
@@ -34,21 +50,7 @@ while getopts "ti:n:h" optname
 do
 	case "$optname" in
 		"h")
-			echo "import-mock-entities; a script to help you generate mocks for a travis test case
-Version: $VERSION
-
-$USAGE
-
-# param : jhipster-application    path to a jhipster application where you generated the entities you want to add as mocks
-
-# -h                              Print this help message
-# -t                              Create mocks at supposed destination : 'generator-db-helper/travis/samples/entities'
-                                  This won't work if you moved the script
-# -n test-case-number             Set the number to associate with the test case (prefix for directory, suffix for entities)
-                                  If not given, counts the directories inside the directory 'entities' relative to this script and add one.
-# -d test-case-description        The string that must be used for the directory name containing the mock entities.
-                                  If not given, use the basename of the last parameter which is the JHipster application which contains the entities you want to add.
-"
+			echo "$HELP"
 			exit 0;
 			;;
 		"t")
