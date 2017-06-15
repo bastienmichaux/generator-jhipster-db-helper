@@ -162,7 +162,7 @@ mockEntitiesDir="$testCaseNameWithId"
 if [ "$paramCreateInTravis" ]; then
     mockEntitiesDir="$TRAVIS_ENTITIES_DIR"/"$mockEntitiesDir"
 fi
-mocksConfigurationFile="$mockEntitiesDir"/mocks.conf
+mocksConfigurationFile="$mockEntitiesDir"/entities.conf
 
 if [ -d "$mockEntitiesDir" ]; then
     echo "# $mockEntitiesDir already exists. $EXISTING_DIR_WARNING" >> "$entityListTempFile"
