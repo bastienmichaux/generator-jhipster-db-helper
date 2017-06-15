@@ -17,5 +17,6 @@
     "dto": "no",
     "service": "no",
     "entityTableName": "Ella_DressedTable",
-    "pagination": "no"
+    "pagination": "no",
+    "dbhIdName": "id"
 }

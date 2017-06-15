@@ -1,0 +1,25 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipName": "iD_MTM_Owner",
+            "otherEntityName": "iD_MTM_Owner",
+            "relationshipType": "many-to-many",
+            "ownerSide": false,
+            "otherEntityRelationshipName": "iD_MTM_Slave"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "id_mtm_slave_field",
+            "dbhColumnName": "id_mtm_slave_field_column",
+            "fieldType": "String"
+        }
+    ],
+    "changelogDate": "20170607101730",
+    "dto": "no",
+    "service": "no",
+    "entityTableName": "id_mtm_slave_table",
+    "pagination": "no",
+    "dbhIdName": "id_mtm_slave_column_id"
+}

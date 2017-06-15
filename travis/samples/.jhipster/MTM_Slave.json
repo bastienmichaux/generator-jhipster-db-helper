@@ -25,5 +25,6 @@
     "dto": "no",
     "service": "no",
     "entityTableName": "mtm_sLAVE",
-    "pagination": "no"
+    "pagination": "no",
+    "dbhIdName": "id"
 }
