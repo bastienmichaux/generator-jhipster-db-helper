@@ -63,3 +63,18 @@ This name respects these rules :
 1. For the main test, the name of the entity must be valid according to JHipster.
 
 And of course, the name of the entity will be the same but without the extension.
+
+### The configuration file
+
+Because we don't solve the entities's dependencies, you must precise them in a 
+configuration file `entities.conf`.
+
+This configuration file is a list of the entities in the correct order, one entity per line.
+The following is a valid configuration file.
+
+```
+Beverage_000
+Developer_000
+Mug_000
+Bug_000
+```
