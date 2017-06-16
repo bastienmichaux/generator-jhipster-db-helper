@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
 
+# ----------------------------------------------------------------------
+# generate-entities-from-travis-case
+#
+# This script's purpose is to generate all entities in the correct order.
+# This supposes said entities respect our conventions
+# ----------------------------------------------------------------------
+
 VERSION='v1.0.0'
 USAGE='generate-mock-entities entities-directory'
 
