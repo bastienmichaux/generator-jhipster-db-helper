@@ -66,9 +66,9 @@ module.exports = class extends Generator {
         files.forEach((path) => {
             if (fs.existsSync(path)) {
                 // 1) replace Spring physical naming strategy
-                dbh.replaceContent(path, physicalOld, physicalNew, null, this);
+                dbh.replaceContent(path, physicalOld, physicalNew, null);
                 // 2) replace Spring implicit naming strategy
-                dbh.replaceContent(path, implicitOld, implicitNew, null, this);
+                dbh.replaceContent(path, implicitOld, implicitNew, null);
             } else {
                 throw new Error(`_replaceNamingStrategies: File doesn't exist! Path was:\n${path}`);
             }

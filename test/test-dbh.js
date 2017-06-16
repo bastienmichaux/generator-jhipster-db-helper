@@ -2,6 +2,7 @@
 /* eslint-disable prefer-arrow-callback */
 const _ = require('lodash');
 const assert = require('yeoman-assert');
+const fse = require('fs-extra');
 const path = require('path');
 
 const dbh = require('../generators/dbh.js');
@@ -10,6 +11,11 @@ const DBH_CONSTANTS = require('../generators/dbh-constants');
 
 // Dbh unit test
 describe('Dbh', function () {
+    describe('dbh.js script', function () {
+        it('has the expected exports', function () {
+            assert(typeof dbh.replaceContent === 'function');
+        });
+    });
     describe('getAppConfig', function () {
         it('returns the expected app config with Maven as build tool', function () {
             const expectedConfig = DBH_CONSTANTS.templateConfigFile.usingMaven;
@@ -219,7 +225,17 @@ describe('Dbh', function () {
         });
     });
     describe('replaceContent', function () {
-        it('works');
+        it('works', function () {
+            // write a temp file
+            let tempFilePath = path.join(__dirname, './testDir/tempDir/foo.json');
+            let content = {foo: 'bar'};
+            let replacedContent = {foo: 'fuz'};
+
+            fse.writeJsonSync(tempFilePath, content);
+            assert.fileContent(tempFilePath, 'bar');
+            dbh.replaceContent(tempFilePath, 'bar', 'fuz', null);
+            assert.fileContent(tempFilePath, 'fuz');
+        });
     });
     describe('replaceNamingStrategies', function () {
         it('throws when given an unknown build tool', function () {

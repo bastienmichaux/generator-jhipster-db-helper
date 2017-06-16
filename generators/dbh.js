@@ -4,6 +4,7 @@ const jhipsterCore = require('jhipster-core');
 const jhipsterModuleSubgenerator = require('../node_modules/generator-jhipster/generators/modules/index.js');
 const pluralize = require('pluralize');
 const fs = require('fs');
+const fse = require('fs-extra');
 
 
 /**
@@ -214,22 +215,19 @@ const hasConstraints = (relationships) => {
 const isNotEmptyString = x => typeof x === 'string' && x !== '';
 
 
-/** Duplicate of a JHipster function where we have replaced how the path is handled, because we use absolute paths */
-
-const replaceContent = (absolutePath, pattern, content, regex, generator) => {
-    const re = regex ? new RegExp(pattern, 'g') : pattern;
-    let body = generator.fs.read(absolutePath);
-
-    body = body.replace(re, content);
-    generator.fs.write(absolutePath, body);
-};
-
-const _replaceContent = (absolutePath, pattern, content, regex) => {
+/**
+ * Duplicate of a JHipster function where we have replaced how the path is handled, because we use absolute paths
+ */
+const replaceContent = (absolutePath, pattern, content, regex) => {
+    if (!fs.existsSync(absolutePath)) {
+        throw new Error('_replaceContent: file not found.\n' + absolutePath);
+    }
+    
     const re = regex ? new RegExp(pattern, 'g') : pattern;
     let body = fs.readFileSync(absolutePath);
-
+    body = '' + body;
     body = body.replace(re, content);
-    fs.write(absolutePath, body); // fs.createWriteStream is recommended
+    fs.writeFileSync(absolutePath, body); // fs.createWriteStream is recommended
 };
 
 /**
@@ -262,7 +260,7 @@ const replaceNamingStrategies = (appBuildTool) => {
             // 2) replace Spring implicit naming strategy
             replaceContent(file, implicitOld, implicitNew, null, this);
         } else {
-            throw new Error(`_replaceNamingStrategies: File doesn't exist! Path was:\n${file}`);
+            throw new Error(`replaceNamingStrategies: File doesn't exist! Path was:\n${file}`);
         }
     });
 };
