@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+VERSION='v1.0.0'
 USAGE='generate-mock-entities entities-directory'
 
 
