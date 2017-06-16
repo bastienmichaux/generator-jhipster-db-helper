@@ -2,10 +2,13 @@
 set -ev
 # Generate several sets of entities and launch tests after each cases
 
+gen=`pwd`/"travis/samples/generate-entities-from-travis-case.sh"
+
 cd minimalist-app
 
+$gen 000-only-table-name
+
 # samples to rename table and column names
-cp -t .jhipster "$JHIPSTER_SAMPLES/.jhipster/NakedTable.json"
 cp -t .jhipster "$JHIPSTER_SAMPLES/.jhipster/DressedTable.json"
 
 # samples to rename names from entities involved in a relationship
