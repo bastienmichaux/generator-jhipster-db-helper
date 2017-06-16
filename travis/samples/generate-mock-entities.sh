@@ -27,4 +27,27 @@ if [ ! -f "$CASE_CONF_FILE" ]; then
     exit 1
 fi
 
-# --- core ---------------------------------------------------------------
+# --- core process -------------------------------------------------------
+
+while read line || [[ -n "$line" ]]; do
+    # skip iteration if it's an empty line or comment line
+    if [ -z "$line" ] || [[ "$line" =~ \s*#.* ]]; then
+        continue
+    else
+        entity="$line"
+    fi
+
+    entityFile="$CASE_DIR"/"$entity".json
+    if [ ! -f "$entityFile" ]; then
+        echo "$entityFile missing" >&2
+        exit 1
+    fi
+
+    ### Step 1, copy entity configuration file, if not already done by a previous iteration
+    echo "$entityFile --> ""$PWD"/.jhipster
+    cp -n "$entityFile" "$PWD"/.jhipster
+
+    ### Step 2, generate the entity
+    yo jhipster:entity "$entity" --force
+
+done < "$CASE_CONF_FILE"
