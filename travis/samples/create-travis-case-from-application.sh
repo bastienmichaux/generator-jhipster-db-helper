@@ -198,6 +198,8 @@ while read line || [[ -n "$line" ]]; do
         cp "$entitiesDir"/"$entity".json "$entityFileNameWithId"
         # add suffix the entityTableName
         sed -i -e 's/\("entityTableName": ".*\)\(",\)/\1_'"$testCaseId"'\2/g' "$entityFileNameWithId"
+        # add suffix to the otherEntityNames
+        sed -i -e 's/\("otherEntityName": ".*\)\(",\)/\1_'"$testCaseId"'\2/g' "$entityFileNameWithId"
     fi
 
     echo "$entityNameWithId" >> "$mocksConfigurationFile"
