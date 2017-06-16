@@ -255,14 +255,14 @@ const replaceNamingStrategies = (appBuildTool) => {
     const files = getFilesWithNamingStrategy(appBuildTool);
 
     // check that each file exists, then replace the naming strategies
-    files.forEach((path) => {
+    files.forEach((file) => {
         if (fs.existsSync(file)) {
             // 1) replace Spring physical naming strategy
             replaceContent(file, physicalOld, physicalNew, null, this);
             // 2) replace Spring implicit naming strategy
             replaceContent(file, implicitOld, implicitNew, null, this);
         } else {
-            throw new Error(`_replaceNamingStrategies: File doesn't exist! Path was:\n${path}`);
+            throw new Error(`_replaceNamingStrategies: File doesn't exist! Path was:\n${file}`);
         }
     });
 };
@@ -276,7 +276,7 @@ const validateColumnName = (input, dbType) => {
     } else if (dbType === 'oracle' && input.length > DBH_CONSTANTS.oracleLimitations.tableNameHardMaxLength) {
         return 'Your column name is too long for Oracle, try a shorter name';
     }
-    
+
     return true;
 };
 
