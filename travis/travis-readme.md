@@ -12,7 +12,7 @@ They are organized in a specific manner to ensure extensibility, maintainability
 You don't need to know the rules to add a new use case, just do this :
 1. Create a jhipster application **with our module**
 1. Using JHipster, create the entities you want in your use case
-1. Run `$ import-mock-entities ~/my-jhipster-application`
+1. Run `$ create-travis-case-from-application ~/my-jhipster-application`
 
 That's it, you can stop reading this chapter :-D.
 

@@ -1,17 +1,17 @@
 #!/usr/bin/env bash
 
 # ----------------------------------------------------------------------
-# import-mock-entities
+# create-travis-case-from-application
 #
 # This script's purpose is to help you generate mocks for a travis test case
 # ----------------------------------------------------------------------
 
 VERSION=1.0.0
-NAME='import-mock-entities'
-USAGE='Usage: import-mock-entities [-t] [-i test-case-id] [-n test-case-name] jhipster-application'
-CONCRETE_USAGE='user@host$ ./import-mock-entities.sh -t -i 27 -n  ~/MyJhipsterApplication'
+NAME='create-travis-case-from-application'
+USAGE="Usage: $NAME [-t] [-i test-case-id] [-n test-case-name] jhipster-application"
+CONCRETE_USAGE="user@host$ ./$NAME.sh -t -i 27 -n  ~/MyJhipsterApplication"
 HELP="
-import-mock-entities; a script to help you generate mocks for a travis test case
+$NAME; a script to help you generate mocks for a travis test case
 Version: $VERSION
 
 $USAGE
