@@ -7,9 +7,7 @@ gen=`pwd`/"travis/samples/generate-entities-from-travis-case.sh"
 cd minimalist-app
 
 $gen 000-only-table-name
-
-# samples to rename table and column names
-cp -t .jhipster "$JHIPSTER_SAMPLES/.jhipster/DressedTable.json"
+$gen 001-table-and-fields
 
 # samples to rename names from entities involved in a relationship
 cp -t .jhipster "$JHIPSTER_SAMPLES/.jhipster/OTO_Slave.json" "$JHIPSTER_SAMPLES/.jhipster/OTO_Owner.json"
