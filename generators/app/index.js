@@ -63,14 +63,14 @@ module.exports = class extends Generator {
         const files = dbh.getFilesWithNamingStrategy(appBuildTool);
 
         // check that each file exists, then replace the naming strategies
-        files.forEach((path) => {
-            if (fs.existsSync(path)) {
+        files.forEach((file) => {
+            if (fs.existsSync(file)) {
                 // 1) replace Spring physical naming strategy
-                dbh.replaceContent(path, physicalOld, physicalNew, null);
+                jhipsterFunc.replaceContent(file, physicalOld, physicalNew, null);
                 // 2) replace Spring implicit naming strategy
-                dbh.replaceContent(path, implicitOld, implicitNew, null);
+                jhipsterFunc.replaceContent(file, implicitOld, implicitNew, null);
             } else {
-                throw new Error(`_replaceNamingStrategies: File doesn't exist! Path was:\n${path}`);
+                throw new Error(`_replaceNamingStrategies: File doesn't exist! Path was:\n${file}`);
             }
         });
     }
@@ -127,7 +127,7 @@ module.exports = class extends Generator {
         this.packageName = jhipsterVar.packageName;
         this.angularAppName = jhipsterVar.angularAppName;
         this.clientFramework = jhipsterVar.clientFramework;
-        this.clientPackageManager = jhipsterVar.clientPackageManage;
+        this.clientPackageManager = jhipsterVar.clientPackageManager;
         this.message = this.props.message;
 
         try {

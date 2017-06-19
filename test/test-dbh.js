@@ -2,6 +2,7 @@
 /* eslint-disable prefer-arrow-callback */
 const _ = require('lodash');
 const assert = require('yeoman-assert');
+const fs = require('fs');
 const fse = require('fs-extra');
 const path = require('path');
 
@@ -227,14 +228,18 @@ describe('Dbh', function () {
     describe('replaceContent', function () {
         it('works', function () {
             // write a temp file
-            let tempFilePath = path.join(__dirname, './testDir/tempDir/foo.json');
+            let tempFilePath = path.join(__dirname, './testDir/tempDir/myTest.json');
             let content = {foo: 'bar'};
             let replacedContent = {foo: 'fuz'};
 
+            assert.noFile(tempFilePath);
             fse.writeJsonSync(tempFilePath, content);
+            assert.file(tempFilePath);
             assert.fileContent(tempFilePath, 'bar');
             dbh.replaceContent(tempFilePath, 'bar', 'fuz', null);
             assert.fileContent(tempFilePath, 'fuz');
+            fs.unlinkSync(tempFilePath);
+            assert.noFile(tempFilePath);
         });
     });
     describe('replaceNamingStrategies', function () {

@@ -222,7 +222,7 @@ const replaceContent = (absolutePath, pattern, content, regex) => {
     if (!fs.existsSync(absolutePath)) {
         throw new Error('_replaceContent: file not found.\n' + absolutePath);
     }
-    
+
     const re = regex ? new RegExp(pattern, 'g') : pattern;
     let body = fs.readFileSync(absolutePath);
     body = '' + body;
@@ -230,40 +230,6 @@ const replaceContent = (absolutePath, pattern, content, regex) => {
     fs.writeFileSync(absolutePath, body); // fs.createWriteStream is recommended
 };
 
-/**
- * Replace Spring naming strategies with more neutral ones.
- *
- * Note : after running this function, a reference to the ancient naming strategies will still be found in :
- * ./node_modules/generator-jhipster/generators/server/templates/_pom.xml
- * however this doesn't concern us
- */
-const replaceNamingStrategies = (appBuildTool) => {
-    const physicalOld = DBH_CONSTANTS.physicalNamingStrategyOld;
-    const physicalNew = DBH_CONSTANTS.physicalNamingStrategyNew;
-
-    const implicitOld = DBH_CONSTANTS.implicitNamingStrategyOld;
-    const implicitNew = DBH_CONSTANTS.implicitNamingStrategyNew;
-
-    // fail when application build tool is unknown
-    if (!isValidBuildTool(appBuildTool)) {
-        throw new Error(`replaceNamingStrategies: buildTool parameter '${appBuildTool}' is unknown`);
-    }
-
-    // depending on the application's build tool, get all files where the old naming strategies must be replaced
-    const files = getFilesWithNamingStrategy(appBuildTool);
-
-    // check that each file exists, then replace the naming strategies
-    files.forEach((file) => {
-        if (fs.existsSync(file)) {
-            // 1) replace Spring physical naming strategy
-            replaceContent(file, physicalOld, physicalNew, null, this);
-            // 2) replace Spring implicit naming strategy
-            replaceContent(file, implicitOld, implicitNew, null, this);
-        } else {
-            throw new Error(`replaceNamingStrategies: File doesn't exist! Path was:\n${file}`);
-        }
-    });
-};
 
 /** Validate user input when asking for a SQL column name */
 const validateColumnName = (input, dbType) => {
@@ -312,7 +278,6 @@ module.exports = {
     postAppPolyfill,
     postEntityPolyfill,
     replaceContent,
-    replaceNamingStrategies,
     validateColumnName,
     validateTableName
 };

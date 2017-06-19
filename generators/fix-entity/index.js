@@ -112,9 +112,9 @@ module.exports = generator.extend({
         const updateKey = (landmark, key, oldValue, newValue) => {
             if (oldValue === undefined) {
                 // '(\\s*)' is for capturing indentation
-                dbh.replaceContent(files.config, `(\\s*)${landmark}`, `$1${landmark},$1"${key}": "${newValue}"`, true);
+                jhipsterFunc.replaceContent(files.config, `(\\s*)${landmark}`, `$1${landmark},$1"${key}": "${newValue}"`, true);
             } else {
-                dbh.replaceContent(files.config, `"${key}": "${oldValue}`, `"${key}": "${newValue}`);
+                jhipsterFunc.replaceContent(files.config, `"${key}": "${oldValue}`, `"${key}": "${newValue}`);
             }
         };
 
@@ -122,8 +122,8 @@ module.exports = generator.extend({
             jhipsterFunc.updateEntityConfig(paramFiles.config, 'entityTableName', newValue);
 
             // We search either for our value or jhipster value, so it works even if user didn't accept JHipster overwrite after a regeneration
-            dbh.replaceContent(paramFiles.ORM, `@Table(name = "${this.entityTableName}`, `@Table(name = "${newValue}`);
-            dbh.replaceContent(paramFiles.liquibaseEntity, `<createTable tableName="${this.entityTableName}`, `<createTable tableName="${newValue}`);
+            jhipsterFunc.replaceContent(paramFiles.ORM, `@Table(name = "${this.entityTableName}`, `@Table(name = "${newValue}`);
+            jhipsterFunc.replaceContent(paramFiles.liquibaseEntity, `<createTable tableName="${this.entityTableName}`, `<createTable tableName="${newValue}`);
         };
 
         const replaceIdName = (paramFiles, newValue) => {
@@ -134,7 +134,7 @@ module.exports = generator.extend({
              * - (\\s*) is there to catch the indentation
              * - (private Long id;) is the landmark we use to know where to insert the new @Column tag.
              */
-            dbh.replaceContent(paramFiles.ORM, '(@Column\\(.*\\))?(\\s*)(private Long id;)', `$2@Column(name = "${newValue}")$2$3`, true);
+            jhipsterFunc.replaceContent(paramFiles.ORM, '(@Column\\(.*\\))?(\\s*)(private Long id;)', `$2@Column(name = "${newValue}")$2$3`, true);
             /**
              * - (<column name=") A first pattern to match
              * - (id|${this.dbhIdName}) Either the litteral value id or the previous value set by this module
@@ -144,7 +144,7 @@ module.exports = generator.extend({
              *   - \\s* Any number of white spaces
              *   - <constraints primaryKey="true" The heart of the pattern we want to match, this makes sure we're at the right place
              */
-            dbh.replaceContent(paramFiles.liquibaseEntity, `(<column name=")(id|${this.dbhIdName})(".*>\\s*<constraints primaryKey="true")`, `$1${newValue}$3`, true);
+            jhipsterFunc.replaceContent(paramFiles.liquibaseEntity, `(<column name=")(id|${this.dbhIdName})(".*>\\s*<constraints primaryKey="true")`, `$1${newValue}$3`, true);
         };
 
         // verify files exist
@@ -167,8 +167,8 @@ module.exports = generator.extend({
             updateKey(`"fieldName": "${columnItem.fieldName}"`, 'dbhColumnName', oldValue, newValue);
 
             // We search either for our value or JHipster value, so it works even if user didn't accept JHipster overwrite while regenerating
-            dbh.replaceContent(files.ORM, `@Column\\(name = "(${columnItem.fieldNameAsDatabaseColumn}|${oldValue})`, `@Column(name = "${newValue}`, true);
-            dbh.replaceContent(files.liquibaseEntity, `<column name="(${columnItem.fieldNameAsDatabaseColumn}|${oldValue})`, `<column name="${newValue}`, true);
+            jhipsterFunc.replaceContent(files.ORM, `@Column\\(name = "(${columnItem.fieldNameAsDatabaseColumn}|${oldValue})`, `@Column(name = "${newValue}`, true);
+            jhipsterFunc.replaceContent(files.liquibaseEntity, `<column name="(${columnItem.fieldNameAsDatabaseColumn}|${oldValue})`, `<column name="${newValue}`, true);
         });
 
         /**
@@ -196,8 +196,8 @@ module.exports = generator.extend({
                 columnName = dbh.getColumnIdName(relationshipItem.relationshipName);
                 newValue = `${relationshipItem.relationshipName}_id`;
 
-                dbh.replaceContent(files.liquibaseConstraints, `baseTableName="${this.entityTableName}`, `baseTableName="${this.tableNameInput}`);
-                dbh.replaceContent(files.liquibaseConstraints, `(referencedColumnNames=")id("\\s*referencedTableName="${otherEntity.entityTableName}")`, `$1${otherEntity.dbhIdName}$2`, true);
+                jhipsterFunc.replaceContent(files.liquibaseConstraints, `baseTableName="${this.entityTableName}`, `baseTableName="${this.tableNameInput}`);
+                jhipsterFunc.replaceContent(files.liquibaseConstraints, `(referencedColumnNames=")id("\\s*referencedTableName="${otherEntity.entityTableName}")`, `$1${otherEntity.dbhIdName}$2`, true);
 
                 if (relationshipItem.relationshipType === 'many-to-one') {
                     /**
@@ -205,23 +205,23 @@ module.exports = generator.extend({
                      * (\\s*) catch indentation
                      * (private ${relationshipItem.otherEntityNameCapitalized} ${relationshipItem.relationshipName};) landmark used to find the correct place
                      */
-                    dbh.replaceContent(files.ORM, `(@JoinColumn.*\\))?(\\s*)(private ${relationshipItem.otherEntityNameCapitalized} ${relationshipItem.relationshipName};)`, `$2@JoinColumn(name = "${newValue}")$2$3`, true);
+                    jhipsterFunc.replaceContent(files.ORM, `(@JoinColumn.*\\))?(\\s*)(private ${relationshipItem.otherEntityNameCapitalized} ${relationshipItem.relationshipName};)`, `$2@JoinColumn(name = "${newValue}")$2$3`, true);
                 } else {
-                    dbh.replaceContent(files.ORM, `(@JoinColumn.*)(\\)\\s*private ${relationshipItem.otherEntityNameCapitalized} ${relationshipItem.relationshipName};)`, `$1, name = "${newValue}"$2`, true);
+                    jhipsterFunc.replaceContent(files.ORM, `(@JoinColumn.*)(\\)\\s*private ${relationshipItem.otherEntityNameCapitalized} ${relationshipItem.relationshipName};)`, `$1, name = "${newValue}"$2`, true);
                 }
             } else if (relationshipItem.relationshipType === 'many-to-many' && relationshipItem.ownerSide) {
                 columnName = dbh.getPluralColumnIdName(relationshipItem.relationshipName);
                 newValue = `${relationshipItem.relationshipNamePlural}_id`;
                 initialTableIdName = dbh.getPluralColumnIdName(this.entityClass);
 
-                dbh.replaceContent(files.liquibaseEntity, `<addPrimaryKey columnNames="${initialTableIdName}, (${columnName}|${oldValue})`, `<addPrimaryKey columnNames="${initialTableIdName}, ${newValue}`, true);
-                dbh.replaceContent(files.liquibaseConstraints, `referencedTableName="${this.entityTableName}`, `referencedTableName="${this.tableNameInput}`);
-                dbh.replaceContent(files.ORM, `inverseJoinColumns = @JoinColumn\\(name="(${columnName}|${oldValue})`, `inverseJoinColumns = @JoinColumn(name="${newValue}`, true);
-                dbh.replaceContent(files.liquibaseConstraints, `(referencedColumnNames=")id("\\s*referencedTableName="${this.entityTableName}")`, `$1${this.idNameInput}$2`, true);
+                jhipsterFunc.replaceContent(files.liquibaseEntity, `<addPrimaryKey columnNames="${initialTableIdName}, (${columnName}|${oldValue})`, `<addPrimaryKey columnNames="${initialTableIdName}, ${newValue}`, true);
+                jhipsterFunc.replaceContent(files.liquibaseConstraints, `referencedTableName="${this.entityTableName}`, `referencedTableName="${this.tableNameInput}`);
+                jhipsterFunc.replaceContent(files.ORM, `inverseJoinColumns = @JoinColumn\\(name="(${columnName}|${oldValue})`, `inverseJoinColumns = @JoinColumn(name="${newValue}`, true);
+                jhipsterFunc.replaceContent(files.liquibaseConstraints, `(referencedColumnNames=")id("\\s*referencedTableName="${this.entityTableName}")`, `$1${this.idNameInput}$2`, true);
                 // todo duplicate line, will remove on refactoring (duplicate with l258 as of the commit bringing this up)
-                dbh.replaceContent(files.liquibaseConstraints, `(referencedColumnNames=")id("\\s*referencedTableName="${otherEntity.entityTableName}")`, `$1${otherEntity.dbhIdName}$2`, true);
-                dbh.replaceContent(files.ORM, `(@JoinColumn\\(name="${initialTableIdName}", referencedColumnName=")id`, `$1${this.idNameInput}`, true);
-                dbh.replaceContent(files.ORM, `(inverseJoinColumns = @JoinColumn\\(name="${newValue}", referencedColumnName=")id`, `$1${otherEntity.dbhIdName}`, true);
+                jhipsterFunc.replaceContent(files.liquibaseConstraints, `(referencedColumnNames=")id("\\s*referencedTableName="${otherEntity.entityTableName}")`, `$1${otherEntity.dbhIdName}$2`, true);
+                jhipsterFunc.replaceContent(files.ORM, `(@JoinColumn\\(name="${initialTableIdName}", referencedColumnName=")id`, `$1${this.idNameInput}`, true);
+                jhipsterFunc.replaceContent(files.ORM, `(inverseJoinColumns = @JoinColumn\\(name="${newValue}", referencedColumnName=")id`, `$1${otherEntity.dbhIdName}`, true);
             }
 
             updateKey(`"relationshipName": "${relationshipItem.relationshipName}"`, 'dbhRelationshipId', oldValue, newValue);
@@ -232,7 +232,7 @@ module.exports = generator.extend({
             // The annotation @JsonProperty needs this additional import
             const newImport = 'import com.fasterxml.jackson.annotation.JsonProperty;';
             const landmarkImport = 'import org.hibernate.annotations.Cache;';
-            dbh.replaceContent(files.ORM, `(${newImport})?\n${landmarkImport}`, `${newImport}\n${landmarkImport}`, true);
+            jhipsterFunc.replaceContent(files.ORM, `(${newImport})?\n${landmarkImport}`, `${newImport}\n${landmarkImport}`, true);
             const oldAddition = '@JsonProperty\\(".*"\\)';
             const addition = `@JsonProperty("${relationshipItem.otherEntityNameCapitalized}")`;
             const landmark = `public ${relationshipItem.otherEntityNameCapitalized} get${relationshipItem.otherEntityNameCapitalized}`;
@@ -240,7 +240,7 @@ module.exports = generator.extend({
              * (${oldAddition}\\s*)? - $1 : remove a possibly present old annotation
              * (\\n( |\\t)*) - $2 : catch the indentation
              */
-            dbh.replaceContent(files.ORM, `(${oldAddition}\\s*)?(\\n( |\\t)*)${landmark}`, `$2${addition}$2${landmark}`, true);
+            jhipsterFunc.replaceContent(files.ORM, `(${oldAddition}\\s*)?(\\n( |\\t)*)${landmark}`, `$2${addition}$2${landmark}`, true);
         });
     },
 
