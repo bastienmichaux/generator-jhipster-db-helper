@@ -45,7 +45,7 @@ Before you submit your pull request consider the following guidelines:
 * Make your changes in a new git branch
 
      ```shell
-     git checkout -b my-fix-branch master
+     git checkout -b my-fix-branch dev
      ```
 
 * Create your patch, **including appropriate test cases**.
@@ -78,14 +78,14 @@ Before you submit your pull request consider the following guidelines:
     git push origin my-fix-branch
     ```
 
-* In GitHub, send a pull request to `jhipster/generator-jhipster:master`.
+* In GitHub, send a pull request to `jhipster/generator-jhipster:dev`.
 * If we suggest changes then
   * Make the required updates.
   * Re-run the JHipster tests on your sample generated project to ensure tests are still passing.
   * Rebase your branch and force push to your GitHub repository (this will update your Pull Request):
 
     ```shell
-    git rebase master -i
+    git rebase dev -i
     git push -f
     ```
 
@@ -93,18 +93,18 @@ That's it! Thank you for your contribution!
 
 #### Resolving merge conflicts ("This branch has conflicts that must be resolved")
 
-Sometimes your PR will have merge conflicts with the upstream repository's master branch. There are several ways to solve this but if not done correctly this can end up as a true nightmare. So here is one method that works quite well.
+Sometimes your PR will have merge conflicts with the upstream repository's dev branch. There are several ways to solve this but if not done correctly this can end up as a true nightmare. So here is one method that works quite well.
 
-* First, fetch the latest information from the master
+* First, fetch the latest information from the dev
 
     ```shell
     git fetch upstream
     ```
 
-* Rebase your branch against the upstream/master
+* Rebase your branch against the upstream/dev
 
     ```shell
-    git rebase upstream/master
+    git rebase upstream/dev
     ```
 
 * Git will stop rebasing at the first merge conflict and indicate which file is in conflict. Edit the file, resolve the conflict then
@@ -133,10 +133,10 @@ from the main (upstream) repository:
     git push origin --delete my-fix-branch
     ```
 
-* Check out the master branch:
+* Check out the dev branch:
 
     ```shell
-    git checkout master -f
+    git checkout dev -f
     ```
 
 * Delete the local branch:
@@ -145,10 +145,10 @@ from the main (upstream) repository:
     git branch -D my-fix-branch
     ```
 
-* Update your master with the latest upstream version:
+* Update your dev with the latest upstream version:
 
     ```shell
-    git pull --ff upstream master
+    git pull --ff upstream dev
     ```
 
 ## <a name="setup"></a> Generator development setup
