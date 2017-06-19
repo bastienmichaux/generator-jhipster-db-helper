@@ -127,7 +127,7 @@ module.exports = class extends Generator {
         this.packageName = jhipsterVar.packageName;
         this.angularAppName = jhipsterVar.angularAppName;
         this.clientFramework = jhipsterVar.clientFramework;
-        this.clientPackageManager = jhipsterVar.clientPackageManage;
+        this.clientPackageManager = jhipsterVar.clientPackageManager;
         this.message = this.props.message;
 
         try {
