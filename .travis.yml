@@ -16,6 +16,10 @@ cache:
         - node_modules
         - $HOME/.m2
 env:
+    matrix:
+        - JHIPSTER_VERSION=4.0.8
+        - JHIPSTER_VERSION=4.2.0
+        - JHIPSTER_VERSION=latest
     global:
         - JHIPSTER_TRAVIS=$TRAVIS_BUILD_DIR/travis
         - JHIPSTER_INSTALL=$JHIPSTER_TRAVIS/install
@@ -31,6 +35,7 @@ install:
 before_script:
     - rm -r test
 script:
+    - $JHIPSTER_SCRIPTS/00-configure-dependencies.sh
     - $JHIPSTER_SCRIPTS/01-generate-project.sh
     - $JHIPSTER_SCRIPTS/02-generate-entities.sh
 notifications:
