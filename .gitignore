@@ -6,7 +6,7 @@ coverage
 *.iws
 atlassian-ide-plugin.xml
 /.project
-test/temp/
+test/tempDir/
 *debug.log*
 *.log
 .vscode
