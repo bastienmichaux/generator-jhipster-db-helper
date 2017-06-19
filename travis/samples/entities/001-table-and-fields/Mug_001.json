@@ -1,0 +1,22 @@
+{
+    "fluentMethods": true,
+    "relationships": [],
+    "fields": [
+        {
+            "fieldName": "description",
+            "dbhColumnName": "DB_Description",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "capacity",
+            "dbhColumnName": "DB_Capacity",
+            "fieldType": "Float"
+        }
+    ],
+    "changelogDate": "20170616134017",
+    "dto": "no",
+    "service": "no",
+    "entityTableName": "DB_Mug_001",
+    "pagination": "no",
+    "dbhIdName": "id"
+}

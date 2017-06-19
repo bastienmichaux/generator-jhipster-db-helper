@@ -1,0 +1,11 @@
+{
+    "fluentMethods": true,
+    "relationships": [],
+    "fields": [],
+    "changelogDate": "20170616134313",
+    "dto": "no",
+    "service": "no",
+    "entityTableName": "Ella_devRulesJHI_000",
+    "pagination": "no",
+    "dbhIdName": "id"
+}
