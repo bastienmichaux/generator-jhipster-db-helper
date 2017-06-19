@@ -1,0 +1,20 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipName": "developer",
+            "otherEntityName": "developer_004",
+            "relationshipType": "one-to-one",
+            "otherEntityField": "id",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "mug"
+        }
+    ],
+    "fields": [],
+    "changelogDate": "20170619085750",
+    "dto": "no",
+    "service": "no",
+    "entityTableName": "DB_mug_004",
+    "pagination": "no",
+    "dbhIdName": "id"
+}

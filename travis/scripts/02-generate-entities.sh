@@ -10,6 +10,7 @@ $gen 000-only-table-name
 $gen 001-table-and-fields
 $gen 002-table-and-relationships
 $gen 003-non-standard-relationships
+$gen 004-generate-twice
 
 # test if generated application works
 mvn test
