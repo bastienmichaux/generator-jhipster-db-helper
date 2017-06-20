@@ -1,0 +1,19 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipName": "developer",
+            "otherEntityName": "developer_004",
+            "relationshipType": "many-to-many",
+            "ownerSide": false,
+            "otherEntityRelationshipName": "bug"
+        }
+    ],
+    "fields": [],
+    "changelogDate": "20170619085330",
+    "dto": "no",
+    "service": "no",
+    "entityTableName": "DB_Bug_004",
+    "pagination": "no",
+    "dbhIdName": "id"
+}

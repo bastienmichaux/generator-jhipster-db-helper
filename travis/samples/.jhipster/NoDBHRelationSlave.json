@@ -14,5 +14,6 @@
     "dto": "no",
     "service": "no",
     "entityTableName": "nodbhrelation_slave",
-    "pagination": "no"
+    "pagination": "no",
+    "dbhIdName": "id"
 }

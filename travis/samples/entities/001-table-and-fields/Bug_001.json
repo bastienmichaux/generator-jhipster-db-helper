@@ -1,0 +1,22 @@
+{
+    "fluentMethods": true,
+    "relationships": [],
+    "fields": [
+        {
+            "fieldName": "title",
+            "dbhColumnName": "well__chosenTiTlE",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "priority",
+            "dbhColumnName": "priorityMAX",
+            "fieldType": "Integer"
+        }
+    ],
+    "changelogDate": "20170616134028",
+    "dto": "no",
+    "service": "no",
+    "entityTableName": "DB_Bug_001",
+    "pagination": "no",
+    "dbhIdName": "id"
+}

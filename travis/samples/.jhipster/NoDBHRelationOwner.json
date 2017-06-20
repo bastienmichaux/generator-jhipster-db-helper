@@ -16,5 +16,6 @@
     "dto": "no",
     "service": "no",
     "entityTableName": "nodbhrelation_owner",
-    "pagination": "no"
+    "pagination": "no",
+    "dbhIdName": "id"
 }

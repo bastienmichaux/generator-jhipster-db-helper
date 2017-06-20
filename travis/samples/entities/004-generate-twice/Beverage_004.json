@@ -1,0 +1,18 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipName": "developer",
+            "otherEntityName": "developer_004",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "beverage"
+        }
+    ],
+    "fields": [],
+    "changelogDate": "20170619085107",
+    "dto": "no",
+    "service": "no",
+    "entityTableName": "DB_beverage_004",
+    "pagination": "no",
+    "dbhIdName": "id"
+}

@@ -6,5 +6,6 @@
     "dto": "no",
     "service": "no",
     "entityTableName": "ELLA_nakedTable",
-    "pagination": "no"
+    "pagination": "no",
+    "dbhIdName": "id"
 }

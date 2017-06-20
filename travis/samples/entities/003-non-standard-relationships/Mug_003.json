@@ -1,0 +1,21 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipName": "_user",
+            "dbhRelationshipId": "_user_id",
+            "otherEntityName": "developer_003",
+            "relationshipType": "one-to-one",
+            "otherEntityField": "id",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "drink__Container"
+        }
+    ],
+    "fields": [],
+    "changelogDate": "20170619085750",
+    "dto": "no",
+    "service": "no",
+    "entityTableName": "DB_mug_003",
+    "pagination": "no",
+    "dbhIdName": "id"
+}

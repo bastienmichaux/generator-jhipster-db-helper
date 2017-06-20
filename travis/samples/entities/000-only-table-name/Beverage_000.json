@@ -1,0 +1,11 @@
+{
+    "fluentMethods": true,
+    "relationships": [],
+    "fields": [],
+    "changelogDate": "20170616134227",
+    "dto": "no",
+    "service": "no",
+    "entityTableName": "myLovelyBeverage_000",
+    "pagination": "no",
+    "dbhIdName": "id"
+}

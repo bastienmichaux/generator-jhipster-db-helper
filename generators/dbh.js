@@ -4,6 +4,7 @@ const jhipsterCore = require('jhipster-core');
 const jhipsterModuleSubgenerator = require('../node_modules/generator-jhipster/generators/modules/index.js');
 const pluralize = require('pluralize');
 const fs = require('fs');
+const fse = require('fs-extra');
 
 
 /**
@@ -214,58 +215,21 @@ const hasConstraints = (relationships) => {
 const isNotEmptyString = x => typeof x === 'string' && x !== '';
 
 
-/** Duplicate of a JHipster function where we have replaced how the path is handled, because we use absolute paths */
-
-const replaceContent = (absolutePath, pattern, content, regex, generator) => {
-    const re = regex ? new RegExp(pattern, 'g') : pattern;
-    let body = generator.fs.read(absolutePath);
-
-    body = body.replace(re, content);
-    generator.fs.write(absolutePath, body);
-};
-
-const _replaceContent = (absolutePath, pattern, content, regex) => {
-    const re = regex ? new RegExp(pattern, 'g') : pattern;
-    let body = fs.readFileSync(absolutePath);
-
-    body = body.replace(re, content);
-    fs.write(absolutePath, body); // fs.createWriteStream is recommended
-};
-
 /**
- * Replace Spring naming strategies with more neutral ones.
- *
- * Note : after running this function, a reference to the ancient naming strategies will still be found in :
- * ./node_modules/generator-jhipster/generators/server/templates/_pom.xml
- * however this doesn't concern us
+ * Duplicate of a JHipster function where we have replaced how the path is handled, because we use absolute paths
  */
-const replaceNamingStrategies = (appBuildTool) => {
-    const physicalOld = DBH_CONSTANTS.physicalNamingStrategyOld;
-    const physicalNew = DBH_CONSTANTS.physicalNamingStrategyNew;
-
-    const implicitOld = DBH_CONSTANTS.implicitNamingStrategyOld;
-    const implicitNew = DBH_CONSTANTS.implicitNamingStrategyNew;
-
-    // fail when application build tool is unknown
-    if (!isValidBuildTool(appBuildTool)) {
-        throw new Error(`replaceNamingStrategies: buildTool parameter '${appBuildTool}' is unknown`);
+const replaceContent = (absolutePath, pattern, content, regex) => {
+    if (!fs.existsSync(absolutePath)) {
+        throw new Error('_replaceContent: file not found.\n' + absolutePath);
     }
 
-    // depending on the application's build tool, get all files where the old naming strategies must be replaced
-    const files = getFilesWithNamingStrategy(appBuildTool);
-
-    // check that each file exists, then replace the naming strategies
-    files.forEach((path) => {
-        if (fs.existsSync(file)) {
-            // 1) replace Spring physical naming strategy
-            replaceContent(file, physicalOld, physicalNew, null, this);
-            // 2) replace Spring implicit naming strategy
-            replaceContent(file, implicitOld, implicitNew, null, this);
-        } else {
-            throw new Error(`_replaceNamingStrategies: File doesn't exist! Path was:\n${path}`);
-        }
-    });
+    const re = regex ? new RegExp(pattern, 'g') : pattern;
+    let body = fs.readFileSync(absolutePath);
+    body = '' + body;
+    body = body.replace(re, content);
+    fs.writeFileSync(absolutePath, body); // fs.createWriteStream is recommended
 };
+
 
 /** Validate user input when asking for a SQL column name */
 const validateColumnName = (input, dbType) => {
@@ -276,7 +240,7 @@ const validateColumnName = (input, dbType) => {
     } else if (dbType === 'oracle' && input.length > DBH_CONSTANTS.oracleLimitations.tableNameHardMaxLength) {
         return 'Your column name is too long for Oracle, try a shorter name';
     }
-    
+
     return true;
 };
 
@@ -314,7 +278,6 @@ module.exports = {
     postAppPolyfill,
     postEntityPolyfill,
     replaceContent,
-    replaceNamingStrategies,
     validateColumnName,
     validateTableName
 };

@@ -2,36 +2,16 @@
 set -ev
 # Generate several sets of entities and launch tests after each cases
 
+gen=`pwd`/"travis/samples/generate-entities-from-travis-case.sh"
+
 cd minimalist-app
-cp -t .jhipster "$JHIPSTER_SAMPLES/.jhipster/NakedTable.json"
-cp -t .jhipster "$JHIPSTER_SAMPLES/.jhipster/DressedTable.json"
-cp -t .jhipster "$JHIPSTER_SAMPLES/.jhipster/OTO_Slave.json" "$JHIPSTER_SAMPLES/.jhipster/OTO_Owner.json"
-cp -t .jhipster "$JHIPSTER_SAMPLES/.jhipster/OTM_One.json" "$JHIPSTER_SAMPLES/.jhipster/OTM_Many.json"
-cp -t .jhipster "$JHIPSTER_SAMPLES/.jhipster/MTM_Slave.json" "$JHIPSTER_SAMPLES/.jhipster/MTM_Owner.json"
-cp -t .jhipster "$JHIPSTER_SAMPLES/.jhipster/MTM_Relation_Slave.json" "$JHIPSTER_SAMPLES/.jhipster/MTM_Relation_Owner.json"
-cp -t .jhipster "$JHIPSTER_SAMPLES/.jhipster/OTM_Relation_One.json" "$JHIPSTER_SAMPLES/.jhipster/OTM_Relation_Many.json"
-cp -t .jhipster "$JHIPSTER_SAMPLES/.jhipster/NoDBHRelationSlave.json" "$JHIPSTER_SAMPLES/.jhipster/NoDBHRelationOwner.json"
 
-yo jhipster:entity NakedTable --force
+$gen 000-only-table-name
+$gen 001-table-and-fields
+$gen 002-table-and-relationships
+$gen 003-non-standard-relationships
+$gen 004-generate-twice
+$gen 005-rename-id
 
-yo jhipster:entity DressedTable --force
-
-yo jhipster:entity OTO_Slave --force
-yo jhipster:entity OTO_Owner --force
-
-yo jhipster:entity MTM_Slave --force
-yo jhipster:entity MTM_Owner --force
-
-yo jhipster:entity OTM_One --force
-yo jhipster:entity OTM_Many --force
-
-yo jhipster:entity MTM_Relation_Slave --force
-yo jhipster:entity MTM_Relation_Owner --force
-
-yo jhipster:entity OTM_Relation_One --force
-yo jhipster:entity OTM_Relation_Many --force
-
-yo jhipster:entity NoDBHRelationSlave --force
-yo jhipster:entity NoDBHRelationOwner --force
-
+# test if generated application works
 mvn test
