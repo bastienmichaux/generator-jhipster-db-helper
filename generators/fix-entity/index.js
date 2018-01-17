@@ -47,11 +47,13 @@ module.exports = class extends BaseGenerator {
                     this.tableNameInput = this.entityTableName;
                     this.idNameInput = this.dbhIdName;
                     this.columnsInput = this.fields;
+                    this.relationshipsInput = this.relationships;
                 } else {
                     // input from user (prompts.js will fill them)
                     this.tableNameInput = null;
                     this.idNameInput = null;
                     this.columnsInput = [];
+                    this.relationshipsInput = [];
                 }
             }
         };
@@ -62,7 +64,8 @@ module.exports = class extends BaseGenerator {
         return {
             askForTableName: prompts.askForTableName,
             askForIdName: prompts.askForIdName,
-            askForColumnsName: prompts.askForColumnsName
+            askForColumnsName: prompts.askForColumnsName,
+            askForRelationshipId: prompts.askForRelationshipsId
         };
     }
 
@@ -176,7 +179,7 @@ module.exports = class extends BaseGenerator {
          * But as using this module means you don't respect the convention, these guesses won't be correct and we must guess the values ourselves.
          */
         // Add/Change/Keep dbhRelationshipId
-        this.relationships.forEach((relationshipItem) => {
+        this.relationshipsInput.forEach((relationshipItem) => {
             // We don't need to do anything about relationships which don't add any constraint.
             if (relationshipItem.relationshipType === 'one-to-many' ||
                 (relationshipItem.relationshipType === 'one-to-one' && !relationshipItem.ownerSide) ||
@@ -188,13 +191,12 @@ module.exports = class extends BaseGenerator {
             const oldValue = relationshipItem.dbhRelationshipId;
 
             let columnName = null;
-            let newValue = null;
+            let newValue = relationshipItem.relationshipIdInput || relationshipItem.dbhRelationshipId || `${relationshipItem.relationshipName}_id`;
             let initialTableIdName = null;
 
 
             if (relationshipItem.relationshipType === 'many-to-one' || (relationshipItem.relationshipType === 'one-to-one' && relationshipItem.ownerSide)) {
                 columnName = dbh.getColumnIdName(relationshipItem.relationshipName);
-                newValue = `${relationshipItem.relationshipName}_id`;
 
                 this.replaceContent(files.liquibaseConstraints, `baseTableName="${this.entityTableName}`, `baseTableName="${this.tableNameInput}`);
                 this.replaceContent(files.liquibaseConstraints, `(referencedColumnNames=")id("\\s*referencedTableName="${otherEntity.entityTableName}")`, `$1${otherEntity.dbhIdName}$2`, true);
@@ -211,7 +213,6 @@ module.exports = class extends BaseGenerator {
                 }
             } else if (relationshipItem.relationshipType === 'many-to-many' && relationshipItem.ownerSide) {
                 columnName = dbh.getPluralColumnIdName(relationshipItem.relationshipName);
-                newValue = `${relationshipItem.relationshipNamePlural}_id`;
                 initialTableIdName = dbh.getPluralColumnIdName(this.entityClass);
 
                 this.replaceContent(files.liquibaseEntity, `<addPrimaryKey columnNames="${initialTableIdName}, (${columnName}|${oldValue})`, `<addPrimaryKey columnNames="${initialTableIdName}, ${newValue}`, true);
