@@ -168,6 +168,7 @@ module.exports = class extends BaseGenerator {
             // We search either for our value or JHipster value, so it works even if user didn't accept JHipster overwrite while regenerating
             this.replaceContent(files.ORM, `@Column\\(name = "(${columnItem.fieldNameAsDatabaseColumn}|${oldValue})"`, `@Column(name = "${newValue}"`, true);
             this.replaceContent(files.liquibaseEntity, `<column name="(${columnItem.fieldNameAsDatabaseColumn}|${oldValue})"`, `<column name="${newValue}"`, true);
+            this.replaceContent(files.liquibaseEntity, `<dropDefaultValue tableName="${this.entityTableName}" columnName="(${columnItem.fieldNameAsDatabaseColumn}|${oldValue})"`, `<dropDefaultValue tableName="${this.entityTableName}" columnName="${newValue}"`, true);
         });
 
         /**
