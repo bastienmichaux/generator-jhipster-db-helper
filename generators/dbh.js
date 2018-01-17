@@ -4,8 +4,6 @@ const jhipsterCore = require('jhipster-core');
 const jhipsterModuleSubgenerator = require('../node_modules/generator-jhipster/generators/modules/index.js');
 const pluralize = require('pluralize');
 const fs = require('fs');
-const fse = require('fs-extra');
-
 
 /**
  * return the missing property jhipsterVar.jhipsterConfig for unit tests
@@ -48,33 +46,33 @@ const postAppPolyfill = (appConfigPath) => {
 
     // else return a promise holding the polyfill
     return getAppConfig(appConfigPath)
-    .then(
-        (onResolve) => {
-            const conf = onResolve['generator-jhipster'];
-            const poly = {};
+        .then(
+            (onResolve) => {
+                const conf = onResolve['generator-jhipster'];
+                const poly = {};
 
-            // @todo: defensive programming with these properties (hasOwnProperty ? throw ?)
+                // @todo: defensive programming with these properties (hasOwnProperty ? throw ?)
 
-            // jhipsterVar polyfill :
-            poly.baseName = conf.baseName;
-            poly.packageName = conf.packageName;
-            poly.angularAppName = conf.angularAppName || null; // handle an undefined value (JSON properties can't be undefined)
-            poly.clientFramework = conf.clientFramework;
-            poly.clientPackageManager = conf.clientPackageManager;
-            poly.buildTool = conf.buildTool;
+                // jhipsterVar polyfill :
+                poly.baseName = conf.baseName;
+                poly.packageName = conf.packageName;
+                poly.angularAppName = conf.angularAppName || null; // handle an undefined value (JSON properties can't be undefined)
+                poly.clientFramework = conf.clientFramework;
+                poly.clientPackageManager = conf.clientPackageManager;
+                poly.buildTool = conf.buildTool;
 
-            // jhipsterFunc polyfill :
-            poly.registerModule = jhipsterModuleSubgenerator.prototype.registerModule;
-            poly.updateEntityConfig = jhipsterModuleSubgenerator.prototype.updateEntityConfig;
+                // jhipsterFunc polyfill :
+                poly.registerModule = jhipsterModuleSubgenerator.prototype.registerModule;
+                poly.updateEntityConfig = jhipsterModuleSubgenerator.prototype.updateEntityConfig;
 
-            // @todo : handle this.options.testMode ?
+                // @todo : handle this.options.testMode ?
 
-            return poly;
-        },
-        (onError) => {
-            throw new Error(onError);
-        }
-    );
+                return poly;
+            },
+            (onError) => {
+                throw new Error(onError);
+            }
+        );
 };
 
 /**
@@ -91,24 +89,24 @@ const postEntityPolyfill = (appConfigPath) => {
 
     // else return a promise holding the polyfill
     return getAppConfig(appConfigPath)
-    .then(
-        (onResolve) => {
-            const conf = onResolve['generator-jhipster'];
-            const poly = {};
+        .then(
+            (onResolve) => {
+                const conf = onResolve['generator-jhipster'];
+                const poly = {};
 
-            // jhipsterVar polyfill :
-            poly.jhipsterConfig = conf;
-            poly.javaDir = `${jhipsterConstants.SERVER_MAIN_SRC_DIR + conf.packageFolder}/`;
-            poly.resourceDir = jhipsterConstants.SERVER_MAIN_RES_DIR;
-            poly.replaceContent = jhipsterModuleSubgenerator.prototype.replaceContent;
-            poly.updateEntityConfig = jhipsterModuleSubgenerator.prototype.updateEntityConfig;
+                // jhipsterVar polyfill :
+                poly.jhipsterConfig = conf;
+                poly.javaDir = `${jhipsterConstants.SERVER_MAIN_SRC_DIR + conf.packageFolder}/`;
+                poly.resourceDir = jhipsterConstants.SERVER_MAIN_RES_DIR;
+                poly.replaceContent = jhipsterModuleSubgenerator.prototype.replaceContent;
+                poly.updateEntityConfig = jhipsterModuleSubgenerator.prototype.updateEntityConfig;
 
-            return poly;
-        },
-        (onError) => {
-            console.error(onError);
-        }
-    );
+                return poly;
+            },
+            (onError) => {
+                console.error(onError);
+            }
+        );
 };
 
 
@@ -220,12 +218,12 @@ const isNotEmptyString = x => typeof x === 'string' && x !== '';
  */
 const replaceContent = (absolutePath, pattern, content, regex) => {
     if (!fs.existsSync(absolutePath)) {
-        throw new Error('_replaceContent: file not found.\n' + absolutePath);
+        throw new Error(`_replaceContent: file not found.\n${absolutePath}`);
     }
 
     const re = regex ? new RegExp(pattern, 'g') : pattern;
     let body = fs.readFileSync(absolutePath);
-    body = '' + body;
+    body = `${body}`;
     body = body.replace(re, content);
     fs.writeFileSync(absolutePath, body); // fs.createWriteStream is recommended
 };
