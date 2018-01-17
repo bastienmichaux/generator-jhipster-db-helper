@@ -1,4 +1,4 @@
-/* global describe, beforeEach, it*/
+/* global describe, beforeEach, it */
 /* eslint-disable prefer-arrow-callback */
 
 const path = require('path');
@@ -70,47 +70,47 @@ describe('Post app hook', function () {
              * then we check the naming strategies have been replaced
              */
             return helpers.run(postAppGenerator)
-            .withOptions({ dbhTestCase: DBH_CONSTANTS.testCases.usingMaven }) // this option allow testing outside of an application
-            .withGenerators(deps) // generator(s) we compose with
-            .inDir(temporaryFolder, function () {
+                .withOptions({ dbhTestCase: DBH_CONSTANTS.testCases.usingMaven }) // this option allow testing outside of an application
+                .withGenerators(deps) // generator(s) we compose with
+                .inDir(temporaryFolder, function () {
                 // copy the files that the generator will modify
-                fse.copySync(folder, temporaryFolder);
+                    fse.copySync(folder, temporaryFolder);
 
-                // assert that the old naming strategies are still there
-                testedFiles.forEach((currentFile) => {
-                    assert.file(currentFile);
-                    assert.fileContent(currentFile, DBH_CONSTANTS.implicitNamingStrategyOld);
-                    assert.fileContent(currentFile, DBH_CONSTANTS.physicalNamingStrategyOld);
-                    assert.noFileContent(currentFile, DBH_CONSTANTS.implicitNamingStrategyNew);
-                    assert.noFileContent(currentFile, DBH_CONSTANTS.physicalNamingStrategyNew);
-                });
-            })
-            .then(
-                (tmpFolder) => {
-                    // assert the tested files have the new naming strategies
+                    // assert that the old naming strategies are still there
                     testedFiles.forEach((currentFile) => {
                         assert.file(currentFile);
-                        assert.noFileContent(currentFile, DBH_CONSTANTS.implicitNamingStrategyOld);
-                        assert.noFileContent(currentFile, DBH_CONSTANTS.physicalNamingStrategyOld);
-                        assert.fileContent(currentFile, DBH_CONSTANTS.implicitNamingStrategyNew);
-                        assert.fileContent(currentFile, DBH_CONSTANTS.physicalNamingStrategyNew);
+                        assert.fileContent(currentFile, DBH_CONSTANTS.implicitNamingStrategyOld);
+                        assert.fileContent(currentFile, DBH_CONSTANTS.physicalNamingStrategyOld);
+                        assert.noFileContent(currentFile, DBH_CONSTANTS.implicitNamingStrategyNew);
+                        assert.noFileContent(currentFile, DBH_CONSTANTS.physicalNamingStrategyNew);
                     });
-                },
-                (onError) => {
-                    console.error(onError);
-                }
-            )
-            .then(
-                (tmpFolder) => {
+                })
+                .then(
+                    (tmpFolder) => {
+                    // assert the tested files have the new naming strategies
+                        testedFiles.forEach((currentFile) => {
+                            assert.file(currentFile);
+                            assert.noFileContent(currentFile, DBH_CONSTANTS.implicitNamingStrategyOld);
+                            assert.noFileContent(currentFile, DBH_CONSTANTS.physicalNamingStrategyOld);
+                            assert.fileContent(currentFile, DBH_CONSTANTS.implicitNamingStrategyNew);
+                            assert.fileContent(currentFile, DBH_CONSTANTS.physicalNamingStrategyNew);
+                        });
+                    },
+                    (onError) => {
+                        console.error(onError);
+                    }
+                )
+                .then(
+                    (tmpFolder) => {
                     // empty the test folder for the next test session
-                    fse.emptyDirSync(temporaryFolder);
-                },
-                (onError) => {
+                        fse.emptyDirSync(temporaryFolder);
+                    },
+                    (onError) => {
                     // in case of error, empty the test folder anyway
-                    fse.emptyDirSync(temporaryFolder);
-                    console.error(onError);
-                }
-            );
+                        fse.emptyDirSync(temporaryFolder);
+                        console.error(onError);
+                    }
+                );
         });
     });
     describe('_replaceNamingStrategies, with an application using Gradle', function () {
@@ -141,47 +141,47 @@ describe('Post app hook', function () {
             });
 
             return helpers.run(postAppGenerator)
-            .withOptions({ dbhTestCase: DBH_CONSTANTS.testCases.usingGradle }) // this option allow testing outside of an application
-            .withGenerators(deps) // generator(s) we compose with
-            .inDir(temporaryFolder, function () {
+                .withOptions({ dbhTestCase: DBH_CONSTANTS.testCases.usingGradle }) // this option allow testing outside of an application
+                .withGenerators(deps) // generator(s) we compose with
+                .inDir(temporaryFolder, function () {
                 // copy the files that the generator will modify
-                fse.copySync(folder, temporaryFolder);
+                    fse.copySync(folder, temporaryFolder);
 
-                // assert that the old naming strategies are still there
-                testedFiles.forEach((currentFile) => {
-                    assert.file(currentFile);
-                    assert.fileContent(currentFile, DBH_CONSTANTS.implicitNamingStrategyOld);
-                    assert.fileContent(currentFile, DBH_CONSTANTS.physicalNamingStrategyOld);
-                    assert.noFileContent(currentFile, DBH_CONSTANTS.implicitNamingStrategyNew);
-                    assert.noFileContent(currentFile, DBH_CONSTANTS.physicalNamingStrategyNew);
-                });
-            })
-            .then(
-                (tmpFolder) => {
-                    // assert the tested files have the new naming strategies
+                    // assert that the old naming strategies are still there
                     testedFiles.forEach((currentFile) => {
                         assert.file(currentFile);
-                        assert.noFileContent(currentFile, DBH_CONSTANTS.implicitNamingStrategyOld);
-                        assert.noFileContent(currentFile, DBH_CONSTANTS.physicalNamingStrategyOld);
-                        assert.fileContent(currentFile, DBH_CONSTANTS.implicitNamingStrategyNew);
-                        assert.fileContent(currentFile, DBH_CONSTANTS.physicalNamingStrategyNew);
+                        assert.fileContent(currentFile, DBH_CONSTANTS.implicitNamingStrategyOld);
+                        assert.fileContent(currentFile, DBH_CONSTANTS.physicalNamingStrategyOld);
+                        assert.noFileContent(currentFile, DBH_CONSTANTS.implicitNamingStrategyNew);
+                        assert.noFileContent(currentFile, DBH_CONSTANTS.physicalNamingStrategyNew);
                     });
-                },
-                (onError) => {
-                    console.error(onError);
-                }
-            )
-            .then(
-                (tmpFolder) => {
+                })
+                .then(
+                    (tmpFolder) => {
+                    // assert the tested files have the new naming strategies
+                        testedFiles.forEach((currentFile) => {
+                            assert.file(currentFile);
+                            assert.noFileContent(currentFile, DBH_CONSTANTS.implicitNamingStrategyOld);
+                            assert.noFileContent(currentFile, DBH_CONSTANTS.physicalNamingStrategyOld);
+                            assert.fileContent(currentFile, DBH_CONSTANTS.implicitNamingStrategyNew);
+                            assert.fileContent(currentFile, DBH_CONSTANTS.physicalNamingStrategyNew);
+                        });
+                    },
+                    (onError) => {
+                        console.error(onError);
+                    }
+                )
+                .then(
+                    (tmpFolder) => {
                     // empty the test folder for the next test session
-                    fse.emptyDirSync(temporaryFolder);
-                },
-                (onError) => {
+                        fse.emptyDirSync(temporaryFolder);
+                    },
+                    (onError) => {
                     // in case of error, empty the test folder anyway
-                    fse.emptyDirSync(temporaryFolder);
-                    console.error(onError);
-                }
-            );
+                        fse.emptyDirSync(temporaryFolder);
+                        console.error(onError);
+                    }
+                );
         });
     });
 });

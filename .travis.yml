@@ -1,9 +1,8 @@
 os:
     - linux
-language:
-    - node_js
+language: node_js
 node_js:
-    - "6.10.3"
+    - "8.9.1"
 jdk:
     - oraclejdk8
 addons:
