@@ -166,8 +166,8 @@ module.exports = class extends BaseGenerator {
             updateKey(`"fieldName": "${columnItem.fieldName}"`, 'dbhColumnName', oldValue, newValue);
 
             // We search either for our value or JHipster value, so it works even if user didn't accept JHipster overwrite while regenerating
-            this.replaceContent(files.ORM, `@Column\\(name = "(${columnItem.fieldNameAsDatabaseColumn}|${oldValue})`, `@Column(name = "${newValue}`, true);
-            this.replaceContent(files.liquibaseEntity, `<column name="(${columnItem.fieldNameAsDatabaseColumn}|${oldValue})`, `<column name="${newValue}`, true);
+            this.replaceContent(files.ORM, `@Column\\(name = "(${columnItem.fieldNameAsDatabaseColumn}|${oldValue})"`, `@Column(name = "${newValue}"`, true);
+            this.replaceContent(files.liquibaseEntity, `<column name="(${columnItem.fieldNameAsDatabaseColumn}|${oldValue})"`, `<column name="${newValue}"`, true);
         });
 
         /**
@@ -225,7 +225,7 @@ module.exports = class extends BaseGenerator {
 
             updateKey(`"relationshipName": "${relationshipItem.relationshipName}"`, 'dbhRelationshipId', oldValue, newValue);
 
-            this.replaceContent(files.liquibaseEntity, `<column name="(${columnName}|${oldValue})`, `<column name="${newValue}`, true);
+            this.replaceContent(files.liquibaseEntity, `<column name="(${columnName}|${oldValue})"`, `<column name="${newValue}"`, true);
             this.replaceContent(files.liquibaseConstraints, `<addForeignKeyConstraint baseColumnNames="(${columnName}|${oldValue})`, `<addForeignKeyConstraint baseColumnNames="${newValue}`, true);
 
             // The annotation @JsonProperty needs this additional import
