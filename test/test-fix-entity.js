@@ -3,9 +3,9 @@
  *
  * test/templates/entities : base entities
  * test/templates/expectedEntities : expected json files after search & replace
- **/
+ * */
 
-/* global describe, beforeEach, it*/
+/* global describe, beforeEach, it */
 /* eslint-disable prefer-arrow-callback */
 
 const assert = require('yeoman-assert');
