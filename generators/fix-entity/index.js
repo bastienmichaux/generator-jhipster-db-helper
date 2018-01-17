@@ -32,7 +32,7 @@ module.exports = class extends BaseGenerator {
                 // All information from entity generator
                 this.entityTableName = this.entityConfig.entityTableName;
                 this.entityClass = this.entityConfig.entityClass;
-                this.dbhIdName = this.entityConfig.data.dbhIdName || "id";
+                this.dbhIdName = this.entityConfig.data.dbhIdName || 'id';
                 this.fields = this.entityConfig.data.fields;
                 this.relationships = this.entityConfig.data.relationships;
 
@@ -188,11 +188,11 @@ module.exports = class extends BaseGenerator {
             }
 
             const otherEntity = JSON.parse(fs.readFileSync(`${this.entityConfig.jhipsterConfigDirectory}/${relationshipItem.otherEntityNameCapitalized}.json`, 'utf8'));
-            const otherEntityIdName = otherEntity.dbhIdName || "id";
+            const otherEntityIdName = otherEntity.dbhIdName || 'id';
             const oldValue = relationshipItem.dbhRelationshipId;
 
             let columnName = null;
-            let newValue = relationshipItem.relationshipIdInput || relationshipItem.dbhRelationshipId || `${relationshipItem.relationshipName}_id`;
+            const newValue = relationshipItem.relationshipIdInput || relationshipItem.dbhRelationshipId || `${relationshipItem.relationshipName}_id`;
             let initialTableIdName = null;
 
 

@@ -129,12 +129,11 @@ function askForRelationshipsId() {
     }
 
     // work only on owner relationship
-    this.relationshipsPile = this.relationships.filter((relationshipItem) => {
+    this.relationshipsPile = this.relationships.filter(relationshipItem =>
         // We don't need to do anything about relationships which don't add any constraint.
-        return !(relationshipItem.relationshipType === 'one-to-many' ||
+        !(relationshipItem.relationshipType === 'one-to-many' ||
             (relationshipItem.relationshipType === 'one-to-one' && !relationshipItem.ownerSide) ||
-            (relationshipItem.relationshipType === 'many-to-many' && !relationshipItem.ownerSide));
-    });
+            (relationshipItem.relationshipType === 'many-to-many' && !relationshipItem.ownerSide)));
 
     if (this.relationshipsPile.length === 0) {
         return;
@@ -142,7 +141,7 @@ function askForRelationshipsId() {
 
     this.log(chalk.green(`Asking column names for ${this.relationshipsPile.length} relationship(s)`));
     const done = this.async();
-    
+
     this.relationship = this.relationshipsPile.pop();
     askForRelationshipId.call(this, done);
 }
