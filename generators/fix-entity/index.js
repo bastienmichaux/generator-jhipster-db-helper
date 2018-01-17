@@ -32,7 +32,7 @@ module.exports = class extends BaseGenerator {
                 // All information from entity generator
                 this.entityTableName = this.entityConfig.entityTableName;
                 this.entityClass = this.entityConfig.entityClass;
-                this.dbhIdName = this.entityConfig.data.dbhIdName;
+                this.dbhIdName = this.entityConfig.data.dbhIdName || "id";
                 this.fields = this.entityConfig.data.fields;
                 this.relationships = this.entityConfig.data.relationships;
 
@@ -188,6 +188,7 @@ module.exports = class extends BaseGenerator {
             }
 
             const otherEntity = JSON.parse(fs.readFileSync(`${this.entityConfig.jhipsterConfigDirectory}/${relationshipItem.otherEntityNameCapitalized}.json`, 'utf8'));
+            const otherEntityIdName = otherEntity.dbhIdName || "id";
             const oldValue = relationshipItem.dbhRelationshipId;
 
             let columnName = null;
@@ -199,7 +200,7 @@ module.exports = class extends BaseGenerator {
                 columnName = dbh.getColumnIdName(relationshipItem.relationshipName);
 
                 this.replaceContent(files.liquibaseConstraints, `baseTableName="${this.entityTableName}`, `baseTableName="${this.tableNameInput}`);
-                this.replaceContent(files.liquibaseConstraints, `(referencedColumnNames=")id("\\s*referencedTableName="${otherEntity.entityTableName}")`, `$1${otherEntity.dbhIdName}$2`, true);
+                this.replaceContent(files.liquibaseConstraints, `(referencedColumnNames=")id("\\s*referencedTableName="${otherEntity.entityTableName}")`, `$1${otherEntityIdName}$2`, true);
 
                 if (relationshipItem.relationshipType === 'many-to-one') {
                     /**
@@ -220,7 +221,7 @@ module.exports = class extends BaseGenerator {
                 this.replaceContent(files.ORM, `inverseJoinColumns = @JoinColumn\\(name="(${columnName}|${oldValue})`, `inverseJoinColumns = @JoinColumn(name="${newValue}`, true);
                 this.replaceContent(files.liquibaseConstraints, `(referencedColumnNames=")id("\\s*referencedTableName="${this.entityTableName}")`, `$1${this.idNameInput}$2`, true);
                 // todo duplicate line, will remove on refactoring (duplicate with l258 as of the commit bringing this up)
-                this.replaceContent(files.liquibaseConstraints, `(referencedColumnNames=")id("\\s*referencedTableName="${otherEntity.entityTableName}")`, `$1${otherEntity.dbhIdName}$2`, true);
+                this.replaceContent(files.liquibaseConstraints, `(referencedColumnNames=")id("\\s*referencedTableName="${otherEntity.entityTableName}")`, `$1${otherEntityIdName}$2`, true);
                 this.replaceContent(files.ORM, `(@JoinColumn\\(name="${initialTableIdName}", referencedColumnName=")id`, `$1${this.idNameInput}`, true);
                 this.replaceContent(files.ORM, `(inverseJoinColumns = @JoinColumn\\(name="${newValue}", referencedColumnName=")id`, `$1${otherEntity.dbhIdName}`, true);
             }
