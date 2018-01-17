@@ -23,7 +23,7 @@ function askForTableName() {
             type: 'input',
             name: 'dbhTableName',
             validate: ((input) => {
-                const prodDatabaseType = this.appConfig.prodDatabaseType;
+                const prodDatabaseType = this.jhipsterAppConfig.prodDatabaseType;
                 return validateTableName(input, prodDatabaseType);
             }),
             message: 'What is the table name for this entity ?',
@@ -48,7 +48,7 @@ function askForIdName() {
             type: 'input',
             name: 'dbhIdName',
             validate: ((input) => {
-                const prodDatabaseType = this.appConfig.prodDatabaseType;
+                const prodDatabaseType = this.jhipsterAppConfig.prodDatabaseType;
                 return validateColumnName(input, prodDatabaseType);
             }),
             message: 'What id name do you want for this entity ?',
@@ -95,7 +95,7 @@ function askForColumnName(done) {
             type: 'input',
             name: 'dbhColumnName',
             validate: ((input) => {
-                const prodDatabaseType = this.appConfig.prodDatabaseType;
+                const prodDatabaseType = this.jhipsterAppConfig.prodDatabaseType;
                 return validateColumnName(input, prodDatabaseType);
             }),
             message: `What column name do you want for the field "${this.field.fieldName}" ?`,

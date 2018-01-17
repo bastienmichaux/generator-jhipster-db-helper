@@ -19,16 +19,23 @@ module.exports = class extends BaseGenerator {
                     type: String,
                     defaults: ''
                 });
+            },
+            readConfig() {
+                this.entityConfig = this.options.entityConfig;
+                this.jhipsterAppConfig = this.getJhipsterAppConfig();
+                if (!this.jhipsterAppConfig) {
+                    this.error('Can\'t read .yo-rc.json');
+                }
 
                 this.dbhTestCase = this.options.dbhTestCase;
 
                 // All information from entity generator
-                this.entityConfig = this.options.entityConfig;
-                this.entityTableName = this.options.entityConfig.entityTableName;
-                this.entityClass = this.options.entityConfig.entityClass;
-                this.dbhIdName = this.options.entityConfig.data.dbhIdName;
-                this.fields = this.options.entityConfig.data.fields;
-                this.relationships = this.options.entityConfig.data.relationships;
+                this.entityTableName = this.entityConfig.entityTableName;
+                this.entityClass = this.entityConfig.entityClass;
+                this.dbhIdName = this.entityConfig.data.dbhIdName;
+                this.fields = this.entityConfig.data.fields;
+                this.relationships = this.entityConfig.data.relationships;
+
                 this.force = this.options.force;
 
                 if (this.force && !this.dbhIdName) {
@@ -46,18 +53,12 @@ module.exports = class extends BaseGenerator {
                     this.idNameInput = null;
                     this.columnsInput = [];
                 }
-            },
-            readConfig() {
-                this.jhipsterAppConfig = this.getJhipsterAppConfig();
-                if (!this.jhipsterAppConfig) {
-                    this.error('Can\'t read .yo-rc.json');
-                }
             }
         };
     }
 
     // prompt the user for options
-    prompting() {
+    get prompting() {
         return {
             askForTableName: prompts.askForTableName,
             askForIdName: prompts.askForIdName,
@@ -85,7 +86,6 @@ module.exports = class extends BaseGenerator {
          */
         const getLiquibaseFile = type => `${resourceDir}config/liquibase/changelog/${this.entityConfig.data.changelogDate}_added_${type}_${this.entityConfig.entityClass}.xml`;
 
-        this.log(chalk.red(`${javaDir}`));
         const files = {
             config: this.entityConfig.filename,
             ORM: `${javaDir}domain/${this.entityConfig.entityClass}.java`,
