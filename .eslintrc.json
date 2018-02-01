@@ -22,6 +22,8 @@
         "class-methods-use-this": "off",
         "no-underscore-dangle": "off",
         "no-plusplus": "off",
+        "no-unused-expressions": [2, { "allowShortCircuit": true, "allowTernary": true } ],
+        "prefer-destructuring": "off",
 
         "no-multi-assign": "off",
         "no-param-reassign": "off",

@@ -1,9 +1,8 @@
 os:
     - linux
-language:
-    - node_js
+language: node_js
 node_js:
-    - "6.10.3"
+    - "8.9.1"
 jdk:
     - oraclejdk8
 addons:
@@ -17,8 +16,8 @@ cache:
         - $HOME/.m2
 env:
     matrix:
-        - JHIPSTER_VERSION=4.0.8
-        - JHIPSTER_VERSION=4.2.0
+        - JHIPSTER_VERSION=4.6.0
+        - JHIPSTER_VERSION=4.13.3
         - JHIPSTER_VERSION=latest
     global:
         - JHIPSTER_TRAVIS=$TRAVIS_BUILD_DIR/travis

@@ -1,21 +1,53 @@
 const chalk = require('chalk');
 const fs = require('fs');
-const Generator = require('yeoman-generator');
 const path = require('path');
 
 const dbh = require('../dbh.js');
 const DBH_CONSTANTS = require('../dbh-constants');
-const packagejs = require('../../package.json'); // gives access to the package.json data
+const packagejs = require('../../package.json');
+const semver = require('semver');
+const BaseGenerator = require('generator-jhipster/generators/generator-base');
 
-// Stores JHipster variables
-const jhipsterVar = {
-    moduleName: DBH_CONSTANTS.moduleName.postAppGenerator
-};
+module.exports = class extends BaseGenerator {
+    get initializing() {
+        return {
+            init(args) {
+                /**
+                 * dbhTestCase: Option used to make unit tests in temporary directories instead of the current directory.
+                 * The passed string argument references constants.
+                 * those constants can be found in dbh-constants.js.
+                 */
+                this.option('dbhTestCase', {
+                    desc: 'Test case for this module\'s npm test',
+                    type: String,
+                    defaults: ''
+                });
 
-// Stores JHipster functions
-const jhipsterFunc = {};
+                this.dbhTestCase = this.options.dbhTestCase;
+            },
+            readConfig() {
+                this.jhipsterAppConfig = this.getJhipsterAppConfig();
+                if (!this.jhipsterAppConfig) {
+                    this.error('Can\'t read .yo-rc.json');
+                }
+            },
+            displayLogo() {
+                // it's here to show that you can use functions from generator-jhipster
+                // this function is in: generator-jhipster/generators/generator-base.js
+                this.printJHipsterLogo();
 
-module.exports = class extends Generator {
+                // Have Yeoman greet the user.
+                this.log(`\nWelcome to the ${chalk.bold.yellow('JHipster db-helper')} generator! ${chalk.yellow(`v${packagejs.version}\n`)}`);
+            },
+            checkJhipster() {
+                const currentJhipsterVersion = this.jhipsterAppConfig.jhipsterVersion;
+                const minimumJhipsterVersion = packagejs.dependencies['generator-jhipster'];
+                if (!semver.satisfies(currentJhipsterVersion, minimumJhipsterVersion)) {
+                    this.warning(`\nYour generated project used an old JHipster version (${currentJhipsterVersion})... you need at least (${minimumJhipsterVersion})\n`);
+                }
+            }
+        };
+    }
     // TODO : refactor (no testing logic in production code)
     /**
      * Get the absolute path of the config file .yo-rc.json.
@@ -66,42 +98,13 @@ module.exports = class extends Generator {
         files.forEach((file) => {
             if (fs.existsSync(file)) {
                 // 1) replace Spring physical naming strategy
-                jhipsterFunc.replaceContent(file, physicalOld, physicalNew, null);
+                this.replaceContent(file, physicalOld, physicalNew, null);
                 // 2) replace Spring implicit naming strategy
-                jhipsterFunc.replaceContent(file, implicitOld, implicitNew, null);
+                this.replaceContent(file, implicitOld, implicitNew, null);
             } else {
                 throw new Error(`_replaceNamingStrategies: File doesn't exist! Path was:\n${file}`);
             }
         });
-    }
-
-    constructor(args, opts) {
-        super(args, opts);
-
-        /**
-         * dbhTestCase: Option used to make unit tests in temporary directories instead of the current directory.
-         * The passed string argument references constants.
-         * those constants can be found in dbh-constants.js.
-         */
-        this.option('dbhTestCase', {
-            desc: 'Test case for this module\'s npm test',
-            type: String,
-            defaults: ''
-        });
-
-        this.dbhTestCase = this.options.dbhTestCase;
-    }
-
-    // check current project state, get configs, etc
-    initializing() {
-        // Have Yeoman greet the user.
-        this.log(chalk.bold.green(`JHipster db-helper generator v${packagejs.version}`));
-
-        // note : before this line we can't use jhipsterVar or jhipsterFunc
-        this.composeWith('jhipster:modules',
-            { jhipsterVar, jhipsterFunc },
-            this.options.testmode ? { local: require.resolve('generator-jhipster/generators/modules') } : null
-        );
     }
 
     // prompt the user for options
@@ -121,23 +124,30 @@ module.exports = class extends Generator {
 
     // write the generator-specific files
     writing() {
-        this._replaceNamingStrategies(jhipsterVar.jhipsterConfig.buildTool);
+        // read config from .yo-rc.json
+        this.baseName = this.jhipsterAppConfig.baseName;
+        this.packageName = this.jhipsterAppConfig.packageName;
+        this.packageFolder = this.jhipsterAppConfig.packageFolder;
+        this.clientFramework = this.jhipsterAppConfig.clientFramework;
+        this.clientPackageManager = this.jhipsterAppConfig.clientPackageManager;
+        this.buildTool = this.jhipsterAppConfig.buildTool;
 
-        this.baseName = jhipsterVar.baseName;
-        this.packageName = jhipsterVar.packageName;
-        this.angularAppName = jhipsterVar.angularAppName;
-        this.clientFramework = jhipsterVar.clientFramework;
-        this.clientPackageManager = jhipsterVar.clientPackageManager;
+        // use function in generator-base.js from generator-jhipster
+        this.angularAppName = this.getAngularAppName();
+
+        // variable from questions
         this.message = this.props.message;
 
+        this._replaceNamingStrategies(this.buildTool);
+
         try {
-            jhipsterFunc.registerModule('generator-jhipster-db-helper', 'app', 'post', 'app', 'A JHipster module for already existing databases');
+            this.registerModule('generator-jhipster-db-helper', 'app', 'post', 'app', 'A JHipster module for already existing databases');
         } catch (err) {
             this.log(`${chalk.red.bold('WARN!')} Could not register as a jhipster entity post creation hook...\n`);
         }
 
         try {
-            jhipsterFunc.registerModule('generator-jhipster-db-helper', 'entity', 'post', 'fix-entity', 'A JHipster module to circumvent JHipster limitations about names');
+            this.registerModule('generator-jhipster-db-helper', 'entity', 'post', 'fix-entity', 'A JHipster module to circumvent JHipster limitations about names');
         } catch (err) {
             this.log(`${chalk.red.bold('WARN!')} Could not register as a jhipster entity post creation hook...\n`);
         }

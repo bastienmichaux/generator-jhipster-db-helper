@@ -1,95 +1,94 @@
-const generator = require('yeoman-generator');
 const chalk = require('chalk');
 const prompts = require('./prompts.js');
 const fs = require('fs');
 
 const dbh = require('../dbh.js');
 
-// Stores JHipster variables
-const jhipsterVar = {
-    moduleName: 'fix-entity'
-};
+const BaseGenerator = require('generator-jhipster/generators/generator-base');
+const jhipsterConstants = require('generator-jhipster/generators/generator-constants');
 
-// Stores JHipster functions
-const jhipsterFunc = {};
+module.exports = class extends BaseGenerator {
+    get initializing() {
+        return {
+            init(args) {
+                // Option used to make unit tests in temporary directories instead of the current directory.
+                // The passed string argument references constants,
+                // those constants can be found in test/test-constants.js.
+                this.option('dbhTestCase', {
+                    desc: 'Test case for this module\'s npm test',
+                    type: String,
+                    defaults: ''
+                });
+            },
+            readConfig() {
+                this.entityConfig = this.options.entityConfig;
+                this.jhipsterAppConfig = this.getJhipsterAppConfig();
+                if (!this.jhipsterAppConfig) {
+                    this.error('Can\'t read .yo-rc.json');
+                }
 
+                this.dbhTestCase = this.options.dbhTestCase;
 
-module.exports = generator.extend({
-    constructor: function (...args) { // eslint-disable-line object-shorthand
-        generator.apply(this, args);
+                // All information from entity generator
+                this.entityTableName = this.entityConfig.entityTableName;
+                this.entityClass = this.entityConfig.entityClass;
+                this.dbhIdName = this.entityConfig.data.dbhIdName;
+                this.fields = this.entityConfig.data.fields;
+                this.relationships = this.entityConfig.data.relationships;
 
-        // Option used to make unit tests in temporary directories instead of the current directory.
-        // The passed string argument references constants,
-        // those constants can be found in test/test-constants.js.
-        this.option('dbhTestCase', {
-            desc: 'Test case for this module\'s npm test',
-            type: String,
-            defaults: ''
-        });
+                this.force = this.options.force;
 
-        this.dbhTestCase = this.options.dbhTestCase;
+                if (this.force && !this.dbhIdName) {
+                    throw new Error('You\'ve used option "--force" with an invalid configuration file, fix-entity stops his execution');
+                }
 
-        // All information from entity generator
-        this.entityConfig = this.options.entityConfig;
-        this.entityTableName = this.options.entityConfig.entityTableName;
-        this.entityClass = this.options.entityConfig.entityClass;
-        this.dbhIdName = this.options.entityConfig.data.dbhIdName;
-        this.fields = this.options.entityConfig.data.fields;
-        this.relationships = this.options.entityConfig.data.relationships;
-        this.force = this.options.force;
-
-        if (this.force && !this.dbhIdName) {
-            throw new Error('You\'ve used option "--force" with an invalid configuration file, fix-entity stops his execution');
-        }
-
-        if (this.force) {
-            // use value from configuration file, don't get input from user
-            this.tableNameInput = this.entityTableName;
-            this.idNameInput = this.dbhIdName;
-            this.columnsInput = this.fields;
-        } else {
-            // input from user (prompts.js will fill them)
-            this.tableNameInput = null;
-            this.idNameInput = null;
-            this.columnsInput = [];
-        }
-    },
-
-    // check current project state, get configs, etc
-    initializing() {
-        this.log(chalk.bold.bgYellow('fix-entity generator'));
-        this.log(chalk.bold.yellow('initializing'));
-
-        this.composeWith('jhipster:modules',
-            { jhipsterVar, jhipsterFunc },
-            this.options.testmode ? { local: require.resolve('generator-jhipster/generators/modules') } : null
-        );
-        this.appConfig = jhipsterVar.jhipsterConfig;
-    },
+                if (this.force) {
+                    // use value from configuration file, don't get input from user
+                    this.tableNameInput = this.entityTableName;
+                    this.idNameInput = this.dbhIdName;
+                    this.columnsInput = this.fields;
+                } else {
+                    // input from user (prompts.js will fill them)
+                    this.tableNameInput = null;
+                    this.idNameInput = null;
+                    this.columnsInput = [];
+                }
+            }
+        };
+    }
 
     // prompt the user for options
-    prompting: {
-        askForTableName: prompts.askForTableName,
-        askForIdName: prompts.askForIdName,
-        askForColumnsName: prompts.askForColumnsName
-    },
+    get prompting() {
+        return {
+            askForTableName: prompts.askForTableName,
+            askForIdName: prompts.askForIdName,
+            askForColumnsName: prompts.askForColumnsName
+        };
+    }
 
     /**
      * After creating a new entity, replace the value of the table name.
      *
      * Allows consistent mapping with an existing database table without modifying JHipster's entity subgenerator.
-     **/
+     * */
     writing() {
+        // read config from .yo-rc.json
+        this.packageFolder = this.jhipsterAppConfig.packageFolder;
+
+        // use constants from generator-constants.js
+        const javaDir = `${jhipsterConstants.SERVER_MAIN_SRC_DIR + this.packageFolder}/`;
+        const resourceDir = jhipsterConstants.SERVER_MAIN_RES_DIR;
+
         /**
          * Return path to the liquibase file corresponding to this entity and type of file.
          *
          * @param type is either 'entity' or 'entity_constraints'
          */
-        const getLiquibaseFile = type => `${jhipsterVar.resourceDir}config/liquibase/changelog/${this.entityConfig.data.changelogDate}_added_${type}_${this.entityConfig.entityClass}.xml`;
+        const getLiquibaseFile = type => `${resourceDir}config/liquibase/changelog/${this.entityConfig.data.changelogDate}_added_${type}_${this.entityConfig.entityClass}.xml`;
 
         const files = {
             config: this.entityConfig.filename,
-            ORM: `${jhipsterVar.javaDir}domain/${this.entityConfig.entityClass}.java`,
+            ORM: `${javaDir}domain/${this.entityConfig.entityClass}.java`,
             liquibaseEntity: getLiquibaseFile('entity')
         };
 
@@ -112,29 +111,29 @@ module.exports = generator.extend({
         const updateKey = (landmark, key, oldValue, newValue) => {
             if (oldValue === undefined) {
                 // '(\\s*)' is for capturing indentation
-                jhipsterFunc.replaceContent(files.config, `(\\s*)${landmark}`, `$1${landmark},$1"${key}": "${newValue}"`, true);
+                this.replaceContent(files.config, `(\\s*)${landmark}`, `$1${landmark},$1"${key}": "${newValue}"`, true);
             } else {
-                jhipsterFunc.replaceContent(files.config, `"${key}": "${oldValue}`, `"${key}": "${newValue}`);
+                this.replaceContent(files.config, `"${key}": "${oldValue}`, `"${key}": "${newValue}`);
             }
         };
 
         const replaceTableName = (paramFiles, newValue) => {
-            jhipsterFunc.updateEntityConfig(paramFiles.config, 'entityTableName', newValue);
+            this.updateEntityConfig(paramFiles.config, 'entityTableName', newValue);
 
             // We search either for our value or jhipster value, so it works even if user didn't accept JHipster overwrite after a regeneration
-            jhipsterFunc.replaceContent(paramFiles.ORM, `@Table(name = "${this.entityTableName}`, `@Table(name = "${newValue}`);
-            jhipsterFunc.replaceContent(paramFiles.liquibaseEntity, `<createTable tableName="${this.entityTableName}`, `<createTable tableName="${newValue}`);
+            this.replaceContent(paramFiles.ORM, `@Table(name = "${this.entityTableName}`, `@Table(name = "${newValue}`);
+            this.replaceContent(paramFiles.liquibaseEntity, `<createTable tableName="${this.entityTableName}`, `<createTable tableName="${newValue}`);
         };
 
         const replaceIdName = (paramFiles, newValue) => {
-            jhipsterFunc.updateEntityConfig(paramFiles.config, 'dbhIdName', newValue);
+            this.updateEntityConfig(paramFiles.config, 'dbhIdName', newValue);
 
             /**
              * - (@Column\\(.*\\))? is there to remove any previous @Column tag
              * - (\\s*) is there to catch the indentation
              * - (private Long id;) is the landmark we use to know where to insert the new @Column tag.
              */
-            jhipsterFunc.replaceContent(paramFiles.ORM, '(@Column\\(.*\\))?(\\s*)(private Long id;)', `$2@Column(name = "${newValue}")$2$3`, true);
+            this.replaceContent(paramFiles.ORM, '(@Column\\(.*\\))?(\\s*)(private Long id;)', `$2@Column(name = "${newValue}")$2$3`, true);
             /**
              * - (<column name=") A first pattern to match
              * - (id|${this.dbhIdName}) Either the litteral value id or the previous value set by this module
@@ -144,7 +143,7 @@ module.exports = generator.extend({
              *   - \\s* Any number of white spaces
              *   - <constraints primaryKey="true" The heart of the pattern we want to match, this makes sure we're at the right place
              */
-            jhipsterFunc.replaceContent(paramFiles.liquibaseEntity, `(<column name=")(id|${this.dbhIdName})(".*>\\s*<constraints primaryKey="true")`, `$1${newValue}$3`, true);
+            this.replaceContent(paramFiles.liquibaseEntity, `(<column name=")(id|${this.dbhIdName})(".*>\\s*<constraints primaryKey="true")`, `$1${newValue}$3`, true);
         };
 
         // verify files exist
@@ -167,8 +166,9 @@ module.exports = generator.extend({
             updateKey(`"fieldName": "${columnItem.fieldName}"`, 'dbhColumnName', oldValue, newValue);
 
             // We search either for our value or JHipster value, so it works even if user didn't accept JHipster overwrite while regenerating
-            jhipsterFunc.replaceContent(files.ORM, `@Column\\(name = "(${columnItem.fieldNameAsDatabaseColumn}|${oldValue})`, `@Column(name = "${newValue}`, true);
-            jhipsterFunc.replaceContent(files.liquibaseEntity, `<column name="(${columnItem.fieldNameAsDatabaseColumn}|${oldValue})`, `<column name="${newValue}`, true);
+            this.replaceContent(files.ORM, `@Column\\(name = "(${columnItem.fieldNameAsDatabaseColumn}|${oldValue})"`, `@Column(name = "${newValue}"`, true);
+            this.replaceContent(files.liquibaseEntity, `<column name="(${columnItem.fieldNameAsDatabaseColumn}|${oldValue})"`, `<column name="${newValue}"`, true);
+            this.replaceContent(files.liquibaseEntity, `<dropDefaultValue tableName="${this.entityTableName}" columnName="(${columnItem.fieldNameAsDatabaseColumn}|${oldValue})"`, `<dropDefaultValue tableName="${this.entityTableName}" columnName="${newValue}"`, true);
         });
 
         /**
@@ -196,8 +196,8 @@ module.exports = generator.extend({
                 columnName = dbh.getColumnIdName(relationshipItem.relationshipName);
                 newValue = `${relationshipItem.relationshipName}_id`;
 
-                jhipsterFunc.replaceContent(files.liquibaseConstraints, `baseTableName="${this.entityTableName}`, `baseTableName="${this.tableNameInput}`);
-                jhipsterFunc.replaceContent(files.liquibaseConstraints, `(referencedColumnNames=")id("\\s*referencedTableName="${otherEntity.entityTableName}")`, `$1${otherEntity.dbhIdName}$2`, true);
+                this.replaceContent(files.liquibaseConstraints, `baseTableName="${this.entityTableName}`, `baseTableName="${this.tableNameInput}`);
+                this.replaceContent(files.liquibaseConstraints, `(referencedColumnNames=")id("\\s*referencedTableName="${otherEntity.entityTableName}")`, `$1${otherEntity.dbhIdName}$2`, true);
 
                 if (relationshipItem.relationshipType === 'many-to-one') {
                     /**
@@ -205,34 +205,34 @@ module.exports = generator.extend({
                      * (\\s*) catch indentation
                      * (private ${relationshipItem.otherEntityNameCapitalized} ${relationshipItem.relationshipName};) landmark used to find the correct place
                      */
-                    jhipsterFunc.replaceContent(files.ORM, `(@JoinColumn.*\\))?(\\s*)(private ${relationshipItem.otherEntityNameCapitalized} ${relationshipItem.relationshipName};)`, `$2@JoinColumn(name = "${newValue}")$2$3`, true);
+                    this.replaceContent(files.ORM, `(@JoinColumn.*\\))?(\\s*)(private ${relationshipItem.otherEntityNameCapitalized} ${relationshipItem.relationshipName};)`, `$2@JoinColumn(name = "${newValue}")$2$3`, true);
                 } else {
-                    jhipsterFunc.replaceContent(files.ORM, `(@JoinColumn.*)(\\)\\s*private ${relationshipItem.otherEntityNameCapitalized} ${relationshipItem.relationshipName};)`, `$1, name = "${newValue}"$2`, true);
+                    this.replaceContent(files.ORM, `(@JoinColumn.*)(\\)\\s*private ${relationshipItem.otherEntityNameCapitalized} ${relationshipItem.relationshipName};)`, `$1, name = "${newValue}"$2`, true);
                 }
             } else if (relationshipItem.relationshipType === 'many-to-many' && relationshipItem.ownerSide) {
                 columnName = dbh.getPluralColumnIdName(relationshipItem.relationshipName);
                 newValue = `${relationshipItem.relationshipNamePlural}_id`;
                 initialTableIdName = dbh.getPluralColumnIdName(this.entityClass);
 
-                jhipsterFunc.replaceContent(files.liquibaseEntity, `<addPrimaryKey columnNames="${initialTableIdName}, (${columnName}|${oldValue})`, `<addPrimaryKey columnNames="${initialTableIdName}, ${newValue}`, true);
-                jhipsterFunc.replaceContent(files.liquibaseConstraints, `referencedTableName="${this.entityTableName}`, `referencedTableName="${this.tableNameInput}`);
-                jhipsterFunc.replaceContent(files.ORM, `inverseJoinColumns = @JoinColumn\\(name="(${columnName}|${oldValue})`, `inverseJoinColumns = @JoinColumn(name="${newValue}`, true);
-                jhipsterFunc.replaceContent(files.liquibaseConstraints, `(referencedColumnNames=")id("\\s*referencedTableName="${this.entityTableName}")`, `$1${this.idNameInput}$2`, true);
+                this.replaceContent(files.liquibaseEntity, `<addPrimaryKey columnNames="${initialTableIdName}, (${columnName}|${oldValue})`, `<addPrimaryKey columnNames="${initialTableIdName}, ${newValue}`, true);
+                this.replaceContent(files.liquibaseConstraints, `referencedTableName="${this.entityTableName}`, `referencedTableName="${this.tableNameInput}`);
+                this.replaceContent(files.ORM, `inverseJoinColumns = @JoinColumn\\(name="(${columnName}|${oldValue})`, `inverseJoinColumns = @JoinColumn(name="${newValue}`, true);
+                this.replaceContent(files.liquibaseConstraints, `(referencedColumnNames=")id("\\s*referencedTableName="${this.entityTableName}")`, `$1${this.idNameInput}$2`, true);
                 // todo duplicate line, will remove on refactoring (duplicate with l258 as of the commit bringing this up)
-                jhipsterFunc.replaceContent(files.liquibaseConstraints, `(referencedColumnNames=")id("\\s*referencedTableName="${otherEntity.entityTableName}")`, `$1${otherEntity.dbhIdName}$2`, true);
-                jhipsterFunc.replaceContent(files.ORM, `(@JoinColumn\\(name="${initialTableIdName}", referencedColumnName=")id`, `$1${this.idNameInput}`, true);
-                jhipsterFunc.replaceContent(files.ORM, `(inverseJoinColumns = @JoinColumn\\(name="${newValue}", referencedColumnName=")id`, `$1${otherEntity.dbhIdName}`, true);
+                this.replaceContent(files.liquibaseConstraints, `(referencedColumnNames=")id("\\s*referencedTableName="${otherEntity.entityTableName}")`, `$1${otherEntity.dbhIdName}$2`, true);
+                this.replaceContent(files.ORM, `(@JoinColumn\\(name="${initialTableIdName}", referencedColumnName=")id`, `$1${this.idNameInput}`, true);
+                this.replaceContent(files.ORM, `(inverseJoinColumns = @JoinColumn\\(name="${newValue}", referencedColumnName=")id`, `$1${otherEntity.dbhIdName}`, true);
             }
 
             updateKey(`"relationshipName": "${relationshipItem.relationshipName}"`, 'dbhRelationshipId', oldValue, newValue);
 
-            jhipsterFunc.replaceContent(files.liquibaseEntity, `<column name="(${columnName}|${oldValue})`, `<column name="${newValue}`, true);
-            jhipsterFunc.replaceContent(files.liquibaseConstraints, `<addForeignKeyConstraint baseColumnNames="(${columnName}|${oldValue})`, `<addForeignKeyConstraint baseColumnNames="${newValue}`, true);
+            this.replaceContent(files.liquibaseEntity, `<column name="(${columnName}|${oldValue})"`, `<column name="${newValue}"`, true);
+            this.replaceContent(files.liquibaseConstraints, `<addForeignKeyConstraint baseColumnNames="(${columnName}|${oldValue})`, `<addForeignKeyConstraint baseColumnNames="${newValue}`, true);
 
             // The annotation @JsonProperty needs this additional import
             const newImport = 'import com.fasterxml.jackson.annotation.JsonProperty;';
             const landmarkImport = 'import org.hibernate.annotations.Cache;';
-            jhipsterFunc.replaceContent(files.ORM, `(${newImport})?\n${landmarkImport}`, `${newImport}\n${landmarkImport}`, true);
+            this.replaceContent(files.ORM, `(${newImport})?\n${landmarkImport}`, `${newImport}\n${landmarkImport}`, true);
             const oldAddition = '@JsonProperty\\(".*"\\)';
             const addition = `@JsonProperty("${relationshipItem.otherEntityNameCapitalized}")`;
             const landmark = `public ${relationshipItem.otherEntityNameCapitalized} get${relationshipItem.otherEntityNameCapitalized}`;
@@ -240,12 +240,12 @@ module.exports = generator.extend({
              * (${oldAddition}\\s*)? - $1 : remove a possibly present old annotation
              * (\\n( |\\t)*) - $2 : catch the indentation
              */
-            jhipsterFunc.replaceContent(files.ORM, `(${oldAddition}\\s*)?(\\n( |\\t)*)${landmark}`, `$2${addition}$2${landmark}`, true);
+            this.replaceContent(files.ORM, `(${oldAddition}\\s*)?(\\n( |\\t)*)${landmark}`, `$2${addition}$2${landmark}`, true);
         });
-    },
+    }
 
     // cleanup, say goodbye
     end() {
         this.log(chalk.bold.yellow('End of fix-entity generator'));
     }
-});
+};
