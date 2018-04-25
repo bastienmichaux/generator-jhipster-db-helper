@@ -21,7 +21,7 @@
     "url": "git+https://github.com/bastienmichaux/generator-jhipster-db-helper.git"
   },
   "dependencies": {
-    "chalk": "2.1.0",
+    "chalk": "2.4.0",
     "generator-jhipster": ">=4.6.0",
     "jhipster-core": "1.4.3",
     "lodash": "4.17.4",
