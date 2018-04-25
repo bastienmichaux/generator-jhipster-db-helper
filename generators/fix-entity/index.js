@@ -230,19 +230,6 @@ module.exports = class extends BaseGenerator {
 
             this.replaceContent(files.liquibaseEntity, `<column name="(${columnName}|${oldValue})"`, `<column name="${newValue}"`, true);
             this.replaceContent(files.liquibaseConstraints, `<addForeignKeyConstraint baseColumnNames="(${columnName}|${oldValue})`, `<addForeignKeyConstraint baseColumnNames="${newValue}`, true);
-
-            // The annotation @JsonProperty needs this additional import
-            const newImport = 'import com.fasterxml.jackson.annotation.JsonProperty;';
-            const landmarkImport = 'import org.hibernate.annotations.Cache;';
-            this.replaceContent(files.ORM, `(${newImport})?\n${landmarkImport}`, `${newImport}\n${landmarkImport}`, true);
-            const oldAddition = '@JsonProperty\\(".*"\\)';
-            const addition = `@JsonProperty("${relationshipItem.otherEntityNameCapitalized}")`;
-            const landmark = `public ${relationshipItem.otherEntityNameCapitalized} get${relationshipItem.otherEntityNameCapitalized}`;
-            /**
-             * (${oldAddition}\\s*)? - $1 : remove a possibly present old annotation
-             * (\\n( |\\t)*) - $2 : catch the indentation
-             */
-            this.replaceContent(files.ORM, `(${oldAddition}\\s*)?(\\n( |\\t)*)${landmark}`, `$2${addition}$2${landmark}`, true);
         });
     }
 
