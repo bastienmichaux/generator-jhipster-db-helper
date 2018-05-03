@@ -12,18 +12,21 @@
     "fields": [
         {
             "fieldName": "fieldBA",
+            "dbhColumnName": "column_ba",
             "fieldType": "String"
         },
         {
             "fieldName": "fieldBB",
+            "dbhColumnName": "column_bb",
             "fieldType": "Integer"
         }
     ],
     "changelogDate": "20180503130734",
     "dto": "no",
     "service": "no",
-    "entityTableName": "entityb",
+    "entityTableName": "table_b",
     "pagination": "no",
     "microserviceName": "dbhTravisTestCase",
-    "searchEngine": false
+    "searchEngine": false,
+    "dbhIdName": "table_b_id"
 }
