@@ -156,7 +156,7 @@ function askForRelationshipsId() {
  */
 function askForRelationshipId(done) {
     const validateColumnName = dbh.validateColumnName;
-    const defaultAnswer = this.relationship.dbhRelationshipId || `${this.relationship.relationshipName}_id`;
+    const defaultAnswer = this.relationship.dbhRelationshipId || `${dbh.getPluralColumnIdName(this.relationship.relationshipName)}`;
 
     const prompts = [
         {
@@ -171,8 +171,25 @@ function askForRelationshipId(done) {
         }
     ];
 
+    if (this.relationship.relationshipType === 'many-to-many') {
+        const defaultAnswer = this.relationship.dbhRelationshipIdOtherEntity || `${dbh.getPluralColumnIdName(this.relationship.otherEntityRelationshipName)}`;
+
+        prompts[0].message = `What inverseJoin column name do you want for the relationship "${this.relationship.relationshipName}" ?`;
+        prompts.push({
+            type: 'input',
+            name: 'dbhRelationshipIdOtherEntity',
+            validate: ((input) => {
+                const prodDatabaseType = this.jhipsterAppConfig.prodDatabaseType;
+                return validateColumnName(input, prodDatabaseType);
+            }),
+            message: `What join column name do you want for the relationship "${this.relationship.relationshipName}" ?`,
+            default: defaultAnswer
+        });
+    }
+
     this.prompt(prompts).then((props) => {
         this.relationship.relationshipIdInput = props.dbhRelationshipId;
+        this.relationship.otherEntityRelationshipIdInput = props.dbhRelationshipIdOtherEntity;
 
         // push just processed item
         this.relationshipsInput.push(this.relationship);
