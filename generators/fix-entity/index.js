@@ -216,14 +216,21 @@ module.exports = class extends BaseGenerator {
                 columnName = dbh.getPluralColumnIdName(relationshipItem.relationshipName);
                 initialTableIdName = dbh.getPluralColumnIdName(this.entityClass);
 
+                const otherEntityColumnName = dbh.getPluralColumnIdName(relationshipItem.otherEntityRelationshipName);
+                const otherEntityOldValue = relationshipItem.dbhRelationshipIdOtherEntity;
+                const otherEntityNewValue = relationshipItem.otherEntityRelationshipIdInput || otherEntityOldValue || otherEntityColumnName;
+
                 this.replaceContent(files.liquibaseEntity, `<addPrimaryKey columnNames="${initialTableIdName}, (${columnName}|${oldValue})`, `<addPrimaryKey columnNames="${initialTableIdName}, ${newValue}`, true);
                 this.replaceContent(files.liquibaseConstraints, `referencedTableName="${this.entityTableName}`, `referencedTableName="${this.tableNameInput}`);
                 this.replaceContent(files.ORM, `inverseJoinColumns = @JoinColumn\\(name="(${columnName}|${oldValue})`, `inverseJoinColumns = @JoinColumn(name="${newValue}`, true);
+                this.replaceContent(files.ORM, `joinColumns = @JoinColumn\\(name="(${otherEntityColumnName}|${otherEntityOldValue})`, `joinColumns = @JoinColumn(name="${otherEntityNewValue}`, true);
                 this.replaceContent(files.liquibaseConstraints, `(referencedColumnNames=")id("\\s*referencedTableName="${this.entityTableName}")`, `$1${this.idNameInput}$2`, true);
                 // todo duplicate line, will remove on refactoring (duplicate with l258 as of the commit bringing this up)
                 this.replaceContent(files.liquibaseConstraints, `(referencedColumnNames=")id("\\s*referencedTableName="${otherEntity.entityTableName}")`, `$1${otherEntityIdName}$2`, true);
                 this.replaceContent(files.ORM, `(@JoinColumn\\(name="${initialTableIdName}", referencedColumnName=")id`, `$1${this.idNameInput}`, true);
                 this.replaceContent(files.ORM, `(inverseJoinColumns = @JoinColumn\\(name="${newValue}", referencedColumnName=")id`, `$1${otherEntity.dbhIdName}`, true);
+
+                updateKey(`"relationshipName": "${relationshipItem.relationshipName}"`, 'dbhRelationshipIdOtherEntity', otherEntityOldValue, otherEntityNewValue);
             }
 
             updateKey(`"relationshipName": "${relationshipItem.relationshipName}"`, 'dbhRelationshipId', oldValue, newValue);
