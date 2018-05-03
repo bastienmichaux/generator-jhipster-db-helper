@@ -9,7 +9,7 @@ yarn add generator-jhipster@"$JHIPSTER_VERSION"
 yarn link generator-jhipster-db-helper
 
 yo jhipster
-# yo jhipster-db-helper --force # todo adapt entities to pull-request-52
+yo jhipster-db-helper --force
 
 yo jhipster:entity EntityA --force
 yo jhipster:entity EntityB --force

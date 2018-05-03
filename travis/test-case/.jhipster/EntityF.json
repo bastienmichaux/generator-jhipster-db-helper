@@ -3,6 +3,7 @@
     "relationships": [
         {
             "relationshipName": "entityA",
+            "dbhRelationshipId": "table_a_fk",
             "otherEntityName": "entityA",
             "relationshipType": "one-to-one",
             "otherEntityField": "fieldAA",
@@ -13,18 +14,21 @@
     "fields": [
         {
             "fieldName": "fieldFA",
+            "dbhColumnName": "column_fa",
             "fieldType": "String"
         },
         {
             "fieldName": "fieldFB",
+            "dbhColumnName": "column_fb",
             "fieldType": "Integer"
         }
     ],
     "changelogDate": "20180503131307",
     "dto": "no",
     "service": "no",
-    "entityTableName": "entityf",
+    "entityTableName": "table_f",
     "pagination": "no",
     "microserviceName": "dbhTravisTestCase",
-    "searchEngine": false
+    "searchEngine": false,
+    "dbhIdName": "table_f_id"
 }

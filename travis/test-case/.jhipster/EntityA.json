@@ -3,6 +3,7 @@
     "relationships": [
         {
             "relationshipName": "entityB",
+            "dbhRelationshipId": "table_b_fk",
             "otherEntityName": "entityB",
             "relationshipType": "one-to-one",
             "otherEntityField": "fieldBA",
@@ -11,12 +12,15 @@
         },
         {
             "relationshipName": "entityC",
+            "dbhRelationshipId": "table_c_fk",
             "otherEntityName": "entityC",
             "relationshipType": "many-to-one",
             "otherEntityField": "fieldCA"
         },
         {
             "relationshipName": "entityD",
+            "dbhRelationshipId": "table_d_fk",
+            "dbhRelationshipIdOtherEntity": "table_a_fk",
             "otherEntityName": "entityD",
             "relationshipType": "many-to-many",
             "otherEntityField": "fieldDA",
@@ -25,6 +29,8 @@
         },
         {
             "relationshipName": "entityE",
+            "dbhRelationshipId": "table_e_fk",
+            "dbhRelationshipIdOtherEntity": "table_a_fk",
             "otherEntityName": "entityE",
             "relationshipType": "many-to-many",
             "otherEntityField": "fieldEA",
@@ -55,16 +61,19 @@
     "fields": [
         {
             "fieldName": "fieldAA",
+            "dbhColumnName": "column_aa",
             "fieldType": "String"
         },
         {
             "fieldName": "fieldAB",
+            "dbhColumnName": "column_ab",
             "fieldType": "Integer"
         }
     ],
     "changelogDate": "20180503123138",
     "dto": "no",
     "service": "no",
-    "entityTableName": "entitya",
-    "pagination": "no"
+    "entityTableName": "table_a",
+    "pagination": "no",
+    "dbhIdName": "table_a_id"
 }
