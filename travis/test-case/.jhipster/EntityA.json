@@ -1,0 +1,70 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipName": "entityB",
+            "otherEntityName": "entityB",
+            "relationshipType": "one-to-one",
+            "otherEntityField": "fieldBA",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "entityA"
+        },
+        {
+            "relationshipName": "entityC",
+            "otherEntityName": "entityC",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "fieldCA"
+        },
+        {
+            "relationshipName": "entityD",
+            "otherEntityName": "entityD",
+            "relationshipType": "many-to-many",
+            "otherEntityField": "fieldDA",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "entityA"
+        },
+        {
+            "relationshipName": "entityE",
+            "otherEntityName": "entityE",
+            "relationshipType": "many-to-many",
+            "otherEntityField": "fieldEA",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "entityA"
+        },
+        {
+            "relationshipName": "entityF",
+            "otherEntityName": "entityF",
+            "relationshipType": "one-to-one",
+            "ownerSide": false,
+            "otherEntityRelationshipName": "entityA"
+        },
+        {
+            "relationshipName": "entityG",
+            "otherEntityName": "entityG",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "entityA"
+        },
+        {
+            "relationshipName": "entityH",
+            "otherEntityName": "entityH",
+            "relationshipType": "many-to-many",
+            "ownerSide": false,
+            "otherEntityRelationshipName": "entityA"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "fieldAA",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "fieldAB",
+            "fieldType": "Integer"
+        }
+    ],
+    "changelogDate": "20180503123138",
+    "dto": "no",
+    "service": "no",
+    "entityTableName": "entitya",
+    "pagination": "no"
+}

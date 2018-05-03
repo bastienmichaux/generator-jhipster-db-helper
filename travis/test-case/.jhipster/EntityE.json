@@ -1,0 +1,29 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipName": "entityA",
+            "otherEntityName": "entityA",
+            "relationshipType": "many-to-many",
+            "ownerSide": false,
+            "otherEntityRelationshipName": "entityE"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "fieldEA",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "fieldEB",
+            "fieldType": "String"
+        }
+    ],
+    "changelogDate": "20180503131203",
+    "dto": "no",
+    "service": "no",
+    "entityTableName": "entitye",
+    "pagination": "no",
+    "microserviceName": "dbhTravisTestCase",
+    "searchEngine": false
+}
