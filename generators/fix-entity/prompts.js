@@ -75,7 +75,7 @@ function askForColumnsName() {
     // work on a copy
     this.fieldsPile = this.fields.slice();
     // feed the first item for the first question
-    this.field = this.fieldsPile.pop();
+    this.field = this.fieldsPile.shift();
     askForColumnName.call(this, done);
 }
 
@@ -110,7 +110,7 @@ function askForColumnName(done) {
         // push just processed item
         this.columnsInput.push(this.field);
         // pop item for next recursion
-        this.field = this.fieldsPile.pop();
+        this.field = this.fieldsPile.shift();
 
         if (this.field !== undefined) {
             askForColumnName.call(this, done);
@@ -142,7 +142,7 @@ function askForRelationshipsId() {
     this.log(chalk.green(`Asking column names for ${this.relationshipsPile.length} relationship(s)`));
     const done = this.async();
 
-    this.relationship = this.relationshipsPile.pop();
+    this.relationship = this.relationshipsPile.shift();
     askForRelationshipId.call(this, done);
 }
 
@@ -156,6 +156,7 @@ function askForRelationshipsId() {
  */
 function askForRelationshipId(done) {
     const validateColumnName = dbh.validateColumnName;
+    const validateTableName = dbh.validateTableName;
     const defaultAnswer = this.relationship.dbhRelationshipId || `${dbh.getPluralColumnIdName(this.relationship.relationshipName)}`;
 
     const prompts = [
@@ -172,10 +173,8 @@ function askForRelationshipId(done) {
     ];
 
     if (this.relationship.relationshipType === 'many-to-many') {
-        const defaultAnswer = this.relationship.dbhRelationshipIdOtherEntity || `${dbh.getPluralColumnIdName(this.relationship.otherEntityRelationshipName)}`;
-
         prompts[0].message = `What inverseJoin column name do you want for the relationship "${this.relationship.relationshipName}" ?`;
-        prompts.push({
+        prompts.unshift({
             type: 'input',
             name: 'dbhRelationshipIdOtherEntity',
             validate: ((input) => {
@@ -183,18 +182,29 @@ function askForRelationshipId(done) {
                 return validateColumnName(input, prodDatabaseType);
             }),
             message: `What join column name do you want for the relationship "${this.relationship.relationshipName}" ?`,
-            default: defaultAnswer
+            default: this.relationship.dbhRelationshipIdOtherEntity || `${dbh.getPluralColumnIdName(this.relationship.otherEntityRelationshipName)}`
+        });
+        prompts.unshift({
+            type: 'input',
+            name: 'dbhJunctionTable',
+            validate: ((input) => {
+                const prodDatabaseType = this.jhipsterAppConfig.prodDatabaseType;
+                return validateTableName(input, prodDatabaseType);
+            }),
+            message: `What junction table name do you want for the relationship "${this.relationship.relationshipName}" ?`,
+            default: `${this.getJoinTableName(this.entityClass, this.relationship.relationshipName, this.jhipsterAppConfig.prodDatabaseType)}`
         });
     }
 
     this.prompt(prompts).then((props) => {
         this.relationship.relationshipIdInput = props.dbhRelationshipId;
         this.relationship.otherEntityRelationshipIdInput = props.dbhRelationshipIdOtherEntity;
+        this.relationship.junctionTableInput = props.dbhJunctionTable;
 
         // push just processed item
         this.relationshipsInput.push(this.relationship);
         // pop item for next recursion
-        this.relationship = this.relationshipsPile.pop();
+        this.relationship = this.relationshipsPile.shift();
 
         if (this.relationship !== undefined) {
             askForRelationshipId.call(this, done);
