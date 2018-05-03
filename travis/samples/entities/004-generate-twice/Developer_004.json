@@ -9,6 +9,8 @@
         },
         {
             "relationshipName": "bug",
+            "dbhRelationshipId": "bug_id",
+            "dbhRelationshipIdOtherEntity": "developers_id",
             "otherEntityName": "bug_004",
             "relationshipType": "many-to-many",
             "otherEntityField": "id",

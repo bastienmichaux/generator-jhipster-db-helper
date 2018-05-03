@@ -11,6 +11,7 @@
         {
             "relationshipName": "bug",
             "dbhRelationshipId": "bugs_id",
+            "dbhRelationshipIdOtherEntity": "developers_id",
             "otherEntityName": "bug_005",
             "relationshipType": "many-to-many",
             "otherEntityField": "title",
