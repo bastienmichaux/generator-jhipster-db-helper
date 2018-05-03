@@ -11,6 +11,7 @@
         {
             "relationshipName": "salty_Work",
             "dbhRelationshipId": "salty_Works_id",
+            "dbhRelationshipIdOtherEntity": "developers_id",
             "otherEntityName": "bug_003",
             "relationshipType": "many-to-many",
             "otherEntityField": "id",
