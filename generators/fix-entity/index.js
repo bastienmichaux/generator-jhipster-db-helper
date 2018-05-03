@@ -222,7 +222,7 @@ module.exports = class extends BaseGenerator {
                 this.replaceContent(files.ORM, `joinColumns = @JoinColumn\\(name="(${otherEntityColumnName}|${otherEntityOldValue})`, `joinColumns = @JoinColumn(name="${otherEntityNewValue}`, true);
                 this.replaceContent(files.ORM, `(@JoinColumn\\(name="${otherEntityNewValue}", referencedColumnName=")(id|${this.dbhIdName})`, `$1${this.idNameInput}`, true);
                 this.replaceContent(files.ORM, `inverseJoinColumns = @JoinColumn\\(name="(${columnName}|${oldValue})`, `inverseJoinColumns = @JoinColumn(name="${newValue}`, true);
-                this.replaceContent(files.ORM, `(inverseJoinColumns = @JoinColumn\\(name="${newValue}", referencedColumnName=")(id|${otherEntity.dbhIdName})`, `$1${otherEntity.dbhIdName}`, true);
+                this.replaceContent(files.ORM, `(inverseJoinColumns = @JoinColumn\\(name="${newValue}", referencedColumnName=")(id|${otherEntity.dbhIdName})`, `$1${otherEntity.dbhIdName || 'id'}`, true);
                 this.replaceContent(files.liquibaseConstraints, `<addForeignKeyConstraint baseColumnNames="(${otherEntityColumnName}|${otherEntityOldValue})`, `<addForeignKeyConstraint baseColumnNames="${otherEntityNewValue}`, true);
                 this.replaceContent(files.liquibaseConstraints, `referencedTableName="${this.entityTableName}`, `referencedTableName="${this.tableNameInput}`, false);
                 this.replaceContent(files.liquibaseConstraints, `(referencedColumnNames=")id("\\s*referencedTableName="${this.entityTableName}")`, `$1${this.idNameInput}$2`, true);
