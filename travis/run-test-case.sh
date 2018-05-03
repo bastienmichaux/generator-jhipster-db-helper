@@ -19,3 +19,5 @@ yo jhipster:entity EntityE --force
 yo jhipster:entity EntityF --force
 yo jhipster:entity EntityG --force
 yo jhipster:entity EntityH --force
+
+mvn test
