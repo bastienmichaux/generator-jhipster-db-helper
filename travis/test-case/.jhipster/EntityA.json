@@ -1,0 +1,81 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipName": "entityB",
+            "dbhRelationshipId": "table_b_fk",
+            "otherEntityName": "entityB",
+            "relationshipType": "one-to-one",
+            "otherEntityField": "fieldBA",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "entityA"
+        },
+        {
+            "relationshipName": "entityC",
+            "dbhRelationshipId": "table_c_fk",
+            "otherEntityName": "entityC",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "fieldCA"
+        },
+        {
+            "relationshipName": "entityD",
+            "dbhJunctionTable": "table_a_table_d",
+            "dbhRelationshipId": "table_d_fk",
+            "dbhRelationshipIdOtherEntity": "table_a_fk",
+            "otherEntityName": "entityD",
+            "relationshipType": "many-to-many",
+            "otherEntityField": "fieldDA",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "entityA"
+        },
+        {
+            "relationshipName": "entityE",
+            "dbhJunctionTable": "table_a_table_e",
+            "dbhRelationshipId": "table_e_fk",
+            "dbhRelationshipIdOtherEntity": "table_a_fk",
+            "otherEntityName": "entityE",
+            "relationshipType": "many-to-many",
+            "otherEntityField": "fieldEA",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "entityA"
+        },
+        {
+            "relationshipName": "entityF",
+            "otherEntityName": "entityF",
+            "relationshipType": "one-to-one",
+            "ownerSide": false,
+            "otherEntityRelationshipName": "entityA"
+        },
+        {
+            "relationshipName": "entityG",
+            "otherEntityName": "entityG",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "entityA"
+        },
+        {
+            "relationshipName": "entityH",
+            "otherEntityName": "entityH",
+            "relationshipType": "many-to-many",
+            "ownerSide": false,
+            "otherEntityRelationshipName": "entityA"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "fieldAA",
+            "dbhColumnName": "column_aa",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "fieldAB",
+            "dbhColumnName": "column_ab",
+            "fieldType": "Integer"
+        }
+    ],
+    "changelogDate": "20180503123138",
+    "dto": "no",
+    "service": "no",
+    "entityTableName": "table_a",
+    "pagination": "no",
+    "dbhIdName": "table_a_id"
+}

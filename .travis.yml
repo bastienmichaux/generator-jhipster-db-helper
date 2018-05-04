@@ -16,17 +16,14 @@ cache:
         - $HOME/.m2
 env:
     matrix:
-        - JHIPSTER_VERSION=4.6.0
+        - JHIPSTER_VERSION=4.6.2
         - JHIPSTER_VERSION=4.13.3
         - JHIPSTER_VERSION=latest
     global:
         - JHIPSTER_TRAVIS=$TRAVIS_BUILD_DIR/travis
-        - JHIPSTER_INSTALL=$JHIPSTER_TRAVIS/install
-        - JHIPSTER_SAMPLES=$JHIPSTER_TRAVIS/samples
-        - JHIPSTER_SCRIPTS=$JHIPSTER_TRAVIS/scripts
 before_install:
     - export JAVA_HOME=/usr/lib/jvm/java-8-oracle
-    - yarn global add yo bower gulp-cli generator-jhipster
+    - yarn global add yo
 install:
     - yarn install
     - yarn test
@@ -34,9 +31,6 @@ install:
 before_script:
     - rm -r test
 script:
-    - $JHIPSTER_SCRIPTS/00-configure-dependencies.sh
-    - $JHIPSTER_SCRIPTS/01-generate-project.sh
-    - $JHIPSTER_SCRIPTS/02-generate-entities.sh
+    - $JHIPSTER_TRAVIS/run-test-case.sh
 notifications:
-# We will invert both when we'll have a smooth running build
     email: false

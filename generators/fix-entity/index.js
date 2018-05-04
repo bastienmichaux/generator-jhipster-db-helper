@@ -32,7 +32,7 @@ module.exports = class extends BaseGenerator {
                 // All information from entity generator
                 this.entityTableName = this.entityConfig.entityTableName;
                 this.entityClass = this.entityConfig.entityClass;
-                this.dbhIdName = this.entityConfig.data.dbhIdName;
+                this.dbhIdName = this.entityConfig.data.dbhIdName || 'id';
                 this.fields = this.entityConfig.data.fields;
                 this.relationships = this.entityConfig.data.relationships;
 
@@ -47,11 +47,13 @@ module.exports = class extends BaseGenerator {
                     this.tableNameInput = this.entityTableName;
                     this.idNameInput = this.dbhIdName;
                     this.columnsInput = this.fields;
+                    this.relationshipsInput = this.relationships;
                 } else {
                     // input from user (prompts.js will fill them)
                     this.tableNameInput = null;
                     this.idNameInput = null;
                     this.columnsInput = [];
+                    this.relationshipsInput = [];
                 }
             }
         };
@@ -62,7 +64,8 @@ module.exports = class extends BaseGenerator {
         return {
             askForTableName: prompts.askForTableName,
             askForIdName: prompts.askForIdName,
-            askForColumnsName: prompts.askForColumnsName
+            askForColumnsName: prompts.askForColumnsName,
+            askForRelationshipId: prompts.askForRelationshipsId
         };
     }
 
@@ -176,7 +179,7 @@ module.exports = class extends BaseGenerator {
          * But as using this module means you don't respect the convention, these guesses won't be correct and we must guess the values ourselves.
          */
         // Add/Change/Keep dbhRelationshipId
-        this.relationships.forEach((relationshipItem) => {
+        this.relationshipsInput.forEach((relationshipItem) => {
             // We don't need to do anything about relationships which don't add any constraint.
             if (relationshipItem.relationshipType === 'one-to-many' ||
                 (relationshipItem.relationshipType === 'one-to-one' && !relationshipItem.ownerSide) ||
@@ -185,19 +188,17 @@ module.exports = class extends BaseGenerator {
             }
 
             const otherEntity = JSON.parse(fs.readFileSync(`${this.entityConfig.jhipsterConfigDirectory}/${relationshipItem.otherEntityNameCapitalized}.json`, 'utf8'));
+            const otherEntityIdName = otherEntity.dbhIdName || 'id';
             const oldValue = relationshipItem.dbhRelationshipId;
 
             let columnName = null;
-            let newValue = null;
-            let initialTableIdName = null;
-
+            const newValue = relationshipItem.relationshipIdInput || relationshipItem.dbhRelationshipId || `${relationshipItem.relationshipName}_id`;
 
             if (relationshipItem.relationshipType === 'many-to-one' || (relationshipItem.relationshipType === 'one-to-one' && relationshipItem.ownerSide)) {
                 columnName = dbh.getColumnIdName(relationshipItem.relationshipName);
-                newValue = `${relationshipItem.relationshipName}_id`;
 
                 this.replaceContent(files.liquibaseConstraints, `baseTableName="${this.entityTableName}`, `baseTableName="${this.tableNameInput}`);
-                this.replaceContent(files.liquibaseConstraints, `(referencedColumnNames=")id("\\s*referencedTableName="${otherEntity.entityTableName}")`, `$1${otherEntity.dbhIdName}$2`, true);
+                this.replaceContent(files.liquibaseConstraints, `(referencedColumnNames=")id("\\s*referencedTableName="${otherEntity.entityTableName}")`, `$1${otherEntityIdName}$2`, true);
 
                 if (relationshipItem.relationshipType === 'many-to-one') {
                     /**
@@ -211,36 +212,37 @@ module.exports = class extends BaseGenerator {
                 }
             } else if (relationshipItem.relationshipType === 'many-to-many' && relationshipItem.ownerSide) {
                 columnName = dbh.getPluralColumnIdName(relationshipItem.relationshipName);
-                newValue = `${relationshipItem.relationshipNamePlural}_id`;
-                initialTableIdName = dbh.getPluralColumnIdName(this.entityClass);
 
-                this.replaceContent(files.liquibaseEntity, `<addPrimaryKey columnNames="${initialTableIdName}, (${columnName}|${oldValue})`, `<addPrimaryKey columnNames="${initialTableIdName}, ${newValue}`, true);
-                this.replaceContent(files.liquibaseConstraints, `referencedTableName="${this.entityTableName}`, `referencedTableName="${this.tableNameInput}`);
+                const otherEntityColumnName = dbh.getPluralColumnIdName(relationshipItem.otherEntityRelationshipName);
+                const otherEntityOldValue = relationshipItem.dbhRelationshipIdOtherEntity;
+                const otherEntityNewValue = relationshipItem.otherEntityRelationshipIdInput || otherEntityOldValue || otherEntityColumnName;
+
+                const junctionTableJhipster = this.getJoinTableName(this.entityClass, relationshipItem.relationshipName, this.jhipsterAppConfig.prodDatabaseType);
+                const junctionTableOldValue = relationshipItem.dbhJunctionTable;
+                const junctionTableNewValue = relationshipItem.junctionTableInput || junctionTableOldValue || junctionTableJhipster;
+
+                this.replaceContent(files.liquibaseEntity, `<addPrimaryKey columnNames="${otherEntityColumnName}, (${columnName}|${oldValue})`, `<addPrimaryKey columnNames="${otherEntityNewValue}, ${newValue}`, true);
+                this.replaceContent(files.liquibaseEntity, `<column name="(${otherEntityColumnName}|${otherEntityOldValue})"`, `<column name="${otherEntityNewValue}"`, true);
+                this.replaceContent(files.liquibaseEntity, `(tableName=")(${junctionTableJhipster}|${junctionTableOldValue})`, `$1${junctionTableNewValue}`, true);
+                this.replaceContent(files.ORM, `(@JoinTable\\(name = ")(${junctionTableJhipster}|${junctionTableOldValue})`, `$1${junctionTableNewValue}`, true);
+                this.replaceContent(files.ORM, `joinColumns = @JoinColumn\\(name="(${otherEntityColumnName}|${otherEntityOldValue})`, `joinColumns = @JoinColumn(name="${otherEntityNewValue}`, true);
+                this.replaceContent(files.ORM, `(@JoinColumn\\(name="${otherEntityNewValue}", referencedColumnName=")(id|${this.dbhIdName})`, `$1${this.idNameInput}`, true);
                 this.replaceContent(files.ORM, `inverseJoinColumns = @JoinColumn\\(name="(${columnName}|${oldValue})`, `inverseJoinColumns = @JoinColumn(name="${newValue}`, true);
+                this.replaceContent(files.ORM, `(inverseJoinColumns = @JoinColumn\\(name="${newValue}", referencedColumnName=")(id|${otherEntity.dbhIdName})`, `$1${otherEntity.dbhIdName || 'id'}`, true);
+                this.replaceContent(files.liquibaseConstraints, `(baseTableName=")(${junctionTableJhipster}|${junctionTableOldValue})`, `$1${junctionTableNewValue}`, true);
+                this.replaceContent(files.liquibaseConstraints, `<addForeignKeyConstraint baseColumnNames="(${otherEntityColumnName}|${otherEntityOldValue})`, `<addForeignKeyConstraint baseColumnNames="${otherEntityNewValue}`, true);
+                this.replaceContent(files.liquibaseConstraints, `referencedTableName="${this.entityTableName}`, `referencedTableName="${this.tableNameInput}`, false);
                 this.replaceContent(files.liquibaseConstraints, `(referencedColumnNames=")id("\\s*referencedTableName="${this.entityTableName}")`, `$1${this.idNameInput}$2`, true);
-                // todo duplicate line, will remove on refactoring (duplicate with l258 as of the commit bringing this up)
-                this.replaceContent(files.liquibaseConstraints, `(referencedColumnNames=")id("\\s*referencedTableName="${otherEntity.entityTableName}")`, `$1${otherEntity.dbhIdName}$2`, true);
-                this.replaceContent(files.ORM, `(@JoinColumn\\(name="${initialTableIdName}", referencedColumnName=")id`, `$1${this.idNameInput}`, true);
-                this.replaceContent(files.ORM, `(inverseJoinColumns = @JoinColumn\\(name="${newValue}", referencedColumnName=")id`, `$1${otherEntity.dbhIdName}`, true);
+                this.replaceContent(files.liquibaseConstraints, `(referencedColumnNames=")id("\\s*referencedTableName="${otherEntity.entityTableName}")`, `$1${otherEntityIdName}$2`, true);
+
+                updateKey(`"relationshipName": "${relationshipItem.relationshipName}"`, 'dbhJunctionTable', junctionTableOldValue, junctionTableNewValue);
+                updateKey(`"relationshipName": "${relationshipItem.relationshipName}"`, 'dbhRelationshipIdOtherEntity', otherEntityOldValue, otherEntityNewValue);
             }
 
             updateKey(`"relationshipName": "${relationshipItem.relationshipName}"`, 'dbhRelationshipId', oldValue, newValue);
 
             this.replaceContent(files.liquibaseEntity, `<column name="(${columnName}|${oldValue})"`, `<column name="${newValue}"`, true);
             this.replaceContent(files.liquibaseConstraints, `<addForeignKeyConstraint baseColumnNames="(${columnName}|${oldValue})`, `<addForeignKeyConstraint baseColumnNames="${newValue}`, true);
-
-            // The annotation @JsonProperty needs this additional import
-            const newImport = 'import com.fasterxml.jackson.annotation.JsonProperty;';
-            const landmarkImport = 'import org.hibernate.annotations.Cache;';
-            this.replaceContent(files.ORM, `(${newImport})?\n${landmarkImport}`, `${newImport}\n${landmarkImport}`, true);
-            const oldAddition = '@JsonProperty\\(".*"\\)';
-            const addition = `@JsonProperty("${relationshipItem.otherEntityNameCapitalized}")`;
-            const landmark = `public ${relationshipItem.otherEntityNameCapitalized} get${relationshipItem.otherEntityNameCapitalized}`;
-            /**
-             * (${oldAddition}\\s*)? - $1 : remove a possibly present old annotation
-             * (\\n( |\\t)*) - $2 : catch the indentation
-             */
-            this.replaceContent(files.ORM, `(${oldAddition}\\s*)?(\\n( |\\t)*)${landmark}`, `$2${addition}$2${landmark}`, true);
         });
     }
 

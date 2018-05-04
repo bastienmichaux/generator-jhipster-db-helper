@@ -1,0 +1,32 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipName": "entityA",
+            "otherEntityName": "entityA",
+            "relationshipType": "many-to-many",
+            "ownerSide": false,
+            "otherEntityRelationshipName": "entityE"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "fieldEA",
+            "dbhColumnName": "column_ea",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "fieldEB",
+            "dbhColumnName": "column_eb",
+            "fieldType": "String"
+        }
+    ],
+    "changelogDate": "20180503131203",
+    "dto": "no",
+    "service": "no",
+    "entityTableName": "table_e",
+    "pagination": "no",
+    "microserviceName": "dbhTravisTestCase",
+    "searchEngine": false,
+    "dbhIdName": "table_e_id"
+}

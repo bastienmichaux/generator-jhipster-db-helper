@@ -1,0 +1,36 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipName": "entityA",
+            "dbhJunctionTable": "table_h_table_a",
+            "dbhRelationshipId": "table_a_fk",
+            "dbhRelationshipIdOtherEntity": "table_h_fk",
+            "otherEntityName": "entityA",
+            "relationshipType": "many-to-many",
+            "otherEntityField": "fieldAA",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "entityH"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "fieldHA",
+            "dbhColumnName": "column_ha",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "fieldHB",
+            "dbhColumnName": "column_hb",
+            "fieldType": "Integer"
+        }
+    ],
+    "changelogDate": "20180503131741",
+    "dto": "no",
+    "service": "no",
+    "entityTableName": "table_h",
+    "pagination": "no",
+    "microserviceName": "dbhTravisTestCase",
+    "searchEngine": false,
+    "dbhIdName": "table_h_fk"
+}

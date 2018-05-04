@@ -1,0 +1,32 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipName": "entityA",
+            "dbhRelationshipId": "table_a_fk",
+            "otherEntityName": "entityA",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "fieldAA"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "fieldGA",
+            "dbhColumnName": "column_ga",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "fieldGB",
+            "dbhColumnName": "column_gb",
+            "fieldType": "Integer"
+        }
+    ],
+    "changelogDate": "20180503131615",
+    "dto": "no",
+    "service": "no",
+    "entityTableName": "table_g",
+    "pagination": "no",
+    "microserviceName": "dbhTravisTestCase",
+    "searchEngine": false,
+    "dbhIdName": "table_g_id"
+}
