@@ -217,17 +217,25 @@ module.exports = class extends BaseGenerator {
                 const otherEntityOldValue = relationshipItem.dbhRelationshipIdOtherEntity;
                 const otherEntityNewValue = relationshipItem.otherEntityRelationshipIdInput || otherEntityOldValue || otherEntityColumnName;
 
+                const junctionTableJhipster = this.getJoinTableName(this.entityClass, relationshipItem.relationshipName, this.jhipsterAppConfig.prodDatabaseType);
+                const junctionTableOldValue = relationshipItem.dbhJunctionTable;
+                const junctionTableNewValue = relationshipItem.junctionTableInput || junctionTableOldValue || junctionTableJhipster;
+
                 this.replaceContent(files.liquibaseEntity, `<addPrimaryKey columnNames="${otherEntityColumnName}, (${columnName}|${oldValue})`, `<addPrimaryKey columnNames="${otherEntityNewValue}, ${newValue}`, true);
                 this.replaceContent(files.liquibaseEntity, `<column name="(${otherEntityColumnName}|${otherEntityOldValue})"`, `<column name="${otherEntityNewValue}"`, true);
+                this.replaceContent(files.liquibaseEntity, `(tableName=")(${junctionTableJhipster}|${junctionTableOldValue})`, `$1${junctionTableNewValue}`, true);
+                this.replaceContent(files.ORM, `(@JoinTable\\(name = ")(${junctionTableJhipster}|${junctionTableOldValue})`, `$1${junctionTableNewValue}`, true);
                 this.replaceContent(files.ORM, `joinColumns = @JoinColumn\\(name="(${otherEntityColumnName}|${otherEntityOldValue})`, `joinColumns = @JoinColumn(name="${otherEntityNewValue}`, true);
                 this.replaceContent(files.ORM, `(@JoinColumn\\(name="${otherEntityNewValue}", referencedColumnName=")(id|${this.dbhIdName})`, `$1${this.idNameInput}`, true);
                 this.replaceContent(files.ORM, `inverseJoinColumns = @JoinColumn\\(name="(${columnName}|${oldValue})`, `inverseJoinColumns = @JoinColumn(name="${newValue}`, true);
                 this.replaceContent(files.ORM, `(inverseJoinColumns = @JoinColumn\\(name="${newValue}", referencedColumnName=")(id|${otherEntity.dbhIdName})`, `$1${otherEntity.dbhIdName || 'id'}`, true);
+                this.replaceContent(files.liquibaseConstraints, `(baseTableName=")(${junctionTableJhipster}|${junctionTableOldValue})`, `$1${junctionTableNewValue}`, true);
                 this.replaceContent(files.liquibaseConstraints, `<addForeignKeyConstraint baseColumnNames="(${otherEntityColumnName}|${otherEntityOldValue})`, `<addForeignKeyConstraint baseColumnNames="${otherEntityNewValue}`, true);
                 this.replaceContent(files.liquibaseConstraints, `referencedTableName="${this.entityTableName}`, `referencedTableName="${this.tableNameInput}`, false);
                 this.replaceContent(files.liquibaseConstraints, `(referencedColumnNames=")id("\\s*referencedTableName="${this.entityTableName}")`, `$1${this.idNameInput}$2`, true);
                 this.replaceContent(files.liquibaseConstraints, `(referencedColumnNames=")id("\\s*referencedTableName="${otherEntity.entityTableName}")`, `$1${otherEntityIdName}$2`, true);
 
+                updateKey(`"relationshipName": "${relationshipItem.relationshipName}"`, 'dbhJunctionTable', junctionTableOldValue, junctionTableNewValue);
                 updateKey(`"relationshipName": "${relationshipItem.relationshipName}"`, 'dbhRelationshipIdOtherEntity', otherEntityOldValue, otherEntityNewValue);
             }
 

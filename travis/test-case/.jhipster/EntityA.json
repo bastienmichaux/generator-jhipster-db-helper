@@ -19,6 +19,7 @@
         },
         {
             "relationshipName": "entityD",
+            "dbhJunctionTable": "table_a_table_d",
             "dbhRelationshipId": "table_d_fk",
             "dbhRelationshipIdOtherEntity": "table_a_fk",
             "otherEntityName": "entityD",
@@ -29,6 +30,7 @@
         },
         {
             "relationshipName": "entityE",
+            "dbhJunctionTable": "table_a_table_e",
             "dbhRelationshipId": "table_e_fk",
             "dbhRelationshipIdOtherEntity": "table_a_fk",
             "otherEntityName": "entityE",
