@@ -157,7 +157,6 @@ function askForRelationshipsId() {
 function askForRelationshipId(done) {
     const validateColumnName = dbh.validateColumnName;
     const validateTableName = dbh.validateTableName;
-    const defaultAnswer = this.relationship.dbhRelationshipId || `${dbh.getPluralColumnIdName(this.relationship.relationshipName)}`;
 
     const prompts = [
         {
@@ -168,7 +167,7 @@ function askForRelationshipId(done) {
                 return validateColumnName(input, prodDatabaseType);
             }),
             message: `What column name do you want for the relationship "${this.relationship.relationshipName}" ?`,
-            default: defaultAnswer
+            default: this.relationship.dbhRelationshipId || `${dbh.getPluralColumnIdName(this.relationship.relationshipName)}`
         }
     ];
 
@@ -192,7 +191,7 @@ function askForRelationshipId(done) {
                 return validateTableName(input, prodDatabaseType);
             }),
             message: `What junction table name do you want for the relationship "${this.relationship.relationshipName}" ?`,
-            default: `${this.getJoinTableName(this.entityClass, this.relationship.relationshipName, this.jhipsterAppConfig.prodDatabaseType)}`
+            default: this.relationship.dbhJunctionTable || `${this.getJoinTableName(this.entityClass, this.relationship.relationshipName, this.jhipsterAppConfig.prodDatabaseType)}`
         });
     }
 

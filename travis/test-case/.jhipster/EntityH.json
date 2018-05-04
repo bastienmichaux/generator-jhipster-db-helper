@@ -3,6 +3,7 @@
     "relationships": [
         {
             "relationshipName": "entityA",
+            "dbhJunctionTable": "table_h_table_a",
             "dbhRelationshipId": "table_a_fk",
             "dbhRelationshipIdOtherEntity": "table_h_fk",
             "otherEntityName": "entityA",
