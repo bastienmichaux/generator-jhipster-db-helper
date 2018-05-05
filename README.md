@@ -5,8 +5,8 @@
 This is a [JHipster](http://jhipster.github.io/) module, meant to be used in a JHipster application.
 
 JHipster was created with the purpose to generate pristine new applications.
-It enforces conventions which make it hard to use it with messy existing databases.
-However some of us still want create to JHipster applications with such databases.
+It enforces conventions which makes it hard to use it with messy existing databases.
+However some of us still want create a JHipster applications with such databases.
 `generator-jhipster-db-helper` makes it easy.
 
 ## Usage
@@ -29,7 +29,7 @@ Our module do all the necessary modifications (see below some of them)
 
 4. Profit
 
-Check [this application][demo-app] to see all the modifications our module do or check our [notes](whatAndWhy.md) for details.
+Check [this application][demo-app] to see all the modifications our module do.
 
 ## Installation
 
@@ -57,15 +57,15 @@ To update this module: `npm update -g generator-jhipster-db-helper`
 
 Upon running the main generator, it changes the naming convention to a more flexible one, registers itself as a post app hook and registers the 'fix-entity' sub-generator as a post-entity hook.
 
-When you create or regenerate an entity, the sub-generator `fix-entity` will after `jhipster:entity` has finished running.
-It receives information from `jhipster:entity` and uses it to find out what must modified.
+When you create or regenerate an entity, the sub-generator `fix-entity` will run after `jhipster:entity` has finished running.
+It receives information from `jhipster:entity` and uses it to find out what must be modified.
 
 It asks the user what values it must use as replacements for the entity and liquibase files with.
 It offers jhipster default values or user previous values if any as default answers.
 
 It then match correspond values and replaces them with user input using regexes.
 
-It stores your answer in the entity configuration file (`.jhipster/Entity.json`) and makes the necessary replacements in both ORM and changelog files.
+It stores your answer in the entity configuration file `.jhipster/Entity.json` and makes the necessary replacements in both ORM and changelog files.
 
 ## Contributing
 
