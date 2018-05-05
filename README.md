@@ -2,114 +2,34 @@
 
 [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url] [![Join the chat at https://gitter.im/generator-jhipster-db-helper/Lobby][gitter-img]][gitter-url]
 
-This JHipster module makes mapping on an existing database easier.
-If you're not aware of the difficulties of using an existing database with JHipster, read [this](whatAndWhy.md)
-
-## quick start
-
-**Step one** : Answer questions after creating or regenerating an entity
-
-![the questions this module will ask for a given entity 'Book'][demo-picture]
-
-**Step two** : Let our module do all the necessary modifications (see here some of them)
-
-![the modifications this module will do in the JPA file for a given entity][demo-jpa-picture]
-
-**Step three** : Profit
-
-Check [this application][demo-app] to see all the modifications our module do or check our [notes](whatAndWhy.md) for details.
-
-## New feature or supporting a new set up
-
-We've made as easy as possible to contribute to our project, come and join the fun !
-
-To contribute to this project, please read [the contributing section](#contributing).
-
-## Introduction
-
 This is a [JHipster](http://jhipster.github.io/) module, meant to be used in a JHipster application.
 
-It enables the user to input values corresponding to its existing database and inject them at the right places in the
- pertinent files automatically.
-Without this module, you would have to modify each value by hand.
-Count all your tables and your fields, sum everything, multiply by 2 or more (depending on the relationships) and this is
- the number of modifications this module will spare you.
+JHipster was created with the purpose to generate pristine new applications.
+It enforces conventions which make it hard to use it with messy existing databases.
+However some of us still want create to JHipster applications with such databases.
+`generator-jhipster-db-helper` makes it easy.
 
 ## Usage
 
-Generate an application with `yo jhipster`, run our module with `yo jhipster-db-helper` and you're done.
-Our module will run as a post app/entity hook and you'll have to answer its questions.
+1. Install our module from JHipster Marketplace or using your favourite package manager.
 
-Furthermore, you can use the option `--force` from Entity generator when generating an entity, provided that you have
- a configuration file including our module fields for this entity.
-Our module will interpret the option and look for values into the corresponding entity configuration file rather than
- from user input.
+`yarn add generator-jhipster-db-helper`
 
-So the following will work :
+2. Run the main generator on your already created JHipster application.
 
-```shell
-$ cat .jhipster/Developer.json
-```
+`yo generator-jhipster-db-helper`
 
-```json
-{
-    "fluentMethods": true,
-    "relationships": [
-        {
-            "relationshipName": "beverage",
-            "dbhRelationshipId": "beverage_id",
-            "otherEntityName": "beverage",
-            "relationshipType": "many-to-one",
-            "otherEntityField": "name"
-        },
-        {
-            "relationshipName": "bug",
-            "dbhRelationshipId": "bugs_id",
-            "otherEntityName": "bug",
-            "relationshipType": "many-to-many",
-            "otherEntityField": "analysis",
-            "ownerSide": true,
-            "otherEntityRelationshipName": "developer"
-        },
-        {
-            "relationshipName": "mug",
-            "otherEntityName": "mug",
-            "relationshipType": "one-to-one",
-            "ownerSide": false,
-            "otherEntityRelationshipName": "developer"
-        }
-    ],
-    "fields": [
-        {
-            "fieldName": "firstname",
-            "dbhColumnName": "DB_Firstname",
-            "fieldType": "String"
-        },
-        {
-            "fieldName": "lastname",
-            "dbhColumnName": "DB_Lastname",
-            "fieldType": "String"
-        },
-        {
-            "fieldName": "birthdate",
-            "dbhColumnName": "DB_Birthdate",
-            "fieldType": "LocalDate"
-        }
-    ],
-    "changelogDate": "20170619101554",
-    "dto": "no",
-    "service": "no",
-    "entityTableName": "DB_Developer",
-    "pagination": "no",
-    "dbhIdName": "DB_ID"
-}
-```
+3. Answer our module's questions after creating or regenerating an entity
 
-```shell
-$ yo jhipster:entity Developer --force
-```
+![dbh-1 1 0-demo-questions][dbh-1 1 0-demo-questions]
 
-Don't mind the field `"dbhRelationshipId"`. It's there so we can successfully match some values after regeneration.
+Our module do all the necessary modifications (see below some of them)
+
+![dbh-1 1 0-demo-entity-git-diff][dbh-1 1 0-demo-entity-git-diff]
+
+4. Profit
+
+Check [this application][demo-app] to see all the modifications our module do or check our [notes](whatAndWhy.md) for details.
 
 ## Installation
 
@@ -133,68 +53,66 @@ To install this module: `npm install -g generator-jhipster-db-helper`
 
 To update this module: `npm update -g generator-jhipster-db-helper`
 
-## What this module does
+## How this module works
 
-In a new app, run `yo jhipster-db-helper`.
+Upon running the main generator, it changes the naming convention to a more flexible one, registers itself as a post app hook and registers the 'fix-entity' sub-generator as a post-entity hook.
 
-This changes the naming convention to a more flexible one, registers itself as a post app hook and registers a 'fix-entity' sub-generator as a post-entity hook.
+When you create or regenerate an entity, the sub-generator `fix-entity` will after `jhipster:entity` has finished running.
+It receives information from `jhipster:entity` and uses it to find out what must modified.
 
-After creating or regenerating an entity (`yo jhipster:entity MyEntity`), there will be two more questions :
+It asks the user what values it must use as replacements for the entity and liquibase files with.
+It offers jhipster default values or user previous values if any as default answers.
 
-* What is the table name for this entity ? (default)
-* What column name do you want for the field "fieldName" ? (default)
+It then match correspond values and replaces them with user input using regexes.
 
-The former is asked once, the latter once for each field.
 It stores your answer in the entity configuration file (`.jhipster/Entity.json`) and makes the necessary replacements in both ORM and changelog files.
 
-**Planned features** :
+## Contributing
 
-* Import your database schema into JHipster.
-At the moment, you must create each entity yourself.
-We plan to make the module able to import a database and create all entities itself, with correct table and column names of course.
+### Development
 
-## Contributing <a id="contributing"></a>
+1. Set up your local copy
+	1. Fork this module
+	2. Clone your fork on your working machine
+	3. Install dependencies by running `yarn`
+	4. Create a branch from master (see section Branching below)
+	5. Develop new stuff
+2. Use your local copy
+	1. Register your local copy by running `yarn link` inside your clone directory
+	2. Create an application to test your modifications
+	3. Link the application with your local copy by running `yarn link generator-jhipster-db-helper` inside your application directory
+	4. Use the module (see section Usage above)
 
-### Using your local version
+You can edit your local repository and test the changes in the application directly.
+There is no need to rebuild the app.
 
-Create your local working copy :
-
-* Fork this module and create your local branch
-* In the module folder, `yarn link`
-* In an another, empty folder : `yo jhipster`
-* In the new app folder **and for each new app** :
-  * `yarn link generator-jhipster-db-helper`
-  * `yo jhipster-db-helper`
-
-You can edit your local repository and test the changes in the app. No need to rebuild the app.
+An **easy way** to get an application with many entities and all relationship types is to:
+1. Copy the whole `travis` directory.
+2. Edit the script `run-test-case.sh` to modify `JHIPSTER_VERSION` variable.
+3. Run the script from the `travis` directory, not the `test-case` directory.
+4. The application will be created inside the `test-case`
 
 ### Branching
 
-We work from the `dev` branch, **not** master.
-
-When submitting, please do so from a new branch, not the master or dev one.
+When submitting changes, please do so from a new branch, **not the master branch**.
 Please name your branch according these rules : 
-* descriptive name : `fork` is bad, `bugfix/entity-name-validation` si good.
-* all lowercase
+* descriptive name : `fork` is bad, `bugfix/entity-name-validation` is good.
+* all characters must be lowercase
 * use dash `-` as a word separator.
 * use a prefix to describe the branch's type :
-    * `feature/` : New thing
-    * `bugfix/` : Repairing something that wasn't working correctly
-    * `fix/` : Improving something without modifying its behaviour
+    * `feature/` : New thing or improvement
+    * `bugfix/xx-` : Repairing something that wasn't working correctly
+    	* replace xx with the number of the issue. Always open an issue about discovered bugs.
     
 ### Integration testing
     
 We use Travis CI for integration testing.
 If you want our module to support another type of database, another application configuration or another set up
- of entities, the first thing you should do is adding your test case.
+ of entities, the first thing you should do is adding your test case to the travis build.
  
-We've set up conventions and helper scripts.
-You **don't even need to know our conventions** if you use our scripts.
-Please, go [check it out][travis-doc].
-    
 ### General guidelines
     
-We also use the same guidelines as `jhipster/generator-jhipster`, if you don't know it, please read [this](CONTRIBUTING.md).
+We aligned ourselves on the guidelines of `jhipster/generator-jhipster`, if you don't know them, please read [them][contributing-guidelines].
 
 ## Contact
 
@@ -215,8 +133,9 @@ Adrien Horgnies & Bastien Michaux
 [gitter-url]: https://gitter.im/generator-jhipster-db-helper/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
 [gitter-img]: https://badges.gitter.im/generator-jhipster-db-helper/Lobby.svg
 
-[demo-picture]:https://cloud.githubusercontent.com/assets/7291317/25616627/40ffe10a-2f3e-11e7-832e-b04ec645a48c.png
-[demo-JPA-picture]:https://cloud.githubusercontent.com/assets/7291317/25616642/53d92f7a-2f3e-11e7-9794-a4d7131ad8a9.png
 [demo-app]:https://github.com/AdrienHorgnies/jhipster-with-db-helper/compare/0cd0d00...141151f
+[dbh-1 1 0-demo-questions]:https://user-images.githubusercontent.com/7291317/39645987-40128d16-4fda-11e8-85b4-6e9dc35a7605.png
+[dbh-1 1 0-demo-entity-git-diff]:https://user-images.githubusercontent.com/7291317/39645986-3fe97e08-4fda-11e8-93db-164c909d8fe3.png
 
-[travis-doc]:travis/travis-readme.md
+[contributing-guidelines]:https://github.com/jhipster/generator-jhipster/blob/master/CONTRIBUTING.md
+
