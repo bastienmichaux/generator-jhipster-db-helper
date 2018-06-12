@@ -133,7 +133,7 @@ Adrien Horgnies & Bastien Michaux
 [gitter-url]: https://gitter.im/generator-jhipster-db-helper/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
 [gitter-img]: https://badges.gitter.im/generator-jhipster-db-helper/Lobby.svg
 
-[demo-app]:https://github.com/AdrienHorgnies/jhipster-with-db-helper/compare/0cd0d00...141151f
+[demo-app]:https://github.com/AdrienHorgnies/jhipster-with-db-helper/compare/55226ac5f171d0844b933938fd147d68b59a3d4a...d7028c327b01b5e4e821a3843fb5a419ffa7ac4e
 [dbh-1 1 0-demo-questions]:https://user-images.githubusercontent.com/7291317/39645987-40128d16-4fda-11e8-85b4-6e9dc35a7605.png
 [dbh-1 1 0-demo-entity-git-diff]:https://user-images.githubusercontent.com/7291317/39645986-3fe97e08-4fda-11e8-93db-164c909d8fe3.png
 
