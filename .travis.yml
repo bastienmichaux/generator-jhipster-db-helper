@@ -2,7 +2,7 @@ os:
     - linux
 language: node_js
 node_js:
-    - "8.9.1"
+    - "8.15.1"
 jdk:
     - oraclejdk8
 addons:
