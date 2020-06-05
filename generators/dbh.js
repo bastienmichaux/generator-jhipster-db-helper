@@ -1,7 +1,7 @@
 const DBH_CONSTANTS = require('./dbh-constants');
 const jhipsterConstants = require('generator-jhipster/generators/generator-constants.js');
 const jhipsterCore = require('jhipster-core');
-const jhipsterModuleSubgenerator = require('generator-jhipster/generators/generator-base.js');
+const jhipsterModuleSubgenerator = require('generator-jhipster/generators/entity/index.js');
 const pluralize = require('pluralize');
 const fs = require('fs');
 
