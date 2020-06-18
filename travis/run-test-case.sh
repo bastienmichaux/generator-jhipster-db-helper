@@ -5,19 +5,19 @@ set -ev
 
 cd "$JHIPSTER_TRAVIS"/test-case
 
-yarn global add generator-jhipster@"$JHIPSTER_VERSION"
+yarn add generator-jhipster@"$JHIPSTER_VERSION"
 yarn link generator-jhipster-db-helper
 
-jhipster --force --no-insight
-jhipster-db-helper --force
+yo jhipster --force --no-insight
+yo jhipster-db-helper --force
 
-jhipster:entity EntityA --force
-jhipster:entity EntityB --force
-jhipster:entity EntityC --force
-jhipster:entity EntityD --force
-jhipster:entity EntityE --force
-jhipster:entity EntityF --force
-jhipster:entity EntityG --force
-jhipster:entity EntityH --force
+yo jhipster:entity EntityA --force
+yo jhipster:entity EntityB --force
+yo jhipster:entity EntityC --force
+yo jhipster:entity EntityD --force
+yo jhipster:entity EntityE --force
+yo jhipster:entity EntityF --force
+yo jhipster:entity EntityG --force
+yo jhipster:entity EntityH --force
 
 mvn test
