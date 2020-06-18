@@ -12,7 +12,7 @@ cache:
         - $HOME/.m2
 env:
     matrix:
-        - JHIPSTER_VERSION=6.0.0
+        - JHIPSTER_VERSION=6.9.1
         - JHIPSTER_VERSION=latest
     global:
         - JHIPSTER_TRAVIS=$TRAVIS_BUILD_DIR/travis
@@ -25,7 +25,6 @@ install:
 before_script:
     - rm -r test
 script:
-    - jdk_switcher use oraclejdk8
     - $JHIPSTER_TRAVIS/run-test-case.sh
 notifications:
     email: false
