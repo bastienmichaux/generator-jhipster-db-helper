@@ -1,12 +1,12 @@
-const chalk = require("chalk");
-const fs = require("fs");
-const path = require("path");
+const chalk = require('chalk');
+const fs = require('fs');
+const path = require('path');
 
-const semver = require("semver");
-const BaseGenerator = require("generator-jhipster/generators/generator-base");
-const dbh = require("../dbh.js");
-const DBH_CONSTANTS = require("../dbh-constants");
-const packagejs = require("../../package.json");
+const semver = require('semver');
+const BaseGenerator = require('generator-jhipster/generators/generator-base');
+const dbh = require('../dbh.js');
+const DBH_CONSTANTS = require('../dbh-constants');
+const packagejs = require('../../package.json');
 
 module.exports = class extends BaseGenerator {
     get initializing() {
@@ -17,10 +17,10 @@ module.exports = class extends BaseGenerator {
                  * The passed string argument references constants.
                  * those constants can be found in dbh-constants.js.
                  */
-                this.option("dbhTestCase", {
-                    desc: "Test case for this module's npm test",
+                this.option('dbhTestCase', {
+                    desc: 'Test case for this module\'s npm test',
                     type: String,
-                    defaults: ""
+                    defaults: ''
                 });
 
                 this.dbhTestCase = this.options.dbhTestCase;
@@ -28,7 +28,7 @@ module.exports = class extends BaseGenerator {
             readConfig() {
                 this.jhipsterAppConfig = this.getAllJhipsterConfig();
                 if (!this.jhipsterAppConfig) {
-                    this.error("Can't read .yo-rc.json");
+                    this.error('Can\'t read .yo-rc.json');
                 }
             },
             displayLogo() {
@@ -39,15 +39,14 @@ module.exports = class extends BaseGenerator {
                 // Have Yeoman greet the user.
                 this.log(
                     `\nWelcome to the ${chalk.bold.yellow(
-                        "JHipster db-helper"
+                        'JHipster db-helper'
                     )} generator! ${chalk.yellow(`v${packagejs.version}\n`)}`
                 );
             },
             checkJhipster() {
                 const currentJhipsterVersion = this.jhipsterAppConfig
                     .jhipsterVersion;
-                const minimumJhipsterVersion =
-                    packagejs.dependencies["generator-jhipster"];
+                const minimumJhipsterVersion = packagejs.dependencies['generator-jhipster'];
                 if (
                     !semver.satisfies(
                         currentJhipsterVersion,
@@ -71,19 +70,19 @@ module.exports = class extends BaseGenerator {
     _getConfigFilePath(testCase) {
         let filePath = null;
 
-        if (typeof testCase !== "string") {
+        if (typeof testCase !== 'string') {
             throw new TypeError(
                 `_getConfigFilePath: testCase parameter: expected type 'string', was instead '${typeof testCase}'`
             );
         }
 
         // set filePath depending on whether the generator is running a test case or not
-        if (testCase === "") {
-            filePath = path.join(process.cwd(), "/.yo-rc.json");
+        if (testCase === '') {
+            filePath = path.join(process.cwd(), '/.yo-rc.json');
         } else if (DBH_CONSTANTS.testCases[testCase] !== undefined) {
             filePath = path.join(
                 __dirname,
-                "..",
+                '..',
                 DBH_CONSTANTS.testConfigFiles[testCase]
             );
         } else {
@@ -119,7 +118,7 @@ module.exports = class extends BaseGenerator {
         const files = dbh.getFilesWithNamingStrategy(appBuildTool);
 
         // check that each file exists, then replace the naming strategies
-        files.forEach(file => {
+        files.forEach((file) => {
             if (fs.existsSync(file)) {
                 // 1) replace Spring physical naming strategy
                 this.replaceContent(file, physicalOld, physicalNew, null);
@@ -141,7 +140,7 @@ module.exports = class extends BaseGenerator {
         const prompts = [];
 
         // call the prompts
-        this.prompt(prompts).then(props => {
+        this.prompt(prompts).then((props) => {
             this.props = props;
             // To access props later use this.props.someOption;
             done();
@@ -168,32 +167,32 @@ module.exports = class extends BaseGenerator {
 
         try {
             this.registerModule(
-                "generator-jhipster-db-helper",
-                "app",
-                "post",
-                "app",
-                "A JHipster module for already existing databases"
+                'generator-jhipster-db-helper',
+                'app',
+                'post',
+                'app',
+                'A JHipster module for already existing databases'
             );
         } catch (err) {
             this.log(
                 `${chalk.red.bold(
-                    "WARN!"
+                    'WARN!'
                 )} Could not register as a jhipster entity post creation hook...\n`
             );
         }
 
         try {
             this.registerModule(
-                "generator-jhipster-db-helper",
-                "entity",
-                "post",
-                "fix-entity",
-                "A JHipster module to circumvent JHipster limitations about names"
+                'generator-jhipster-db-helper',
+                'entity',
+                'post',
+                'fix-entity',
+                'A JHipster module to circumvent JHipster limitations about names'
             );
         } catch (err) {
             this.log(
                 `${chalk.red.bold(
-                    "WARN!"
+                    'WARN!'
                 )} Could not register as a jhipster entity post creation hook...\n`
             );
         }
@@ -205,25 +204,25 @@ module.exports = class extends BaseGenerator {
             `${this.clientPackageManager} install`
         )}`;
 
-        if (this.clientFramework === "angular1") {
+        if (this.clientFramework === 'angular1') {
             logMsg = `To install your dependencies manually, run: ${chalk.yellow.bold(
                 `${this.clientPackageManager} install & bower install`
             )}`;
         }
 
-        const injectDependenciesAndConstants = err => {
+        const injectDependenciesAndConstants = (err) => {
             if (err) {
-                this.log("Install of dependencies failed!");
+                this.log('Install of dependencies failed!');
                 this.log(logMsg);
-            } else if (this.clientFramework === "angular1") {
-                this.spawnCommand("gulp", ["install"]);
+            } else if (this.clientFramework === 'angular1') {
+                this.spawnCommand('gulp', ['install']);
             }
         };
 
         const installConfig = {
-            bower: this.clientFramework === "angular1",
-            npm: this.clientPackageManager !== "yarn",
-            yarn: this.clientPackageManager === "yarn",
+            bower: this.clientFramework === 'angular1',
+            npm: this.clientPackageManager !== 'yarn',
+            yarn: this.clientPackageManager === 'yarn',
             callback: injectDependenciesAndConstants
         };
 
@@ -232,6 +231,6 @@ module.exports = class extends BaseGenerator {
 
     // cleanup, say goodbye
     end() {
-        this.log(chalk.bold.yellow("End of db-helper generator"));
+        this.log(chalk.bold.yellow('End of db-helper generator'));
     }
 };

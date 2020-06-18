@@ -1,10 +1,10 @@
-const chalk = require("chalk");
-const fs = require("fs");
+const chalk = require('chalk');
+const fs = require('fs');
 
-const BaseGenerator = require("generator-jhipster/generators/generator-base");
-const jhipsterConstants = require("generator-jhipster/generators/generator-constants");
-const dbh = require("../dbh.js");
-const prompts = require("./prompts.js");
+const BaseGenerator = require('generator-jhipster/generators/generator-base');
+const jhipsterConstants = require('generator-jhipster/generators/generator-constants');
+const dbh = require('../dbh.js');
+const prompts = require('./prompts.js');
 
 module.exports = class extends BaseGenerator {
     get initializing() {
@@ -13,17 +13,17 @@ module.exports = class extends BaseGenerator {
                 // Option used to make unit tests in temporary directories instead of the current directory.
                 // The passed string argument references constants,
                 // those constants can be found in test/test-constants.js.
-                this.option("dbhTestCase", {
-                    desc: "Test case for this module's npm test",
+                this.option('dbhTestCase', {
+                    desc: 'Test case for this module\'s npm test',
                     type: String,
-                    defaults: ""
+                    defaults: ''
                 });
             },
             readConfig() {
                 this.entityConfig = this.options.entityConfig;
                 this.jhipsterAppConfig = this.getAllJhipsterConfig();
                 if (!this.jhipsterAppConfig) {
-                    this.error("Can't read .yo-rc.json");
+                    this.error('Can\'t read .yo-rc.json');
                 }
 
                 this.dbhTestCase = this.options.dbhTestCase;
@@ -31,7 +31,7 @@ module.exports = class extends BaseGenerator {
                 // All information from entity generator
                 this.entityTableName = this.entityConfig.entityTableName;
                 this.entityClass = this.entityConfig.entityClass;
-                this.dbhIdName = this.entityConfig.data.dbhIdName || "id";
+                this.dbhIdName = this.entityConfig.data.dbhIdName || 'id';
                 this.fields = this.entityConfig.data.fields;
                 this.relationships = this.entityConfig.data.relationships;
 
@@ -80,8 +80,8 @@ module.exports = class extends BaseGenerator {
         this.packageFolder = this.jhipsterAppConfig.packageFolder;
 
         // use constants from generator-constants.js
-        const javaDir = `${jhipsterConstants.SERVER_MAIN_SRC_DIR +
-            this.packageFolder}/`;
+        const javaDir = `${jhipsterConstants.SERVER_MAIN_SRC_DIR
+            + this.packageFolder}/`;
         const resourceDir = jhipsterConstants.SERVER_MAIN_RES_DIR;
 
         /**
@@ -89,19 +89,18 @@ module.exports = class extends BaseGenerator {
          *
          * @param type is either 'entity' or 'entity_constraints'
          */
-        const getLiquibaseFile = type =>
-            `${resourceDir}config/liquibase/changelog/${this.entityConfig.data.changelogDate}_added_${type}_${this.entityConfig.entityClass}.xml`;
+        const getLiquibaseFile = (type) => `${resourceDir}config/liquibase/changelog/${this.entityConfig.data.changelogDate}_added_${type}_${this.entityConfig.entityClass}.xml`;
 
         const files = {
             config: this.entityConfig.filename,
             ORM: `${javaDir}domain/${this.entityConfig.entityClass}.java`,
-            liquibaseEntity: getLiquibaseFile("entity")
+            liquibaseEntity: getLiquibaseFile('entity')
         };
 
         const filesArr = Object.keys(files);
 
         if (dbh.hasConstraints(this.relationships)) {
-            files.liquibaseConstraints = getLiquibaseFile("entity_constraints");
+            files.liquibaseConstraints = getLiquibaseFile('entity_constraints');
         }
 
         // @todo it would be nice to move this procedure to dbh.js but it will loose access to jhipsterFunc
@@ -135,7 +134,7 @@ module.exports = class extends BaseGenerator {
         const replaceTableName = (paramFiles, newValue) => {
             this.updateEntityConfig(
                 paramFiles.config,
-                "entityTableName",
+                'entityTableName',
                 newValue
             );
 
@@ -153,7 +152,7 @@ module.exports = class extends BaseGenerator {
         };
 
         const replaceIdName = (paramFiles, newValue) => {
-            this.updateEntityConfig(paramFiles.config, "dbhIdName", newValue);
+            this.updateEntityConfig(paramFiles.config, 'dbhIdName', newValue);
 
             /**
              * - (@Column\\(.*\\))? is there to remove any previous @Column tag
@@ -162,7 +161,7 @@ module.exports = class extends BaseGenerator {
              */
             this.replaceContent(
                 paramFiles.ORM,
-                "(@Column\\(.*\\))?(\\s*)(private Long id;)",
+                '(@Column\\(.*\\))?(\\s*)(private Long id;)',
                 `$2@Column(name = "${newValue}")$2$3`,
                 true
             );
@@ -184,7 +183,7 @@ module.exports = class extends BaseGenerator {
         };
 
         // verify files exist
-        filesArr.forEach(file => {
+        filesArr.forEach((file) => {
             if (!fs.existsSync(files[file])) {
                 throw new Error(
                     `JHipster-db-helper : File not found (${file}: ${files[file]}).`
@@ -198,14 +197,13 @@ module.exports = class extends BaseGenerator {
         replaceIdName(files, this.idNameInput);
 
         // Add/Change/Keep dbhColumnName for each field
-        this.columnsInput.forEach(columnItem => {
+        this.columnsInput.forEach((columnItem) => {
             const oldValue = columnItem.dbhColumnName;
-            const newValue =
-                columnItem.columnNameInput || columnItem.dbhColumnName;
+            const newValue = columnItem.columnNameInput || columnItem.dbhColumnName;
 
             updateKey(
                 `"fieldName": "${columnItem.fieldName}"`,
-                "dbhColumnName",
+                'dbhColumnName',
                 oldValue,
                 newValue
             );
@@ -236,14 +234,14 @@ module.exports = class extends BaseGenerator {
          * But as using this module means you don't respect the convention, these guesses won't be correct and we must guess the values ourselves.
          */
         // Add/Change/Keep dbhRelationshipId
-        this.relationshipsInput.forEach(relationshipItem => {
+        this.relationshipsInput.forEach((relationshipItem) => {
             // We don't need to do anything about relationships which don't add any constraint.
             if (
-                relationshipItem.relationshipType === "one-to-many" ||
-                (relationshipItem.relationshipType === "one-to-one" &&
-                    !relationshipItem.ownerSide) ||
-                (relationshipItem.relationshipType === "many-to-many" &&
-                    !relationshipItem.ownerSide)
+                relationshipItem.relationshipType === 'one-to-many'
+                || (relationshipItem.relationshipType === 'one-to-one'
+                    && !relationshipItem.ownerSide)
+                || (relationshipItem.relationshipType === 'many-to-many'
+                    && !relationshipItem.ownerSide)
             ) {
                 return;
             }
@@ -251,22 +249,21 @@ module.exports = class extends BaseGenerator {
             const otherEntity = JSON.parse(
                 fs.readFileSync(
                     `${this.entityConfig.jhipsterConfigDirectory}/${relationshipItem.otherEntityNameCapitalized}.json`,
-                    "utf8"
+                    'utf8'
                 )
             );
-            const otherEntityIdName = otherEntity.dbhIdName || "id";
+            const otherEntityIdName = otherEntity.dbhIdName || 'id';
             const oldValue = relationshipItem.dbhRelationshipId;
 
             let columnName = null;
-            const newValue =
-                relationshipItem.relationshipIdInput ||
-                relationshipItem.dbhRelationshipId ||
-                `${relationshipItem.relationshipName}_id`;
+            const newValue = relationshipItem.relationshipIdInput
+                || relationshipItem.dbhRelationshipId
+                || `${relationshipItem.relationshipName}_id`;
 
             if (
-                relationshipItem.relationshipType === "many-to-one" ||
-                (relationshipItem.relationshipType === "one-to-one" &&
-                    relationshipItem.ownerSide)
+                relationshipItem.relationshipType === 'many-to-one'
+                || (relationshipItem.relationshipType === 'one-to-one'
+                    && relationshipItem.ownerSide)
             ) {
                 columnName = dbh.getColumnIdName(
                     relationshipItem.relationshipName
@@ -284,7 +281,7 @@ module.exports = class extends BaseGenerator {
                     true
                 );
 
-                if (relationshipItem.relationshipType === "many-to-one") {
+                if (relationshipItem.relationshipType === 'many-to-one') {
                     /**
                      * (@JoinColumn.*\\))? any previous is deleted if existing
                      * (\\s*) catch indentation
@@ -305,8 +302,8 @@ module.exports = class extends BaseGenerator {
                     );
                 }
             } else if (
-                relationshipItem.relationshipType === "many-to-many" &&
-                relationshipItem.ownerSide
+                relationshipItem.relationshipType === 'many-to-many'
+                && relationshipItem.ownerSide
             ) {
                 columnName = dbh.getPluralColumnIdName(
                     relationshipItem.relationshipName
@@ -315,12 +312,10 @@ module.exports = class extends BaseGenerator {
                 const otherEntityColumnName = dbh.getPluralColumnIdName(
                     relationshipItem.otherEntityRelationshipName
                 );
-                const otherEntityOldValue =
-                    relationshipItem.dbhRelationshipIdOtherEntity;
-                const otherEntityNewValue =
-                    relationshipItem.otherEntityRelationshipIdInput ||
-                    otherEntityOldValue ||
-                    otherEntityColumnName;
+                const otherEntityOldValue = relationshipItem.dbhRelationshipIdOtherEntity;
+                const otherEntityNewValue = relationshipItem.otherEntityRelationshipIdInput
+                    || otherEntityOldValue
+                    || otherEntityColumnName;
 
                 const junctionTableJhipster = this.getJoinTableName(
                     this.entityClass,
@@ -328,10 +323,9 @@ module.exports = class extends BaseGenerator {
                     this.jhipsterAppConfig.prodDatabaseType
                 );
                 const junctionTableOldValue = relationshipItem.dbhJunctionTable;
-                const junctionTableNewValue =
-                    relationshipItem.junctionTableInput ||
-                    junctionTableOldValue ||
-                    junctionTableJhipster;
+                const junctionTableNewValue = relationshipItem.junctionTableInput
+                    || junctionTableOldValue
+                    || junctionTableJhipster;
 
                 this.replaceContent(
                     files.liquibaseEntity,
@@ -378,7 +372,7 @@ module.exports = class extends BaseGenerator {
                 this.replaceContent(
                     files.ORM,
                     `(inverseJoinColumns = @JoinColumn\\(name="${newValue}", referencedColumnName=")(id|${otherEntity.dbhIdName})`,
-                    `$1${otherEntity.dbhIdName || "id"}`,
+                    `$1${otherEntity.dbhIdName || 'id'}`,
                     true
                 );
                 this.replaceContent(
@@ -414,13 +408,13 @@ module.exports = class extends BaseGenerator {
 
                 updateKey(
                     `"relationshipName": "${relationshipItem.relationshipName}"`,
-                    "dbhJunctionTable",
+                    'dbhJunctionTable',
                     junctionTableOldValue,
                     junctionTableNewValue
                 );
                 updateKey(
                     `"relationshipName": "${relationshipItem.relationshipName}"`,
-                    "dbhRelationshipIdOtherEntity",
+                    'dbhRelationshipIdOtherEntity',
                     otherEntityOldValue,
                     otherEntityNewValue
                 );
@@ -428,7 +422,7 @@ module.exports = class extends BaseGenerator {
 
             updateKey(
                 `"relationshipName": "${relationshipItem.relationshipName}"`,
-                "dbhRelationshipId",
+                'dbhRelationshipId',
                 oldValue,
                 newValue
             );
@@ -450,6 +444,6 @@ module.exports = class extends BaseGenerator {
 
     // cleanup, say goodbye
     end() {
-        this.log(chalk.bold.yellow("End of fix-entity generator"));
+        this.log(chalk.bold.yellow('End of fix-entity generator'));
     }
 };

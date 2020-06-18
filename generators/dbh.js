@@ -1,45 +1,44 @@
-const fs = require("fs");
-const jhipsterConstants = require("generator-jhipster/generators/generator-constants.js");
-const jhipsterCore = require("jhipster-core");
-const jhipsterModuleSubgenerator = require("generator-jhipster/generators/entity/index.js");
-const pluralize = require("pluralize");
-const DBH_CONSTANTS = require("./dbh-constants");
+const fs = require('fs');
+const jhipsterConstants = require('generator-jhipster/generators/generator-constants.js');
+const jhipsterCore = require('jhipster-core');
+const jhipsterModuleSubgenerator = require('generator-jhipster/generators/entity/index.js');
+const pluralize = require('pluralize');
+const DBH_CONSTANTS = require('./dbh-constants');
 
 /**
  * return the missing property jhipsterVar.jhipsterConfig for unit tests
  * @param path : path to .yo-rc.json
  */
-const getAppConfig = configFilePath =>
-    new Promise((resolve, reject) => {
-        // if file exists, return it as a JSON object
-        if (fs.existsSync(configFilePath)) {
-            fs.readFile(configFilePath, "utf8", (err, data) => {
-                if (err) {
-                    reject(
-                        new Error(
-                            `getAppConfig: fs.readFile error.\nPath was ${configFilePath}\n${err}`
-                        )
-                    );
-                }
+const getAppConfig = (configFilePath) => new Promise((resolve, reject) => {
+    // if file exists, return it as a JSON object
+    if (fs.existsSync(configFilePath)) {
+        fs.readFile(configFilePath, 'utf8', (err, data) => {
+            if (err) {
+                reject(
+                    new Error(
+                        `getAppConfig: fs.readFile error.\nPath was ${configFilePath}\n${err}`
+                    )
+                );
+            }
 
-                // TODO : search if this statement should be in a try/catch or not
-                const appConfigToJson = JSON.parse(data);
+            // TODO : search if this statement should be in a try/catch or not
+            const appConfigToJson = JSON.parse(data);
 
-                // handle undefined object
-                if (appConfigToJson) {
-                    resolve(appConfigToJson);
-                } else {
-                    reject(
-                        new Error(
-                            `getAppConfig: output error.\nOutput type: ${typeof appConfigToJson}, value:\n${appConfigToJson}`
-                        )
-                    );
-                }
-            });
-        } else {
-            reject(new Error(`getAppConfig: file ${configFilePath} not found`));
-        }
-    });
+            // handle undefined object
+            if (appConfigToJson) {
+                resolve(appConfigToJson);
+            } else {
+                reject(
+                    new Error(
+                        `getAppConfig: output error.\nOutput type: ${typeof appConfigToJson}, value:\n${appConfigToJson}`
+                    )
+                );
+            }
+        });
+    } else {
+        reject(new Error(`getAppConfig: file ${configFilePath} not found`));
+    }
+});
 
 /**
  * Get a polyfill for the jhipsterVar and jhipsterFunc properties gone missing when testing
@@ -47,7 +46,7 @@ const getAppConfig = configFilePath =>
  *
  * @param {string} appConfigPath - path to the current .yo-rc.json application file
  */
-const postAppPolyfill = appConfigPath => {
+const postAppPolyfill = (appConfigPath) => {
     // stop if file not found
     if (!fs.existsSync(appConfigPath)) {
         throw new Error(`_getPolyfill: File ${appConfigPath} not found`);
@@ -55,8 +54,8 @@ const postAppPolyfill = appConfigPath => {
 
     // else return a promise holding the polyfill
     return getAppConfig(appConfigPath).then(
-        onResolve => {
-            const conf = onResolve["generator-jhipster"];
+        (onResolve) => {
+            const conf = onResolve['generator-jhipster'];
             const poly = {};
 
             // @todo: defensive programming with these properties (hasOwnProperty ? throw ?)
@@ -70,16 +69,14 @@ const postAppPolyfill = appConfigPath => {
             poly.buildTool = conf.buildTool;
 
             // jhipsterFunc polyfill :
-            poly.registerModule =
-                jhipsterModuleSubgenerator.prototype.registerModule;
-            poly.updateEntityConfig =
-                jhipsterModuleSubgenerator.prototype.updateEntityConfig;
+            poly.registerModule = jhipsterModuleSubgenerator.prototype.registerModule;
+            poly.updateEntityConfig = jhipsterModuleSubgenerator.prototype.updateEntityConfig;
 
             // @todo : handle this.options.testMode ?
 
             return poly;
         },
-        onError => {
+        (onError) => {
             throw new Error(onError);
         }
     );
@@ -91,7 +88,7 @@ const postAppPolyfill = appConfigPath => {
  *
  * @param {string} appConfigPath - path to the current .yo-rc.json application file
  */
-const postEntityPolyfill = appConfigPath => {
+const postEntityPolyfill = (appConfigPath) => {
     // stop if file not found
     if (!fs.existsSync(appConfigPath)) {
         throw new Error(`_getPolyfill: File ${appConfigPath} not found`);
@@ -99,23 +96,21 @@ const postEntityPolyfill = appConfigPath => {
 
     // else return a promise holding the polyfill
     return getAppConfig(appConfigPath).then(
-        onResolve => {
-            const conf = onResolve["generator-jhipster"];
+        (onResolve) => {
+            const conf = onResolve['generator-jhipster'];
             const poly = {};
 
             // jhipsterVar polyfill :
             poly.jhipsterConfig = conf;
-            poly.javaDir = `${jhipsterConstants.SERVER_MAIN_SRC_DIR +
-                conf.packageFolder}/`;
+            poly.javaDir = `${jhipsterConstants.SERVER_MAIN_SRC_DIR
+                + conf.packageFolder}/`;
             poly.resourceDir = jhipsterConstants.SERVER_MAIN_RES_DIR;
-            poly.replaceContent =
-                jhipsterModuleSubgenerator.prototype.replaceContent;
-            poly.updateEntityConfig =
-                jhipsterModuleSubgenerator.prototype.updateEntityConfig;
+            poly.replaceContent = jhipsterModuleSubgenerator.prototype.replaceContent;
+            poly.updateEntityConfig = jhipsterModuleSubgenerator.prototype.updateEntityConfig;
 
             return poly;
         },
-        onError => {
+        (onError) => {
             console.error(onError);
         }
     );
@@ -127,17 +122,17 @@ const postEntityPolyfill = appConfigPath => {
  * @param {string} value - table column name or table name string
  * @see org.springframework.boot.orm.jpa.hibernate.SpringNamingStrategy
  */
-const hibernateSnakeCase = value => {
-    let res = "";
+const hibernateSnakeCase = (value) => {
+    let res = '';
 
     if (value) {
-        value = value.replace(".", "_");
+        value = value.replace('.', '_');
         res = value[0];
         for (let i = 1, len = value.length - 1; i < len; i++) {
             if (
-                value[i - 1] !== value[i - 1].toUpperCase() &&
-                value[i] !== value[i].toLowerCase() &&
-                value[i + 1] !== value[i + 1].toUpperCase()
+                value[i - 1] !== value[i - 1].toUpperCase()
+                && value[i] !== value[i].toLowerCase()
+                && value[i + 1] !== value[i + 1].toUpperCase()
             ) {
                 res += `_${value[i]}`;
             } else {
@@ -152,19 +147,18 @@ const hibernateSnakeCase = value => {
 };
 
 /** Check that the build tool isn't unknown */
-const isValidBuildTool = buildTool =>
-    DBH_CONSTANTS.buildTools.includes(buildTool);
+const isValidBuildTool = (buildTool) => DBH_CONSTANTS.buildTools.includes(buildTool);
 
 // We need the two following functions to be able to find JHipster generated values and match them in a search and replace.
 /**
  * @param create a column id name from the relationship name
  */
-const getColumnIdName = name => `${hibernateSnakeCase(name)}_id`;
+const getColumnIdName = (name) => `${hibernateSnakeCase(name)}_id`;
 
 /**
  * @param create a column id name from the relationship name for a to-many relationship (either one-to-many or many-to-many)
  */
-const getPluralColumnIdName = name => getColumnIdName(pluralize(name));
+const getPluralColumnIdName = (name) => getColumnIdName(pluralize(name));
 
 /**
  * From the JHipster files where the original Spring naming strategies can be found,
@@ -174,7 +168,7 @@ const getPluralColumnIdName = name => getColumnIdName(pluralize(name));
  *
  * @returns The returned array holds the configuration files where references to the naming strategies can be found
  */
-const getFilesWithNamingStrategy = buildTool => {
+const getFilesWithNamingStrategy = (buildTool) => {
     // if build tool is valid, return the files with naming strategy,
     // including those specific to the application build tool
     const baseFiles = DBH_CONSTANTS.filesWithNamingStrategy.base;
@@ -194,7 +188,7 @@ const getFilesWithNamingStrategy = buildTool => {
  * @returns true if and only if it contains at least one relationship with a constraint, false otherwise
  * TODO complex condition could be rewritten as a function
  */
-const hasConstraints = relationships => {
+const hasConstraints = (relationships) => {
     if (!Array.isArray(relationships)) {
         throw new TypeError(
             `hasConstraints: 'relationships' parameter must be an array, was ${typeof relationships}`
@@ -203,13 +197,13 @@ const hasConstraints = relationships => {
 
     let res = false;
 
-    relationships.forEach(relationship => {
+    relationships.forEach((relationship) => {
         if (
-            relationship.relationshipType === "many-to-one" ||
-            (relationship.relationshipType === "one-to-one" &&
-                relationship.ownerSide) ||
-            (relationship.relationshipType === "many-to-many" &&
-                relationship.ownerSide)
+            relationship.relationshipType === 'many-to-one'
+            || (relationship.relationshipType === 'one-to-one'
+                && relationship.ownerSide)
+            || (relationship.relationshipType === 'many-to-many'
+                && relationship.ownerSide)
         ) {
             res = true;
         }
@@ -223,7 +217,7 @@ const hasConstraints = relationships => {
  *
  * Note : Currently unused, remove if no uses in the future
  */
-const isNotEmptyString = x => typeof x === "string" && x !== "";
+const isNotEmptyString = (x) => typeof x === 'string' && x !== '';
 
 /**
  * Duplicate of a JHipster function where we have replaced how the path is handled, because we use absolute paths
@@ -233,7 +227,7 @@ const replaceContent = (absolutePath, pattern, content, regex) => {
         throw new Error(`_replaceContent: file not found.\n${absolutePath}`);
     }
 
-    const re = regex ? new RegExp(pattern, "g") : pattern;
+    const re = regex ? new RegExp(pattern, 'g') : pattern;
     let body = fs.readFileSync(absolutePath);
     body = `${body}`;
     body = body.replace(re, content);
@@ -242,17 +236,17 @@ const replaceContent = (absolutePath, pattern, content, regex) => {
 
 /** Validate user input when asking for a SQL column name */
 const validateColumnName = (input, dbType) => {
-    if (input === "") {
-        return "Your column name cannot be empty";
+    if (input === '') {
+        return 'Your column name cannot be empty';
     }
     if (!/^([a-zA-Z0-9_]*)$/.test(input)) {
-        return "Your column name cannot contain special characters";
+        return 'Your column name cannot contain special characters';
     }
     if (
-        dbType === "oracle" &&
-        input.length > DBH_CONSTANTS.oracleLimitations.tableNameHardMaxLength
+        dbType === 'oracle'
+        && input.length > DBH_CONSTANTS.oracleLimitations.tableNameHardMaxLength
     ) {
-        return "Your column name is too long for Oracle, try a shorter name";
+        return 'Your column name is too long for Oracle, try a shorter name';
     }
 
     return true;
@@ -264,23 +258,23 @@ const validateColumnName = (input, dbType) => {
  * (in generator-jhipster/generators/entity/index.js)
  */
 const validateTableName = (input, dbType) => {
-    if (input === "") {
-        return "The table name cannot be empty";
+    if (input === '') {
+        return 'The table name cannot be empty';
     }
     if (!/^([a-zA-Z0-9_]*)$/.test(input)) {
-        return "The table name cannot contain special characters";
+        return 'The table name cannot contain special characters';
     }
     if (
-        dbType === "oracle" &&
-        input.length > DBH_CONSTANTS.oracleLimitations.tableNameHardMaxLength
+        dbType === 'oracle'
+        && input.length > DBH_CONSTANTS.oracleLimitations.tableNameHardMaxLength
     ) {
-        return "The table name is too long for Oracle, try a shorter name";
+        return 'The table name is too long for Oracle, try a shorter name';
     }
     if (
-        dbType === "oracle" &&
-        input.length > DBH_CONSTANTS.oracleLimitations.tableNameSoftMaxLength
+        dbType === 'oracle'
+        && input.length > DBH_CONSTANTS.oracleLimitations.tableNameSoftMaxLength
     ) {
-        return "The table name is long for Oracle, long table names can cause issues when used to create constraint names and join table names";
+        return 'The table name is long for Oracle, long table names can cause issues when used to create constraint names and join table names';
     }
     if (jhipsterCore.isReservedTableName(input, dbType)) {
         return `'${input}' is a ${dbType} reserved keyword.`;

@@ -1,5 +1,5 @@
-const chalk = require("chalk");
-const dbh = require("../dbh.js");
+const chalk = require('chalk');
+const dbh = require('../dbh.js');
 
 module.exports = {
     askForTableName,
@@ -21,17 +21,17 @@ function askForTableName() {
 
     this.prompt([
         {
-            type: "input",
-            name: "dbhTableName",
-            validate: input => {
+            type: 'input',
+            name: 'dbhTableName',
+            validate: (input) => {
                 const prodDatabaseType = this.jhipsterAppConfig
                     .prodDatabaseType;
                 return validateTableName(input, prodDatabaseType);
             },
-            message: "What is the table name for this entity ?",
+            message: 'What is the table name for this entity ?',
             default: this.entityTableName
         }
-    ]).then(props => {
+    ]).then((props) => {
         this.tableNameInput = props.dbhTableName;
         done();
     });
@@ -47,17 +47,17 @@ function askForIdName() {
 
     this.prompt([
         {
-            type: "input",
-            name: "dbhIdName",
-            validate: input => {
+            type: 'input',
+            name: 'dbhIdName',
+            validate: (input) => {
                 const prodDatabaseType = this.jhipsterAppConfig
                     .prodDatabaseType;
                 return validateColumnName(input, prodDatabaseType);
             },
-            message: "What id name do you want for this entity ?",
-            default: this.dbhIdName ? this.dbhIdName : "id"
+            message: 'What id name do you want for this entity ?',
+            default: this.dbhIdName ? this.dbhIdName : 'id'
         }
-    ]).then(props => {
+    ]).then((props) => {
         this.idNameInput = props.dbhIdName;
         done();
     });
@@ -93,16 +93,15 @@ function askForColumnsName() {
  */
 function askForColumnName(done) {
     const validateColumnName = dbh.validateColumnName;
-    const defaultAnswer =
-        this.field.dbhColumnName ||
-        this.field.fieldNameAsDatabaseColumn ||
-        this.field.dbhColumnName;
+    const defaultAnswer = this.field.dbhColumnName
+        || this.field.fieldNameAsDatabaseColumn
+        || this.field.dbhColumnName;
 
     const prompts = [
         {
-            type: "input",
-            name: "dbhColumnName",
-            validate: input => {
+            type: 'input',
+            name: 'dbhColumnName',
+            validate: (input) => {
                 const prodDatabaseType = this.jhipsterAppConfig
                     .prodDatabaseType;
                 return validateColumnName(input, prodDatabaseType);
@@ -112,7 +111,7 @@ function askForColumnName(done) {
         }
     ];
 
-    this.prompt(prompts).then(props => {
+    this.prompt(prompts).then((props) => {
         this.field.columnNameInput = props.dbhColumnName;
 
         // push just processed item
@@ -133,9 +132,9 @@ function askForRelationshipsId() {
     // Don't ask relationship id if there aren't any relationship
     // Or option --force
     if (
-        this.relationships === undefined ||
-        this.relationships.length === 0 ||
-        this.force
+        this.relationships === undefined
+        || this.relationships.length === 0
+        || this.force
     ) {
         return;
     }
@@ -143,14 +142,13 @@ function askForRelationshipsId() {
     // work only on owner relationship
     // We don't need to do anything about relationships which don't add any constraint.
     this.relationshipsPile = this.relationships.filter(
-        relationshipItem =>
-            !(
-                relationshipItem.relationshipType === "one-to-many" ||
-                (relationshipItem.relationshipType === "one-to-one" &&
-                    !relationshipItem.ownerSide) ||
-                (relationshipItem.relationshipType === "many-to-many" &&
-                    !relationshipItem.ownerSide)
-            )
+        (relationshipItem) => !(
+            relationshipItem.relationshipType === 'one-to-many'
+                || (relationshipItem.relationshipType === 'one-to-one'
+                    && !relationshipItem.ownerSide)
+                || (relationshipItem.relationshipType === 'many-to-many'
+                    && !relationshipItem.ownerSide)
+        )
     );
 
     if (this.relationshipsPile.length === 0) {
@@ -182,51 +180,51 @@ function askForRelationshipId(done) {
 
     const prompts = [
         {
-            type: "input",
-            name: "dbhRelationshipId",
-            validate: input => {
+            type: 'input',
+            name: 'dbhRelationshipId',
+            validate: (input) => {
                 const prodDatabaseType = this.jhipsterAppConfig
                     .prodDatabaseType;
                 return validateColumnName(input, prodDatabaseType);
             },
             message: `What column name do you want for the relationship "${this.relationship.relationshipName}" ?`,
             default:
-                this.relationship.dbhRelationshipId ||
-                `${dbh.getPluralColumnIdName(
+                this.relationship.dbhRelationshipId
+                || `${dbh.getPluralColumnIdName(
                     this.relationship.relationshipName
                 )}`
         }
     ];
 
-    if (this.relationship.relationshipType === "many-to-many") {
+    if (this.relationship.relationshipType === 'many-to-many') {
         prompts[0].message = `What inverseJoin column name do you want for the relationship "${this.relationship.relationshipName}" ?`;
         prompts.unshift({
-            type: "input",
-            name: "dbhRelationshipIdOtherEntity",
-            validate: input => {
+            type: 'input',
+            name: 'dbhRelationshipIdOtherEntity',
+            validate: (input) => {
                 const prodDatabaseType = this.jhipsterAppConfig
                     .prodDatabaseType;
                 return validateColumnName(input, prodDatabaseType);
             },
             message: `What join column name do you want for the relationship "${this.relationship.relationshipName}" ?`,
             default:
-                this.relationship.dbhRelationshipIdOtherEntity ||
-                `${dbh.getPluralColumnIdName(
+                this.relationship.dbhRelationshipIdOtherEntity
+                || `${dbh.getPluralColumnIdName(
                     this.relationship.otherEntityRelationshipName
                 )}`
         });
         prompts.unshift({
-            type: "input",
-            name: "dbhJunctionTable",
-            validate: input => {
+            type: 'input',
+            name: 'dbhJunctionTable',
+            validate: (input) => {
                 const prodDatabaseType = this.jhipsterAppConfig
                     .prodDatabaseType;
                 return validateTableName(input, prodDatabaseType);
             },
             message: `What junction table name do you want for the relationship "${this.relationship.relationshipName}" ?`,
             default:
-                this.relationship.dbhJunctionTable ||
-                `${this.getJoinTableName(
+                this.relationship.dbhJunctionTable
+                || `${this.getJoinTableName(
                     this.entityClass,
                     this.relationship.relationshipName,
                     this.jhipsterAppConfig.prodDatabaseType
@@ -234,10 +232,9 @@ function askForRelationshipId(done) {
         });
     }
 
-    this.prompt(prompts).then(props => {
+    this.prompt(prompts).then((props) => {
         this.relationship.relationshipIdInput = props.dbhRelationshipId;
-        this.relationship.otherEntityRelationshipIdInput =
-            props.dbhRelationshipIdOtherEntity;
+        this.relationship.otherEntityRelationshipIdInput = props.dbhRelationshipIdOtherEntity;
         this.relationship.junctionTableInput = props.dbhJunctionTable;
 
         // push just processed item
