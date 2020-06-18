@@ -5,7 +5,7 @@ set -ev
 
 cd "$JHIPSTER_TRAVIS"/test-case
 
-yarn add generator-jhipster@"$JHIPSTER_VERSION"
+yarn global add generator-jhipster@"$JHIPSTER_VERSION"
 yarn link generator-jhipster-db-helper
 
 jhipster --force --no-insight
