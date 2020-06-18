@@ -17,7 +17,7 @@ However some of us still want create a JHipster applications with such databases
 
 2. Run the main generator on your already created JHipster application.
 
-`yo generator-jhipster-db-helper`
+`yo jhipster-db-helper`
 
 3. Answer our module's questions after creating or regenerating an entity
 
