@@ -1,20 +1,24 @@
-const DBH_CONSTANTS = require('./dbh-constants');
+const fs = require('fs');
 const jhipsterConstants = require('generator-jhipster/generators/generator-constants.js');
 const jhipsterCore = require('jhipster-core');
-const jhipsterModuleSubgenerator = require('generator-jhipster/generators/generator-base.js');
+const jhipsterModuleSubgenerator = require('generator-jhipster/generators/entity/index.js');
 const pluralize = require('pluralize');
-const fs = require('fs');
+const DBH_CONSTANTS = require('./dbh-constants');
 
 /**
  * return the missing property jhipsterVar.jhipsterConfig for unit tests
  * @param path : path to .yo-rc.json
  */
-const getAppConfig = configFilePath => new Promise((resolve, reject) => {
+const getAppConfig = (configFilePath) => new Promise((resolve, reject) => {
     // if file exists, return it as a JSON object
     if (fs.existsSync(configFilePath)) {
         fs.readFile(configFilePath, 'utf8', (err, data) => {
             if (err) {
-                reject(new Error(`getAppConfig: fs.readFile error.\nPath was ${configFilePath}\n${err}`));
+                reject(
+                    new Error(
+                        `getAppConfig: fs.readFile error.\nPath was ${configFilePath}\n${err}`
+                    )
+                );
             }
 
             // TODO : search if this statement should be in a try/catch or not
@@ -24,7 +28,11 @@ const getAppConfig = configFilePath => new Promise((resolve, reject) => {
             if (appConfigToJson) {
                 resolve(appConfigToJson);
             } else {
-                reject(new Error(`getAppConfig: output error.\nOutput type: ${typeof appConfigToJson}, value:\n${appConfigToJson}`));
+                reject(
+                    new Error(
+                        `getAppConfig: output error.\nOutput type: ${typeof appConfigToJson}, value:\n${appConfigToJson}`
+                    )
+                );
             }
         });
     } else {
@@ -45,34 +53,33 @@ const postAppPolyfill = (appConfigPath) => {
     }
 
     // else return a promise holding the polyfill
-    return getAppConfig(appConfigPath)
-        .then(
-            (onResolve) => {
-                const conf = onResolve['generator-jhipster'];
-                const poly = {};
+    return getAppConfig(appConfigPath).then(
+        (onResolve) => {
+            const conf = onResolve['generator-jhipster'];
+            const poly = {};
 
-                // @todo: defensive programming with these properties (hasOwnProperty ? throw ?)
+            // @todo: defensive programming with these properties (hasOwnProperty ? throw ?)
 
-                // jhipsterVar polyfill :
-                poly.baseName = conf.baseName;
-                poly.packageName = conf.packageName;
-                poly.angularAppName = conf.angularAppName || null; // handle an undefined value (JSON properties can't be undefined)
-                poly.clientFramework = conf.clientFramework;
-                poly.clientPackageManager = conf.clientPackageManager;
-                poly.buildTool = conf.buildTool;
+            // jhipsterVar polyfill :
+            poly.baseName = conf.baseName;
+            poly.packageName = conf.packageName;
+            poly.angularAppName = conf.angularAppName || null; // handle an undefined value (JSON properties can't be undefined)
+            poly.clientFramework = conf.clientFramework;
+            poly.clientPackageManager = conf.clientPackageManager;
+            poly.buildTool = conf.buildTool;
 
-                // jhipsterFunc polyfill :
-                poly.registerModule = jhipsterModuleSubgenerator.prototype.registerModule;
-                poly.updateEntityConfig = jhipsterModuleSubgenerator.prototype.updateEntityConfig;
+            // jhipsterFunc polyfill :
+            poly.registerModule = jhipsterModuleSubgenerator.prototype.registerModule;
+            poly.updateEntityConfig = jhipsterModuleSubgenerator.prototype.updateEntityConfig;
 
-                // @todo : handle this.options.testMode ?
+            // @todo : handle this.options.testMode ?
 
-                return poly;
-            },
-            (onError) => {
-                throw new Error(onError);
-            }
-        );
+            return poly;
+        },
+        (onError) => {
+            throw new Error(onError);
+        }
+    );
 };
 
 /**
@@ -88,27 +95,26 @@ const postEntityPolyfill = (appConfigPath) => {
     }
 
     // else return a promise holding the polyfill
-    return getAppConfig(appConfigPath)
-        .then(
-            (onResolve) => {
-                const conf = onResolve['generator-jhipster'];
-                const poly = {};
+    return getAppConfig(appConfigPath).then(
+        (onResolve) => {
+            const conf = onResolve['generator-jhipster'];
+            const poly = {};
 
-                // jhipsterVar polyfill :
-                poly.jhipsterConfig = conf;
-                poly.javaDir = `${jhipsterConstants.SERVER_MAIN_SRC_DIR + conf.packageFolder}/`;
-                poly.resourceDir = jhipsterConstants.SERVER_MAIN_RES_DIR;
-                poly.replaceContent = jhipsterModuleSubgenerator.prototype.replaceContent;
-                poly.updateEntityConfig = jhipsterModuleSubgenerator.prototype.updateEntityConfig;
+            // jhipsterVar polyfill :
+            poly.jhipsterConfig = conf;
+            poly.javaDir = `${jhipsterConstants.SERVER_MAIN_SRC_DIR
+                + conf.packageFolder}/`;
+            poly.resourceDir = jhipsterConstants.SERVER_MAIN_RES_DIR;
+            poly.replaceContent = jhipsterModuleSubgenerator.prototype.replaceContent;
+            poly.updateEntityConfig = jhipsterModuleSubgenerator.prototype.updateEntityConfig;
 
-                return poly;
-            },
-            (onError) => {
-                console.error(onError);
-            }
-        );
+            return poly;
+        },
+        (onError) => {
+            console.error(onError);
+        }
+    );
 };
-
 
 /**
  * get hibernate SnakeCase in JHipster preferred style.
@@ -123,9 +129,10 @@ const hibernateSnakeCase = (value) => {
         value = value.replace('.', '_');
         res = value[0];
         for (let i = 1, len = value.length - 1; i < len; i++) {
-            if (value[i - 1] !== value[i - 1].toUpperCase() &&
-                value[i] !== value[i].toLowerCase() &&
-                value[i + 1] !== value[i + 1].toUpperCase()
+            if (
+                value[i - 1] !== value[i - 1].toUpperCase()
+                && value[i] !== value[i].toLowerCase()
+                && value[i + 1] !== value[i + 1].toUpperCase()
             ) {
                 res += `_${value[i]}`;
             } else {
@@ -139,23 +146,19 @@ const hibernateSnakeCase = (value) => {
     return res;
 };
 
-
 /** Check that the build tool isn't unknown */
-const isValidBuildTool = buildTool => DBH_CONSTANTS.buildTools.includes(buildTool);
-
+const isValidBuildTool = (buildTool) => DBH_CONSTANTS.buildTools.includes(buildTool);
 
 // We need the two following functions to be able to find JHipster generated values and match them in a search and replace.
 /**
  * @param create a column id name from the relationship name
  */
-const getColumnIdName = name => `${hibernateSnakeCase(name)}_id`;
-
+const getColumnIdName = (name) => `${hibernateSnakeCase(name)}_id`;
 
 /**
  * @param create a column id name from the relationship name for a to-many relationship (either one-to-many or many-to-many)
  */
-const getPluralColumnIdName = name => getColumnIdName(pluralize(name));
-
+const getPluralColumnIdName = (name) => getColumnIdName(pluralize(name));
 
 /**
  * From the JHipster files where the original Spring naming strategies can be found,
@@ -169,11 +172,12 @@ const getFilesWithNamingStrategy = (buildTool) => {
     // if build tool is valid, return the files with naming strategy,
     // including those specific to the application build tool
     const baseFiles = DBH_CONSTANTS.filesWithNamingStrategy.base;
-    const result = baseFiles.concat(DBH_CONSTANTS.filesWithNamingStrategy[buildTool]);
+    const result = baseFiles.concat(
+        DBH_CONSTANTS.filesWithNamingStrategy[buildTool]
+    );
 
     return result;
 };
-
 
 /**
  * Check if these relationships add constraints.
@@ -185,17 +189,21 @@ const getFilesWithNamingStrategy = (buildTool) => {
  * TODO complex condition could be rewritten as a function
  */
 const hasConstraints = (relationships) => {
-    if (!Array.isArray((relationships))) {
-        throw new TypeError(`hasConstraints: 'relationships' parameter must be an array, was ${typeof relationships}`);
+    if (!Array.isArray(relationships)) {
+        throw new TypeError(
+            `hasConstraints: 'relationships' parameter must be an array, was ${typeof relationships}`
+        );
     }
 
     let res = false;
 
     relationships.forEach((relationship) => {
         if (
-            (relationship.relationshipType === 'many-to-one') ||
-            (relationship.relationshipType === 'one-to-one' && relationship.ownerSide) ||
-            (relationship.relationshipType === 'many-to-many' && relationship.ownerSide)
+            relationship.relationshipType === 'many-to-one'
+            || (relationship.relationshipType === 'one-to-one'
+                && relationship.ownerSide)
+            || (relationship.relationshipType === 'many-to-many'
+                && relationship.ownerSide)
         ) {
             res = true;
         }
@@ -204,14 +212,12 @@ const hasConstraints = (relationships) => {
     return res;
 };
 
-
 /**
  * Assert parameter is a non-empty string
  *
  * Note : Currently unused, remove if no uses in the future
  */
-const isNotEmptyString = x => typeof x === 'string' && x !== '';
-
+const isNotEmptyString = (x) => typeof x === 'string' && x !== '';
 
 /**
  * Duplicate of a JHipster function where we have replaced how the path is handled, because we use absolute paths
@@ -228,20 +234,23 @@ const replaceContent = (absolutePath, pattern, content, regex) => {
     fs.writeFileSync(absolutePath, body); // fs.createWriteStream is recommended
 };
 
-
 /** Validate user input when asking for a SQL column name */
 const validateColumnName = (input, dbType) => {
     if (input === '') {
         return 'Your column name cannot be empty';
-    } else if (!/^([a-zA-Z0-9_]*)$/.test(input)) {
+    }
+    if (!/^([a-zA-Z0-9_]*)$/.test(input)) {
         return 'Your column name cannot contain special characters';
-    } else if (dbType === 'oracle' && input.length > DBH_CONSTANTS.oracleLimitations.tableNameHardMaxLength) {
+    }
+    if (
+        dbType === 'oracle'
+        && input.length > DBH_CONSTANTS.oracleLimitations.tableNameHardMaxLength
+    ) {
         return 'Your column name is too long for Oracle, try a shorter name';
     }
 
     return true;
 };
-
 
 /**
  * Validate user input when asking for a SQL table name
@@ -251,19 +260,28 @@ const validateColumnName = (input, dbType) => {
 const validateTableName = (input, dbType) => {
     if (input === '') {
         return 'The table name cannot be empty';
-    } else if (!/^([a-zA-Z0-9_]*)$/.test(input)) {
+    }
+    if (!/^([a-zA-Z0-9_]*)$/.test(input)) {
         return 'The table name cannot contain special characters';
-    } else if (dbType === 'oracle' && input.length > DBH_CONSTANTS.oracleLimitations.tableNameHardMaxLength) {
+    }
+    if (
+        dbType === 'oracle'
+        && input.length > DBH_CONSTANTS.oracleLimitations.tableNameHardMaxLength
+    ) {
         return 'The table name is too long for Oracle, try a shorter name';
-    } else if (dbType === 'oracle' && input.length > DBH_CONSTANTS.oracleLimitations.tableNameSoftMaxLength) {
+    }
+    if (
+        dbType === 'oracle'
+        && input.length > DBH_CONSTANTS.oracleLimitations.tableNameSoftMaxLength
+    ) {
         return 'The table name is long for Oracle, long table names can cause issues when used to create constraint names and join table names';
-    } else if (jhipsterCore.isReservedTableName(input, dbType)) {
+    }
+    if (jhipsterCore.isReservedTableName(input, dbType)) {
         return `'${input}' is a ${dbType} reserved keyword.`;
     }
 
     return true;
 };
-
 
 module.exports = {
     getAppConfig,

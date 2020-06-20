@@ -9,7 +9,6 @@ const path = require('path');
 const dbh = require('../generators/dbh.js');
 const DBH_CONSTANTS = require('../generators/dbh-constants');
 
-
 // Dbh unit test
 describe('Dbh', function () {
     describe('dbh.js script', function () {
@@ -20,12 +19,16 @@ describe('Dbh', function () {
     describe('getAppConfig', function () {
         it('returns the expected app config with Maven as build tool', function () {
             const expectedConfig = DBH_CONSTANTS.templateConfigFile.usingMaven;
-            const f = path.join(__dirname, 'templates/default/usingMaven/.yo-rc.json');
+            const f = path.join(
+                __dirname,
+                'templates/default/usingMaven/.yo-rc.json'
+            );
 
             assert.file(f);
 
-            return dbh.getAppConfig(f)
-                .catch(err => console.error(err))
+            return dbh
+                .getAppConfig(f)
+                .catch((err) => console.error(err))
                 .then(
                     (onFulfilled) => {
                         assert(typeof onFulfilled === 'object');
@@ -38,32 +41,46 @@ describe('Dbh', function () {
         });
         it('returns the expected app config with Gradle as build tool', function () {
             const expectedConfig = DBH_CONSTANTS.templateConfigFile.usingGradle;
-            const f = path.join(__dirname, 'templates/default/usingGradle/.yo-rc.json');
+            const f = path.join(
+                __dirname,
+                'templates/default/usingGradle/.yo-rc.json'
+            );
 
             assert.file(f);
 
-            return dbh.getAppConfig(f)
-                .catch(err => console.error(err))
-                .then((onFulfilled) => {
-                    assert(typeof onFulfilled === 'object');
-                    assert.deepStrictEqual(expectedConfig, onFulfilled);
-                }, (onRejected) => {
-                    console.log(onRejected);
-                });
-        });
-        it('throws when a file is not found', function () {
-            return dbh.getAppConfig('foo.bar')
-                .then((onFulfilled) => {
-                    throw new Error('Promise should have been rejected but was instead fulfilled');
-                }, (onRejected) => {
-                    assert(onRejected instanceof Error);
-                });
-        });
-        it('throws when the output file is no correct json', function () {
-            return dbh.getAppConfig('./templates/default/usingMaven/pom.xml')
+            return dbh
+                .getAppConfig(f)
+                .catch((err) => console.error(err))
                 .then(
                     (onFulfilled) => {
-                        throw new Error('Promise should have been rejected but was instead fulfilled');
+                        assert(typeof onFulfilled === 'object');
+                        assert.deepStrictEqual(expectedConfig, onFulfilled);
+                    },
+                    (onRejected) => {
+                        console.log(onRejected);
+                    }
+                );
+        });
+        it('throws when a file is not found', function () {
+            return dbh.getAppConfig('foo.bar').then(
+                (onFulfilled) => {
+                    throw new Error(
+                        'Promise should have been rejected but was instead fulfilled'
+                    );
+                },
+                (onRejected) => {
+                    assert(onRejected instanceof Error);
+                }
+            );
+        });
+        it('throws when the output file is no correct json', function () {
+            return dbh
+                .getAppConfig('./templates/default/usingMaven/pom.xml')
+                .then(
+                    (onFulfilled) => {
+                        throw new Error(
+                            'Promise should have been rejected but was instead fulfilled'
+                        );
                     },
                     (onRejected) => {
                         assert(onRejected instanceof Error);
@@ -75,12 +92,30 @@ describe('Dbh', function () {
         it('works as expected with treacherous input', function () {
             assert.textEqual(dbh.getColumnIdName('Authors'), 'authors_id');
             assert.textEqual(dbh.getColumnIdName('AUTHORS'), 'authors_id');
-            assert.textEqual(dbh.getColumnIdName('IT_IS_OVER_9000'), 'it_is_over_9000_id');
-            assert.textEqual(dbh.getColumnIdName('AuthorTable'), 'author_table_id');
-            assert.textEqual(dbh.getColumnIdName('TheAuthor_table'), 'the_author_table_id');
-            assert.textEqual(dbh.getColumnIdName('XMLHTTPPosts'), 'xmlhttpposts_id');
-            assert.textEqual(dbh.getColumnIdName('CssClassesService'), 'css_classes_service_id');
-            assert.textEqual(dbh.getColumnIdName('CSSClassesService'), 'cssclasses_service_id');
+            assert.textEqual(
+                dbh.getColumnIdName('IT_IS_OVER_9000'),
+                'it_is_over_9000_id'
+            );
+            assert.textEqual(
+                dbh.getColumnIdName('AuthorTable'),
+                'author_table_id'
+            );
+            assert.textEqual(
+                dbh.getColumnIdName('TheAuthor_table'),
+                'the_author_table_id'
+            );
+            assert.textEqual(
+                dbh.getColumnIdName('XMLHTTPPosts'),
+                'xmlhttpposts_id'
+            );
+            assert.textEqual(
+                dbh.getColumnIdName('CssClassesService'),
+                'css_classes_service_id'
+            );
+            assert.textEqual(
+                dbh.getColumnIdName('CSSClassesService'),
+                'cssclasses_service_id'
+            );
         });
     });
     describe('getFilesWithNamingStrategy', function () {
@@ -100,7 +135,7 @@ describe('Dbh', function () {
             const expectedArray = [
                 './src/main/resources/config/application.yml',
                 './src/test/resources/config/application.yml',
-                './gradle/liquibase.gradle',
+                './gradle/liquibase.gradle'
             ].sort();
             assert(_.isEqual(files, expectedArray));
         });
@@ -111,16 +146,34 @@ describe('Dbh', function () {
             // some of these assertions would never appear in a real application
             // however contrived column names are a useful reference for further development
             assert.textEqual(dbh.getPluralColumnIdName('author'), 'authors_id');
-            assert.textEqual(dbh.getPluralColumnIdName('the_Authors_table'), 'the_authors_tables_id');
+            assert.textEqual(
+                dbh.getPluralColumnIdName('the_Authors_table'),
+                'the_authors_tables_id'
+            );
             assert.textEqual(dbh.getPluralColumnIdName('01234'), '01234s_id');
-            assert.textEqual(dbh.getPluralColumnIdName('AUTHORSTABLE'), 'authorstables_id');
-            assert.textEqual(dbh.getPluralColumnIdName('AUTHORS_TABLE'), 'authors_tables_id');
+            assert.textEqual(
+                dbh.getPluralColumnIdName('AUTHORSTABLE'),
+                'authorstables_id'
+            );
+            assert.textEqual(
+                dbh.getPluralColumnIdName('AUTHORS_TABLE'),
+                'authors_tables_id'
+            );
             assert.textEqual(dbh.getPluralColumnIdName('_'), '_s_id');
             assert.textEqual(dbh.getPluralColumnIdName(''), '_id');
             assert.textEqual(dbh.getPluralColumnIdName('\r'), '\rs_id');
-            assert.textEqual(dbh.getPluralColumnIdName('\rAuthor'), '\rauthors_id');
-            assert.textEqual(dbh.getPluralColumnIdName('XMLHTTPAPIService'), 'xmlhttpapiservices_id');
-            assert.textEqual(dbh.getPluralColumnIdName('XmlHttpApiService'), 'xml_http_api_services_id');
+            assert.textEqual(
+                dbh.getPluralColumnIdName('\rAuthor'),
+                '\rauthors_id'
+            );
+            assert.textEqual(
+                dbh.getPluralColumnIdName('XMLHTTPAPIService'),
+                'xmlhttpapiservices_id'
+            );
+            assert.textEqual(
+                dbh.getPluralColumnIdName('XmlHttpApiService'),
+                'xml_http_api_services_id'
+            );
         });
     });
     describe('hasConstraints', function () {
@@ -130,18 +183,42 @@ describe('Dbh', function () {
             assert(dbh.hasConstraints(relationshipsSamples.Empty) === false);
         });
         it('returns false if not owner of the relationship', function () {
-            assert(dbh.hasConstraints(relationshipsSamples.manyToManyNotOwner) === false);
-            assert(dbh.hasConstraints(relationshipsSamples.oneToOneNotOwner) === false);
-            assert(dbh.hasConstraints(relationshipsSamples.mixedNotOwner) === false);
+            assert(
+                dbh.hasConstraints(relationshipsSamples.manyToManyNotOwner)
+                    === false
+            );
+            assert(
+                dbh.hasConstraints(relationshipsSamples.oneToOneNotOwner)
+                    === false
+            );
+            assert(
+                dbh.hasConstraints(relationshipsSamples.mixedNotOwner) === false
+            );
         });
         it('returns true if owner of the relationship', function () {
-            assert(dbh.hasConstraints(relationshipsSamples.oneToOneOwner) === true);
-            assert(dbh.hasConstraints(relationshipsSamples.tripleOneToOneOwner) === true);
+            assert(
+                dbh.hasConstraints(relationshipsSamples.oneToOneOwner) === true
+            );
+            assert(
+                dbh.hasConstraints(relationshipsSamples.tripleOneToOneOwner)
+                    === true
+            );
         });
         it('returns true if it is owner in at least one relation', function () {
-            assert(dbh.hasConstraints(relationshipsSamples.mixedConstraints) === true);
-            assert(dbh.hasConstraints(relationshipsSamples.mixedWithOneConstraint) === true);
-            assert(dbh.hasConstraints(relationshipsSamples.mixedWithTwoConstraints) === true);
+            assert(
+                dbh.hasConstraints(relationshipsSamples.mixedConstraints)
+                    === true
+            );
+            assert(
+                dbh.hasConstraints(
+                    relationshipsSamples.mixedWithOneConstraint
+                ) === true
+            );
+            assert(
+                dbh.hasConstraints(
+                    relationshipsSamples.mixedWithTwoConstraints
+                ) === true
+            );
         });
         it('throws when given a wrong type parameter', function () {
             assert.throws(() => dbh.hasConstraints(''), TypeError);
@@ -174,24 +251,36 @@ describe('Dbh', function () {
     });
     describe('postAppPolyfill', function () {
         it('returns a valid polyfill', function () {
-            const f = path.join(__dirname, 'templates/default/usingMaven/.yo-rc.json');
+            const f = path.join(
+                __dirname,
+                'templates/default/usingMaven/.yo-rc.json'
+            );
             assert.file(f);
-            return dbh.postAppPolyfill(f)
-                .then(
-                    (onFulfilled) => {
-                        assert(dbh.isNotEmptyString(onFulfilled.baseName));
-                        assert(dbh.isNotEmptyString(onFulfilled.packageName));
-                        assert(dbh.isNotEmptyString(onFulfilled.angularAppName) || onFulfilled.angularAppName === null);
-                        assert(dbh.isNotEmptyString(onFulfilled.clientFramework));
-                        assert(dbh.isNotEmptyString(onFulfilled.clientPackageManager));
-                        assert(dbh.isNotEmptyString(onFulfilled.buildTool) && dbh.isValidBuildTool(onFulfilled.buildTool));
-                        assert(typeof onFulfilled.registerModule === 'function');
-                        assert(typeof onFulfilled.updateEntityConfig === 'function');
-                    },
-                    (onRejected) => {
-                        console.error(onRejected);
-                    }
-                );
+            return dbh.postAppPolyfill(f).then(
+                (onFulfilled) => {
+                    assert(dbh.isNotEmptyString(onFulfilled.baseName));
+                    assert(dbh.isNotEmptyString(onFulfilled.packageName));
+                    assert(
+                        dbh.isNotEmptyString(onFulfilled.angularAppName)
+                            || onFulfilled.angularAppName === null
+                    );
+                    assert(dbh.isNotEmptyString(onFulfilled.clientFramework));
+                    assert(
+                        dbh.isNotEmptyString(onFulfilled.clientPackageManager)
+                    );
+                    assert(
+                        dbh.isNotEmptyString(onFulfilled.buildTool)
+                            && dbh.isValidBuildTool(onFulfilled.buildTool)
+                    );
+                    assert(typeof onFulfilled.registerModule === 'function');
+                    assert(
+                        typeof onFulfilled.updateEntityConfig === 'function'
+                    );
+                },
+                (onRejected) => {
+                    console.error(onRejected);
+                }
+            );
         });
         it('throws when given a non-existing file', function () {
             assert.throws(() => {
@@ -201,18 +290,26 @@ describe('Dbh', function () {
     });
     describe('postEntityPolyfill', function () {
         it('returns a valid polyfill', function () {
-            const f = path.join(__dirname, 'templates/default/usingMaven/.yo-rc.json');
+            const f = path.join(
+                __dirname,
+                'templates/default/usingMaven/.yo-rc.json'
+            );
             assert.file(f);
 
-            return dbh.postEntityPolyfill(f)
-                .catch(err => console.log(err))
+            return dbh
+                .postEntityPolyfill(f)
+                .catch((err) => console.log(err))
                 .then(
                     (onFulfilled) => {
                         assert(typeof onFulfilled.jhipsterConfig === 'object');
                         assert(dbh.isNotEmptyString(onFulfilled.javaDir));
                         assert(dbh.isNotEmptyString(onFulfilled.resourceDir));
-                        assert(typeof onFulfilled.replaceContent === 'function');
-                        assert(typeof onFulfilled.updateEntityConfig === 'function');
+                        assert(
+                            typeof onFulfilled.replaceContent === 'function'
+                        );
+                        assert(
+                            typeof onFulfilled.updateEntityConfig === 'function'
+                        );
                     },
                     (onRejected) => {
                         console.error(onRejected);
@@ -228,7 +325,10 @@ describe('Dbh', function () {
     describe('replaceContent', function () {
         it('works', function () {
             // write a temp file
-            const tempFilePath = path.join(__dirname, './testDir/tempDir/myTest.json');
+            const tempFilePath = path.join(
+                __dirname,
+                './testDir/tempDir/myTest.json'
+            );
             const content = { foo: 'bar' };
 
             assert.noFile(tempFilePath);
@@ -264,21 +364,49 @@ describe('Dbh', function () {
             assert(dbh.validateColumnName('2Foo2Bar', 'mysql') === true);
             assert(dbh.validateColumnName('06', 'mysql') === true);
             assert(dbh.validateColumnName('_', 'mysql') === true);
-            assert(dbh.validateColumnName('quiteLongTableName', 'mysql') === true);
-            assert(dbh.validateColumnName('definitelyVeryLongTableName', 'mysql') === true);
+            assert(
+                dbh.validateColumnName('quiteLongTableName', 'mysql') === true
+            );
+            assert(
+                dbh.validateColumnName(
+                    'definitelyVeryLongTableName',
+                    'mysql'
+                ) === true
+            );
         });
         it(`returns '${failMsgWhenSpecialChar}'`, function () {
-            assert.textEqual(dbh.validateColumnName(' ', 'mysql'), failMsgWhenSpecialChar);
-            assert.textEqual(dbh.validateColumnName('\r', 'mysql'), failMsgWhenSpecialChar);
-            assert.textEqual(dbh.validateColumnName('\t', 'mysql'), failMsgWhenSpecialChar);
-            assert.textEqual(dbh.validateColumnName('Böök', 'mysql'), failMsgWhenSpecialChar);
-            assert.textEqual(dbh.validateColumnName('book-table', 'mysql'), failMsgWhenSpecialChar);
+            assert.textEqual(
+                dbh.validateColumnName(' ', 'mysql'),
+                failMsgWhenSpecialChar
+            );
+            assert.textEqual(
+                dbh.validateColumnName('\r', 'mysql'),
+                failMsgWhenSpecialChar
+            );
+            assert.textEqual(
+                dbh.validateColumnName('\t', 'mysql'),
+                failMsgWhenSpecialChar
+            );
+            assert.textEqual(
+                dbh.validateColumnName('Böök', 'mysql'),
+                failMsgWhenSpecialChar
+            );
+            assert.textEqual(
+                dbh.validateColumnName('book-table', 'mysql'),
+                failMsgWhenSpecialChar
+            );
         });
         it(`returns '${failMsgWhenEmpty}'`, function () {
-            assert.textEqual(dbh.validateColumnName('', 'mysql'), failMsgWhenEmpty);
+            assert.textEqual(
+                dbh.validateColumnName('', 'mysql'),
+                failMsgWhenEmpty
+            );
         });
         it(`returns '${failMsgWhenTooLongForOracle}'`, function () {
-            assert.textEqual(dbh.validateColumnName('definitelyVeryLongTableName', 'oracle'), failMsgWhenTooLongForOracle);
+            assert.textEqual(
+                dbh.validateColumnName('definitelyVeryLongTableName', 'oracle'),
+                failMsgWhenTooLongForOracle
+            );
         });
     });
     describe('validateTableName', function () {
@@ -297,27 +425,52 @@ describe('Dbh', function () {
             assert(dbh.validateTableName('2Foo2Bar', 'mysql') === true);
             assert(dbh.validateTableName('06', 'mysql') === true);
             assert(dbh.validateTableName('_', 'mysql') === true);
-            assert(dbh.validateTableName('quiteLongTableName', 'mysql') === true);
-            assert(dbh.validateTableName('definitelyVeryLongTableName', 'mysql') === true);
+            assert(
+                dbh.validateTableName('quiteLongTableName', 'mysql') === true
+            );
+            assert(
+                dbh.validateTableName(
+                    'definitelyVeryLongTableName',
+                    'mysql'
+                ) === true
+            );
         });
         it('returns the correct error message with a name containing a reserved keyword', function () {
-            assert.textEqual(dbh.validateTableName('ASENSITIVE', 'mysql').toString(), '\'ASENSITIVE\' is a mysql reserved keyword.');
+            assert.textEqual(
+                dbh.validateTableName('ASENSITIVE', 'mysql').toString(),
+                '\'ASENSITIVE\' is a mysql reserved keyword.'
+            );
         });
         it('fails with missing parameter', function () {
             assert.throws(() => dbh.validateTableName('Book'), Error);
         });
         it(`returns '${failMsgWhenSpecialChar}'`, function () {
-            assert.textEqual(dbh.validateTableName('Böök', 'mysql'), failMsgWhenSpecialChar);
-            assert.textEqual(dbh.validateTableName('book-table', 'mysql'), failMsgWhenSpecialChar);
+            assert.textEqual(
+                dbh.validateTableName('Böök', 'mysql'),
+                failMsgWhenSpecialChar
+            );
+            assert.textEqual(
+                dbh.validateTableName('book-table', 'mysql'),
+                failMsgWhenSpecialChar
+            );
         });
         it(`returns '${failMsgWhenEmpty}'`, function () {
-            assert.textEqual(dbh.validateTableName('', 'mysql'), failMsgWhenEmpty);
+            assert.textEqual(
+                dbh.validateTableName('', 'mysql'),
+                failMsgWhenEmpty
+            );
         });
         it(`returns '${failMsgWhenTooLongForOracle}'`, function () {
-            assert.textEqual(dbh.validateTableName('definitelyVeryLongTableName', 'oracle'), failMsgWhenTooLongForOracle);
+            assert.textEqual(
+                dbh.validateTableName('definitelyVeryLongTableName', 'oracle'),
+                failMsgWhenTooLongForOracle
+            );
         });
         it(`returns '${failMsgWhenLongForOracle}'`, function () {
-            assert.textEqual(dbh.validateTableName('quiteLongTableName', 'oracle'), failMsgWhenLongForOracle);
+            assert.textEqual(
+                dbh.validateTableName('quiteLongTableName', 'oracle'),
+                failMsgWhenLongForOracle
+            );
         });
     });
 });

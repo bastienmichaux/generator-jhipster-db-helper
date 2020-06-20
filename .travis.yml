@@ -2,27 +2,21 @@ os:
     - linux
 language: node_js
 node_js:
-    - "8.15.1"
+    - "12.16.1"
 jdk:
     - oraclejdk8
-addons:
-    apt:
-        packages:
-            - oracle-java8-set-default
 cache:
-    yarn : true
+    yarn: true
     directories:
         - node_modules
         - $HOME/.m2
 env:
     matrix:
-        - JHIPSTER_VERSION=4.6.2
-        - JHIPSTER_VERSION=4.13.3
+        - JHIPSTER_VERSION=6.9.1
         - JHIPSTER_VERSION=latest
     global:
         - JHIPSTER_TRAVIS=$TRAVIS_BUILD_DIR/travis
 before_install:
-    - export JAVA_HOME=/usr/lib/jvm/java-8-oracle
     - yarn global add yo
 install:
     - yarn install

@@ -2,11 +2,11 @@ const chalk = require('chalk');
 const fs = require('fs');
 const path = require('path');
 
+const semver = require('semver');
+const BaseGenerator = require('generator-jhipster/generators/generator-base');
 const dbh = require('../dbh.js');
 const DBH_CONSTANTS = require('../dbh-constants');
 const packagejs = require('../../package.json');
-const semver = require('semver');
-const BaseGenerator = require('generator-jhipster/generators/generator-base');
 
 module.exports = class extends BaseGenerator {
     get initializing() {
@@ -26,7 +26,7 @@ module.exports = class extends BaseGenerator {
                 this.dbhTestCase = this.options.dbhTestCase;
             },
             readConfig() {
-                this.jhipsterAppConfig = this.getJhipsterAppConfig();
+                this.jhipsterAppConfig = this.getAllJhipsterConfig();
                 if (!this.jhipsterAppConfig) {
                     this.error('Can\'t read .yo-rc.json');
                 }
@@ -37,17 +37,30 @@ module.exports = class extends BaseGenerator {
                 this.printJHipsterLogo();
 
                 // Have Yeoman greet the user.
-                this.log(`\nWelcome to the ${chalk.bold.yellow('JHipster db-helper')} generator! ${chalk.yellow(`v${packagejs.version}\n`)}`);
+                this.log(
+                    `\nWelcome to the ${chalk.bold.yellow(
+                        'JHipster db-helper'
+                    )} generator! ${chalk.yellow(`v${packagejs.version}\n`)}`
+                );
             },
             checkJhipster() {
-                const currentJhipsterVersion = this.jhipsterAppConfig.jhipsterVersion;
+                const currentJhipsterVersion = this.jhipsterAppConfig
+                    .jhipsterVersion;
                 const minimumJhipsterVersion = packagejs.dependencies['generator-jhipster'];
-                if (!semver.satisfies(currentJhipsterVersion, minimumJhipsterVersion)) {
-                    this.warning(`\nYour generated project used an old JHipster version (${currentJhipsterVersion})... you need at least (${minimumJhipsterVersion})\n`);
+                if (
+                    !semver.satisfies(
+                        currentJhipsterVersion,
+                        minimumJhipsterVersion
+                    )
+                ) {
+                    this.warning(
+                        `\nYour generated project used an old JHipster version (${currentJhipsterVersion})... you need at least (${minimumJhipsterVersion})\n`
+                    );
                 }
             }
         };
     }
+
     // TODO : refactor (no testing logic in production code)
     /**
      * Get the absolute path of the config file .yo-rc.json.
@@ -58,20 +71,30 @@ module.exports = class extends BaseGenerator {
         let filePath = null;
 
         if (typeof testCase !== 'string') {
-            throw new TypeError(`_getConfigFilePath: testCase parameter: expected type 'string', was instead '${typeof testCase}'`);
+            throw new TypeError(
+                `_getConfigFilePath: testCase parameter: expected type 'string', was instead '${typeof testCase}'`
+            );
         }
 
         // set filePath depending on whether the generator is running a test case or not
         if (testCase === '') {
             filePath = path.join(process.cwd(), '/.yo-rc.json');
         } else if (DBH_CONSTANTS.testCases[testCase] !== undefined) {
-            filePath = path.join(__dirname, '..', DBH_CONSTANTS.testConfigFiles[testCase]);
+            filePath = path.join(
+                __dirname,
+                '..',
+                DBH_CONSTANTS.testConfigFiles[testCase]
+            );
         } else {
-            throw new Error(`_getConfigFilePath: testCase parameter: not a test case we know of. testCase was: ${testCase}`);
+            throw new Error(
+                `_getConfigFilePath: testCase parameter: not a test case we know of. testCase was: ${testCase}`
+            );
         }
 
         if (!fs.existsSync(filePath)) {
-            throw new Error(`_getConfigFilePath: Sought after this file, but it doesn't exist. Path was:\n${filePath}`);
+            throw new Error(
+                `_getConfigFilePath: Sought after this file, but it doesn't exist. Path was:\n${filePath}`
+            );
         }
 
         return filePath;
@@ -102,7 +125,9 @@ module.exports = class extends BaseGenerator {
                 // 2) replace Spring implicit naming strategy
                 this.replaceContent(file, implicitOld, implicitNew, null);
             } else {
-                throw new Error(`_replaceNamingStrategies: File doesn't exist! Path was:\n${file}`);
+                throw new Error(
+                    `_replaceNamingStrategies: File doesn't exist! Path was:\n${file}`
+                );
             }
         });
     }
@@ -141,24 +166,48 @@ module.exports = class extends BaseGenerator {
         this._replaceNamingStrategies(this.buildTool);
 
         try {
-            this.registerModule('generator-jhipster-db-helper', 'app', 'post', 'app', 'A JHipster module for already existing databases');
+            this.registerModule(
+                'generator-jhipster-db-helper',
+                'app',
+                'post',
+                'app',
+                'A JHipster module for already existing databases'
+            );
         } catch (err) {
-            this.log(`${chalk.red.bold('WARN!')} Could not register as a jhipster entity post creation hook...\n`);
+            this.log(
+                `${chalk.red.bold(
+                    'WARN!'
+                )} Could not register as a jhipster entity post creation hook...\n`
+            );
         }
 
         try {
-            this.registerModule('generator-jhipster-db-helper', 'entity', 'post', 'fix-entity', 'A JHipster module to circumvent JHipster limitations about names');
+            this.registerModule(
+                'generator-jhipster-db-helper',
+                'entity',
+                'post',
+                'fix-entity',
+                'A JHipster module to circumvent JHipster limitations about names'
+            );
         } catch (err) {
-            this.log(`${chalk.red.bold('WARN!')} Could not register as a jhipster entity post creation hook...\n`);
+            this.log(
+                `${chalk.red.bold(
+                    'WARN!'
+                )} Could not register as a jhipster entity post creation hook...\n`
+            );
         }
     }
 
     // run installation (npm, bower, etc)
     install() {
-        let logMsg = `To install your dependencies manually, run: ${chalk.yellow.bold(`${this.clientPackageManager} install`)}`;
+        let logMsg = `To install your dependencies manually, run: ${chalk.yellow.bold(
+            `${this.clientPackageManager} install`
+        )}`;
 
         if (this.clientFramework === 'angular1') {
-            logMsg = `To install your dependencies manually, run: ${chalk.yellow.bold(`${this.clientPackageManager} install & bower install`)}`;
+            logMsg = `To install your dependencies manually, run: ${chalk.yellow.bold(
+                `${this.clientPackageManager} install & bower install`
+            )}`;
         }
 
         const injectDependenciesAndConstants = (err) => {
